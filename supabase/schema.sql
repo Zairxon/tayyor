@@ -1,0 +1,3 @@
+-- Tayyor: tables and RPC functions (applied to the Supabase project as migration "tayyor_init")
+-- state per tenant (столовая) in tayyor_state, PINs in tayyor_pins (not readable by clients), access only via RPC.
+-- See README.md for details and limits.

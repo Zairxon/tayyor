@@ -19,13 +19,13 @@
 <div class="foot" id="ver"></div>
 </div>
 <script>
-const V='2.0.0',LI={uzc:0,uzl:1,ru:2,en:3},L=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
+const V='2.1.0',LI={uzc:0,uzl:1,ru:2,en:3},L=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 let lang=localStorage.getItem('tl.lang')||'ru',open_=false;
 const T={tag:["Самса буюртмаси ва заҳираси","Samsa buyurtmasi va zaxirasi","Заказы и запасы самсы","Samsa orders & stock"],
 c:["Буюртма бериш (мижоз)","Buyurtma berish (mijoz)","Заказать (клиент)","Order (customer)"],
 d:["Қабулхона иловаси","Qabulxona ilovasi","Приложение ресепшена","Reception app"],
 k:["Ошпаз иловаси","Oshpaz ilovasi","Приложение повара","Kitchen app"],
-h:["Ҳар бир иловани алоҳида телефонга ўрнатиш мумкин. Янги столовая: «Қабулхона» → «Столовая яратиш».","Har bir ilovani alohida telefonga o'rnatish mumkin. Yangi stolovaya: «Qabulxona» → «Stolovaya yaratish».","Каждое приложение устанавливается на телефон отдельно. Новая столовая: «Ресепшен» → «Создать столовую».","Each app installs on a phone separately. New canteen: Reception → Create a canteen."],
+h:["Ҳар бир иловани алоҳида телефонга ўрнатиш мумкин. Логин ва паролни администратор беради.","Har bir ilovani alohida telefonga o'rnatish mumkin. Login va parolni administrator beradi.","Каждое приложение устанавливается на телефон отдельно. Логин и пароль столовой выдаёт администратор.","Each app installs on a phone separately. The administrator provides the login and password."],
 v:["Версия","Versiya","Версия","Version"]};
 const t=k=>T[k][LI[lang]];
 const q=location.search,hs=location.hash;

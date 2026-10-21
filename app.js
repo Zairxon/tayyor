@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.0.0';
+const APP_VERSION='2.1.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -132,7 +132,7 @@ inv_need_price:["Сотув нархини киритинг","Sotuv narxini kiri
 inv_added:["«{p}» қўшилди ва омборга қабул қилинди","«{p}» qo'shildi va omborga qabul qilindi","Товар «{p}» добавлен и принят на склад","Item “{p}” added and received"],
 rcv_ok2:["Қабул қилинди: {p} × {n}, нархи {c}","Qabul qilindi: {p} × {n}, narxi {c}","Принято: {p} × {n} по {c}","Received: {p} × {n} at {c}"],
 menu_edit:["Таом номлари ва нархлари","Taom nomlari va narxlari","Названия и цены блюд","Dish names and prices"],
-g_code:["Столовая коди","Stolovaya kodi","Код столовой","Canteen code"],
+g_code:["Логин","Login","Логин","Login"],
 g_pass:["Парол","Parol","Пароль","Password"],
 g_pass2:["Паролни такрорланг","Parolni takrorlang","Повторите пароль","Repeat the password"],
 g_login:["Кириш","Kirish","Войти","Sign in"],
@@ -169,6 +169,52 @@ set_save:["Сақлаш","Saqlash","Сохранить","Save"],
 set_pass_ok:["Парол ўзгартирилди. Бошқа қурилмалар қайта киради","Parol o'zgartirildi. Boshqa qurilmalar qayta kiradi","Пароль изменён. Остальные устройства войдут заново","Password changed. Other devices will sign in again"],
 set_pass_bad:["Парол ўзгармади: жорий паролни текширинг","Parol o'zgarmadi: joriy parolni tekshiring","Пароль не изменён: проверьте текущий пароль","Password not changed: check the current password"],
 set_name_ok:["Номи сақланди","Nomi saqlandi","Название сохранено","Name saved"],
+r_admin:["Бошқарув","Boshqaruv","Регулятор","Admin"],
+g_origin:["Бу нусха базага уланмаган: сайт манзили рухсат этилмаган","Bu nusxa bazaga ulanmagan: sayt manzili ruxsat etilmagan","Эта копия программы не подключена к базе: адрес сайта не разрешён","This copy isn't connected to the database: the site address isn't allowed"],
+g_disabled:["Кириш администратор томонидан ўчирилган","Kirish administrator tomonidan o'chirilgan","Доступ отключён администратором","Access was disabled by the administrator"],
+set_retain:["Маълумотлар {n} кун сақланади (администратор белгилайди)","Ma'lumotlar {n} kun saqlanadi (administrator belgilaydi)","Данные хранятся {n} дн. (устанавливает администратор)","Data is kept for {n} days (set by the administrator)"],
+a_pass_admin:["Администратор пароли","Administrator paroli","Пароль администратора","Administrator password"],
+a_bad:["Администратор пароли нотўғри","Administrator paroli noto'g'ri","Неверный пароль администратора","Wrong administrator password"],
+a_locked:["Жуда кўп уриниш. 15 дақиқа кутинг","Juda ko'p urinish. 15 daqiqa kuting","Слишком много попыток. Подождите 15 минут","Too many attempts. Wait 15 minutes"],
+a_add:["+ Столовая қўшиш","+ Stolovaya qo'shish","+ Добавить столовую","+ Add a canteen"],
+a_days:["Маълумот сақлаш (кун)","Ma'lumot saqlash (kun)","Хранить данные (дней)","Keep data (days)"],
+a_gen:["Парол ўйлаб топиш","Parol o'ylab topish","Придумать пароль","Generate a password"],
+a_active:["Фаол","Faol","Активна","Active"],
+a_off:["Ўчирилган","O'chirilgan","Отключена","Disabled"],
+a_created:["Яратилган","Yaratilgan","Создана","Created"],
+a_size:["Маълумот","Ma'lumot","Данные","Data"],
+a_upd:["Охирги фаоллик","Oxirgi faollik","Последняя активность","Last activity"],
+a_inbox:["Навбатдаги буюртма","Navbatdagi buyurtma","Заказов в очереди","Orders in queue"],
+a_links:["Ҳаволалар","Havolalar","Ссылки","Links"],
+a_link_client:["Мижоз","Mijoz","Клиент","Customer"],
+a_link_desk:["Қабулхона","Qabulxona","Ресепшен","Reception"],
+a_link_kitchen:["Ошпаз","Oshpaz","Повар","Kitchen"],
+a_copied:["Нусха олинди: {x}","Nusxa olindi: {x}","Ссылка скопирована: {x}","Link copied: {x}"],
+a_rename:["Номини ўзгартириш","Nomini o'zgartirish","Название","Rename"],
+a_setpass:["Парол","Parol","Пароль","Password"],
+a_disable:["Ўчириш","O'chirish","Отключить","Disable"],
+a_enable:["Ёқиш","Yoqish","Включить","Enable"],
+a_rename_t:["«{n}» учун янги ном","«{n}» uchun yangi nom","Новое название для «{n}»","New name for “{n}”"],
+a_pass_t:["«{n}» учун янги парол","«{n}» uchun yangi parol","Новый пароль для «{n}»","New password for “{n}”"],
+a_c_disable:["«{n}» ўчирилсинми? Кириш ва мижозлар буюртмалари тўхтайди","«{n}» o'chirilsinmi? Kirish va mijozlar buyurtmalari to'xtaydi","Отключить «{n}»? Вход и заказы клиентов остановятся","Disable “{n}”? Sign-in and customer orders will stop"],
+a_c_enable:["«{n}» ёқилсинми?","«{n}» yoqilsinmi?","Включить «{n}»?","Enable “{n}”?"],
+a_c_del:["«{n}» столоваяни барча маълумотлари билан ўчирасизми? Буни қайтариб бўлмайди","«{n}» stolovayani barcha ma'lumotlari bilan o'chirasizmi? Buni qaytarib bo'lmaydi","Удалить столовую «{n}» вместе со всеми данными? Это нельзя отменить","Delete the canteen “{n}” with all its data? This can't be undone"],
+a_created_ok:["«{n}» яратилди. Логин: {l}","«{n}» yaratildi. Login: {l}","Столовая «{n}» создана. Логин: {l}","Canteen “{n}” created. Login: {l}"],
+a_saved:["Сақланди","Saqlandi","Сохранено","Saved"],
+a_days_ok:["«{n}»: маълумотлар {d} кун сақланади","«{n}»: ma'lumotlar {d} kun saqlanadi","«{n}»: данные хранятся {d} дн.","“{n}”: data is kept for {d} days"],
+a_off_ok:["«{n}» ўчирилди","«{n}» o'chirildi","Столовая «{n}» отключена","Canteen “{n}” disabled"],
+a_on_ok:["«{n}» ёқилди","«{n}» yoqildi","Столовая «{n}» включена","Canteen “{n}” enabled"],
+a_del_ok:["«{n}» ўчирилди","«{n}» o'chirildi","Столовая «{n}» удалена","Canteen “{n}” deleted"],
+a_pass_ok:["«{n}» пароли ўзгартирилди","«{n}» paroli o'zgartirildi","Пароль столовой «{n}» изменён","Password of “{n}” changed"],
+a_name_ok:["Номи ўзгартирилди: «{n}»","Nomi o'zgartirildi: «{n}»","Название изменено: «{n}»","Name changed: “{n}”"],
+a_days_bad:["Сақлаш муддати: 1 дан 365 кунгача","Saqlash muddati: 1 dan 365 kungacha","Срок хранения: от 1 до 365 дней","Retention: 1 to 365 days"],
+a_none:["Ҳали столоваялар йўқ","Hali stolovayalar yo'q","Столовых пока нет","No canteens yet"],
+a_refresh:["Янгилаш","Yangilash","Обновить список","Refresh"],
+a_newpass8:["Администратор пароли камида 8 белги бўлсин","Administrator paroli kamida 8 belgi bo'lsin","Пароль администратора — не короче 8 символов","The administrator password must be at least 8 characters"],
+a_origins:["Рухсат этилган сайт манзиллари (вергул билан)","Ruxsat etilgan sayt manzillari (vergul bilan)","Разрешённые адреса сайта (через запятую)","Allowed site addresses (comma-separated)"],
+a_origins_hint:["Дастур фақат шу манзилларда базага уланади. Бошқа сайтдаги нусха ишламайди.","Dastur faqat shu manzillarda bazaga ulanadi. Boshqa saytdagi nusxa ishlamaydi.","Программа подключается к базе только на этих адресах. Копия на другом сайте работать не будет.","The program connects to the database only on these addresses. A copy on another site won't work."],
+a_origins_ok:["Манзиллар сақланди","Manzillar saqlandi","Адреса сохранены","Addresses saved"],
+a_pass_changed:["Администратор пароли ўзгартирилди","Administrator paroli o'zgartirildi","Пароль администратора изменён","Administrator password changed"],
 phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
@@ -251,7 +297,8 @@ let sb=null,online=false,queue=[],syncing=false,PUB=null,pubIds='',ackQ=[],inges
 try{sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false}})}catch(e){}
 function load(){try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.products)S=null}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-const strip=()=>{const d=JSON.parse(JSON.stringify(S));delete d._rev;d.orders=d.orders.filter(o=>o.status==='open'||Date.now()-o.created<2*864e5).slice(-300);return d};
+const strip=()=>{const d=JSON.parse(JSON.stringify(S));delete d._rev;delete d.retain;const keep=(S.retain||10)*864e5,now=Date.now();
+  d.orders=d.orders.filter(o=>o.status==='open'||now-o.created<keep).map(o=>(o.status==='open'||now-o.created<216e5)?o:{id:o.id,no:o.no,type:o.type,table:o.table,status:o.status,created:o.created,lines:[]}).slice(-3000);return d};
 function setOnline(v){if(online!==v){online=v;render()}}
 const mineIds=()=>{try{return JSON.parse(localStorage.getItem(MK)||'[]')}catch(e){return[]}};
 function authLost(){try{localStorage.removeItem(TK);localStorage.removeItem(KEY)}catch(e){}S=null;queue=[];UI.gate='login';render()}
@@ -259,7 +306,7 @@ async function pull(force){if(!sb||!TOK())return false;
   try{const{data,error}=await sb.rpc('tayyor_state_get',{p_slug:SLUG,p_token:TOK()});if(error)throw error;
     if(!data){authLost();return false}
     if(!force&&(queue.length||syncing))return true;
-    S=data.data;S._rev=data.rev;save();setOnline(true);return true}
+    S=data.data;S._rev=data.rev;S.retain=data.retain;if(data.name)S.name=data.name;save();setOnline(true);return true}
   catch(e){setOnline(false);return false}}
 function mutate(fn){const r=fn();queue.push(fn);save();afterChange();flush();return r}
 async function flush(){if(syncing||!queue.length||!sb||!S||!TOK())return;syncing=true;
@@ -316,6 +363,7 @@ async function processInbox(){if(!sb||!TOK()||inboxBusy)return;inboxBusy=true;
   catch(e){}finally{inboxBusy=false}}
 async function syncTick(){
   if(ROLE==='client'){if(SLUG)await pullPub();return}
+  if(ROLE==='admin'){if(ATOK())await adRefresh();return}
   if(!TOK()||!S)return;
   if(queue.length||syncing){flush();return}
   try{const r=await sb.rpc('tayyor_rev',{p_slug:SLUG,p_token:TOK()});if(r.error)throw r.error;
@@ -323,7 +371,7 @@ async function syncTick(){
     setOnline(true);if(r.data!==S._rev&&await pull())afterChange();
     await processInbox();flush()}
   catch(e){setOnline(false)}}
-function schedule(){setTimeout(async()=>{try{await syncTick()}catch(e){}schedule()},ROLE==='client'?(document.hidden?20000:5000):(document.hidden?15000:3000))}
+function schedule(){setTimeout(async()=>{try{await syncTick()}catch(e){}schedule()},ROLE==='client'?(document.hidden?20000:5000):ROLE==='admin'?30000:(document.hidden?15000:3000))}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncTick()});
 const CID=(()=>{try{let c=sessionStorage.getItem('tl.cid');if(!c){c=uid();sessionStorage.setItem('tl.cid',c)}return c}catch(e){return uid()}})();
 let FEEDC=CID;
@@ -403,7 +451,7 @@ function dropBatchDo(bid){mutate(()=>{const b=S.batches.find(x=>x.id===bid);if(!
 const dayKey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 function recSale(lines){S.sold=S.sold||{};const k=dayKey(),d=S.sold[k]=S.sold[k]||{};
   for(const l of lines){const p=P(l.pid);if(!p||l.qty<=0)continue;const e=d[l.pid]=d[l.pid]||{q:0,s:0};e.q+=l.qty;e.s+=l.qty*p.price;e.c=(e.c||0)+(!p.stock&&invOf(l.pid)?invOf(l.pid).cost*l.qty:0)}
-  for(const key of Object.keys(S.sold).sort().slice(0,-35))delete S.sold[key]}
+  for(const key of Object.keys(S.sold))if(key<dayKey(new Date(Date.now()-(S.retain||10)*864e5)))delete S.sold[key]}
 const askN=pid=>openP().reduce((a,o)=>a+o.lines.filter(l=>l.pid===pid).reduce((b,l)=>b+(l.ask||0),0),0);
 function askAnswer(oid,pid,bake){const el=document.getElementById('am-'+oid+'-'+pid),m=Math.max(1,+(el&&el.value)||(S.lastMin&&S.lastMin[pid])||25),bid=uid();
   mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;const l=o.lines.find(x=>x.pid===pid);if(!l||!(l.ask>0))return;const n=l.ask;
@@ -469,25 +517,76 @@ function reloadAs(code){location.replace(location.pathname+'?s='+code)}
 async function doLogin(){const g=UI.g,code=slugify(g.code||SLUG);
   if(code.length<3)return toast(t('g_code_bad'),'bad');
   let r;try{const x=await sb.rpc('tayyor_login',{p_slug:code,p_pass:g.pass||''});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
-  if(!r||!r.ok)return toast(t(r&&r.err==='locked'?'g_locked':'g_bad'),'bad');
+  if(!r||!r.ok)return toast(t(r&&r.err==='locked'?'g_locked':r&&r.err==='origin'?'g_origin':r&&r.err==='disabled'?'g_disabled':'g_bad'),'bad');
   try{localStorage.setItem('tl.tok.'+code,r.token);localStorage.setItem('tl.slug',code)}catch(e){}
   g.pass='';reloadAs(code)}
-async function doRegister(){const g=UI.g,name=(g.name||'').trim(),code=slugify(g.code||name);
-  if(!name)return toast(t('g_name_need'),'bad');if(code.length<3)return toast(t('g_code_bad'),'bad');
-  if((g.pass||'').length<4)return toast(t('g_pass_short'),'bad');if(g.pass!==g.pass2)return toast(t('g_pass_diff'),'bad');
-  const s0=seedFresh(name),keep=S;S=s0;const pub=buildPub();S=keep;
-  let r;try{const x=await sb.rpc('tayyor_register',{p_slug:code,p_name:name,p_pass:g.pass,p_state:s0,p_pub:pub});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
-  if(!r||!r.ok)return toast(t(r&&r.err==='taken'?'g_taken':r&&r.err==='pass'?'g_pass_short':'g_code_bad'),'bad');
-  try{localStorage.setItem('tl.tok.'+code,r.token);localStorage.setItem('tl.slug',code)}catch(e){}
-  g.pass=g.pass2='';reloadAs(code)}
-function onGName(el){UI.g.name=el.value;if(!UI.g.codeEdited){UI.g.code=slugify(el.value);const c=document.getElementById('gcode');if(c)c.value=UI.g.code}}
 async function logout(){try{await sb.rpc('tayyor_logout',{p_slug:SLUG,p_token:TOK()})}catch(e){}authLost()}
 async function savePwd(){const n=UI.pwNew||'';if(n.length<4)return toast(t('g_pass_short'),'bad');let ok=false;
   try{const x=await sb.rpc('tayyor_set_password',{p_slug:SLUG,p_token:TOK(),p_old:UI.pwOld||'',p_new:n});ok=x.data===true}catch(e){}
   if(ok){UI.pwOld=UI.pwNew='';toast(t('set_pass_ok'));render()}else toast(t('set_pass_bad'),'bad')}
-async function saveName(v){v=(v||'').trim();if(!v||v===S.name)return;let ok=false;
-  try{const x=await sb.rpc('tayyor_rename',{p_slug:SLUG,p_token:TOK(),p_name:v});ok=x.data===true}catch(e){}
-  if(ok){mutate(()=>{S.name=v});toast(t('set_name_ok'))}else toast(t('g_fail'),'bad')}
+
+const ATK='tl.atok';
+const ATOK=()=>{try{return localStorage.getItem(ATK)}catch(e){return null}};
+let AD={list:null,origins:[],form:false,f:{name:'',code:'',pass:'',days:10,edited:false},pass:'',old:'',nw:'',orig:null};
+function adOut(){try{localStorage.removeItem(ATK)}catch(e){}AD.list=null;render()}
+async function adLogin(){let r;try{const x=await sb.rpc('tayyor_admin_login',{p_pass:AD.pass||''});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
+  if(!r||!r.ok)return toast(t(r&&r.err==='locked'?'a_locked':r&&r.err==='origin'?'g_origin':'a_bad'),'bad');
+  try{localStorage.setItem(ATK,r.token)}catch(e){}AD.pass='';render();adRefresh()}
+async function adLogout(){try{await sb.rpc('tayyor_admin_logout',{p_token:ATOK()})}catch(e){}adOut()}
+async function adRefresh(){const tk=ATOK();if(!tk)return;
+  try{const x=await sb.rpc('tayyor_admin_list',{p_token:tk});if(x.error)throw x.error;if(!x.data||!x.data.ok){adOut();return}
+    AD.list=x.data.list;AD.origins=x.data.origins||[];if(AD.orig===null)AD.orig=AD.origins.join(', ');setOnline(true);render()}
+  catch(e){setOnline(false)}}
+function adGen(){const a='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=new Uint8Array(10);crypto.getRandomValues(r);AD.f.pass=Array.from(r,b=>a[b%a.length]).join('');render()}
+function adName(el){AD.f.name=el.value;if(!AD.f.edited){AD.f.code=slugify(el.value);const c=document.getElementById('acode');if(c)c.value=AD.f.code}}
+async function adCreate(){const f=AD.f,name=(f.name||'').trim(),code=slugify(f.code||name),days=Math.floor(+f.days||10);
+  if(!name)return toast(t('g_name_need'),'bad');if(code.length<3)return toast(t('g_code_bad'),'bad');if((f.pass||'').length<4)return toast(t('g_pass_short'),'bad');if(days<1||days>365)return toast(t('a_days_bad'),'bad');
+  const s0=seedFresh(name),keep=S;S=s0;const pub=buildPub();S=keep;let r;
+  try{const x=await sb.rpc('tayyor_admin_create',{p_token:ATOK(),p_slug:code,p_name:name,p_pass:f.pass,p_days:days,p_state:s0,p_pub:pub});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
+  if(!r||!r.ok){if(r&&r.err==='auth'){adOut();return}return toast(t(r&&r.err==='taken'?'g_taken':r&&r.err==='pass'?'g_pass_short':'g_code_bad'),'bad')}
+  toast(t('a_created_ok',{n:name,l:code}));AD.f={name:'',code:'',pass:'',days:10,edited:false};AD.form=false;adRefresh()}
+async function adUpdate(slug,o,okKey,okArgs){let r;
+  try{const x=await sb.rpc('tayyor_admin_update',{p_token:ATOK(),p_slug:slug,p_name:o.name??null,p_pass:o.pass??null,p_days:o.days??null,p_disabled:o.disabled??null});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
+  if(!r||!r.ok){if(r&&r.err==='auth'){adOut();return}return toast(t(r&&r.err==='days'?'a_days_bad':r&&r.err==='pass'?'g_pass_short':'g_fail'),'bad')}
+  toast(t(okKey,okArgs));adRefresh()}
+const adItem=slug=>(AD.list||[]).find(x=>x.slug===slug);
+function adDays(slug,v){const d=Math.floor(+v);if(!(d>=1&&d<=365)){toast(t('a_days_bad'),'bad');render();return}adUpdate(slug,{days:d},'a_days_ok',{n:adItem(slug).name,d})}
+function adRename(slug){const c=adItem(slug);askInput(t('a_rename_t',{n:c.name}),c.name,'text',v=>{v=v.trim();if(!v||v===c.name)return;adUpdate(slug,{name:v},'a_name_ok',{n:v})})}
+function adPass(slug){const c=adItem(slug);askInput(t('a_pass_t',{n:c.name}),'', 'text',v=>{if(v.length<4)return toast(t('g_pass_short'),'bad');adUpdate(slug,{pass:v},'a_pass_ok',{n:c.name})})}
+function adToggle(slug){const c=adItem(slug),off=!c.disabled;askConfirm(t(off?'a_c_disable':'a_c_enable',{n:c.name}),()=>adUpdate(slug,{disabled:off},off?'a_off_ok':'a_on_ok',{n:c.name}))}
+function adDelete(slug){const c=adItem(slug);askConfirm(t('a_c_del',{n:c.name}),async()=>{let r;
+  try{const x=await sb.rpc('tayyor_admin_delete',{p_token:ATOK(),p_slug:slug});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
+  if(r&&r.ok){toast(t('a_del_ok',{n:c.name}));adRefresh()}else toast(t('g_fail'),'bad')})}
+function adCopy(slug,role){const u=ROOT+role+'/?s='+slug;const done=()=>toast(t('a_copied',{x:t('a_link_'+(role==='client'?'client':role==='desk'?'desk':'kitchen'))+' · '+slug}));
+  try{navigator.clipboard.writeText(u).then(done,()=>askInput(u,u,'text',()=>{}))}catch(e){askInput(u,u,'text',()=>{})}}
+async function adSavePass(){let ok=false;if((AD.nw||'').length<8)return toast(t('a_newpass8'),'bad');
+  try{const x=await sb.rpc('tayyor_admin_set_password',{p_token:ATOK(),p_old:AD.old||'',p_new:AD.nw});ok=x.data===true}catch(e){}
+  if(ok){AD.old=AD.nw='';toast(t('a_pass_changed'));render()}else toast(t('a_bad'),'bad')}
+async function adSaveOrigins(){const arr=(AD.orig||'').split(',').map(s=>s.trim().replace(/\/+$/,'')).filter(Boolean);let ok=false;
+  if(arr.length)try{const x=await sb.rpc('tayyor_admin_set_origins',{p_token:ATOK(),p_origins:arr});ok=x.data===true}catch(e){}
+  if(ok){toast(t('a_origins_ok'));adRefresh()}else toast(t('g_fail'),'bad')}
+function adLoginHTML(){return head()+`<h2>${t('a_pass_admin')}</h2><div class="card col"><input type="password" autocomplete="current-password" value="${esc(AD.pass)}" oninput="AD.pass=this.value" onkeydown="if(event.key==='Enter')adLogin()"><button class="btn full" style="margin-top:12px" onclick="adLogin()">${t('g_login')}</button></div>${foot()}`}
+const kb=n=>n>=1048576?(n/1048576).toFixed(1)+' МБ':Math.max(1,Math.round(n/1024))+' КБ';
+function adminHTML(){const f=AD.f;let h=head()+`<div class="row" style="margin:8px 0"><button class="btn" onclick="AD.form=!AD.form;render()">${t('a_add')}</button><button class="btn sec" style="flex:0 0 auto" onclick="adRefresh()">${t('a_refresh')}</button></div>`;
+  if(AD.form)h+=`<div class="card col"><div class="sub">${t('g_name')}</div><input value="${esc(f.name)}" oninput="adName(this)">
+    <div class="sub" style="margin-top:10px">${t('g_code')}</div><input id="acode" autocapitalize="none" value="${esc(f.code)}" oninput="AD.f.code=this.value;AD.f.edited=true"><div class="sub">${t('g_code_hint')}</div>
+    <div class="sub" style="margin-top:10px">${t('g_pass')}</div><div class="row" style="flex-wrap:nowrap"><input value="${esc(f.pass)}" autocomplete="off" oninput="AD.f.pass=this.value"><button class="btn sec sm" style="flex:0 0 auto" onclick="adGen()">${t('a_gen')}</button></div>
+    <div class="sub" style="margin-top:10px">${t('a_days')}</div><input type="number" min="1" max="365" value="${esc(f.days)}" oninput="AD.f.days=this.value">
+    <button class="btn ok full" style="margin-top:12px" onclick="adCreate()">${t('g_make')}</button></div>`;
+  h+=(AD.list&&AD.list.length)?AD.list.map(c=>`<div class="card col"><div class="line"><b>${esc(c.name)}</b><span class="chip ${c.disabled?'bad':'ok'}">${t(c.disabled?'a_off':'a_active')}</span></div>
+    <div class="sub">${t('g_code')}: <b>${esc(c.slug)}</b> · ${t('a_created')} ${dtm(Date.parse(c.created))}</div>
+    <div class="sub">${t('a_size')}: ${kb(c.size||0)} · ${t('a_upd')}: ${c.updated?dtm(Date.parse(c.updated)):'—'}${c.inbox?` · ${t('a_inbox')}: ${c.inbox}`:''}</div>
+    <div class="row" style="margin-top:8px;flex-wrap:nowrap;align-items:center"><span class="sub" style="flex:1">${t('a_days')}</span><input type="number" min="1" max="365" style="width:90px;flex:0 0 90px" value="${c.days}" onchange="adDays('${c.slug}',this.value)"></div>
+    <div class="sub" style="margin-top:8px">${t('a_links')}</div><div class="chips"><button class="chip2" onclick="adCopy('${c.slug}','client')">${t('a_link_client')}</button><button class="chip2" onclick="adCopy('${c.slug}','desk')">${t('a_link_desk')}</button><button class="chip2" onclick="adCopy('${c.slug}','kitchen')">${t('a_link_kitchen')}</button></div>
+    <div class="chips" style="margin-top:10px"><button class="btn sec sm" onclick="adRename('${c.slug}')">${t('a_rename')}</button><button class="btn sec sm" onclick="adPass('${c.slug}')">${t('a_setpass')}</button><button class="btn sec sm" onclick="adToggle('${c.slug}')">${t(c.disabled?'a_enable':'a_disable')}</button><button class="btn bad sm" onclick="adDelete('${c.slug}')">${t('del')}</button></div></div>`).join(''):`<p class="sub">${t('a_none')}</p>`;
+  h+=`<div class="card col"><b>${t('a_origins')}</b><input style="margin-top:8px" value="${esc(AD.orig||'')}" oninput="AD.orig=this.value"><div class="sub" style="margin-top:4px">${t('a_origins_hint')}</div><button class="btn sec full" style="margin-top:8px" onclick="adSaveOrigins()">${t('set_save')}</button></div>
+    <div class="card col"><b>${t('a_pass_admin')}</b><div class="sub" style="margin-top:6px">${t('set_old')}</div><input type="password" autocomplete="current-password" value="${esc(AD.old)}" oninput="AD.old=this.value"><div class="sub" style="margin-top:8px">${t('set_new')}</div><input type="password" autocomplete="new-password" value="${esc(AD.nw)}" oninput="AD.nw=this.value"><button class="btn full" style="margin-top:10px" onclick="adSavePass()">${t('set_save')}</button></div>
+    <div class="row" style="margin-top:16px"><button class="btn sec sm" onclick="adLogout()">${t('exit')}</button></div>`+foot();
+  return h}
+function askInput(title,value,type,fn){UI.inp={title,value,type,fn};render()}
+function inpYes(){const i=UI.inp,v=(document.getElementById('inpv')||{}).value||'';UI.inp=null;render();if(i&&i.fn)i.fn(v)}
+function inpNo(){UI.inp=null;render()}
+function inputHTML(){return UI.inp?`<div class="modal" onclick="if(event.target===this)inpNo()"><div><p class="cfm">${esc(UI.inp.title)}</p><input id="inpv" type="${UI.inp.type}" value="${esc(UI.inp.value)}" autocapitalize="none" onkeydown="if(event.key==='Enter')inpYes()"><div class="row" style="margin-top:14px"><button class="btn sec" onclick="inpNo()">${t('back')}</button><button class="btn" onclick="inpYes()">${t('set_save')}</button></div></div></div>`:''}
 let installEv=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEv=e;render()});
 async function doInstall(){if(installEv){installEv.prompt();await installEv.userChoice;installEv=null;render()}}
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
@@ -499,17 +598,10 @@ function mmss(ms){ms=Math.max(0,ms);const s=Math.ceil(ms/1000);return String(Mat
 function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt="">${esc((ROLE==='client'?(PUB&&PUB.name):(S&&S.name))||'Tayyor')}${ROLE!=='client'?` <small style="font-weight:600;color:var(--mut)">${t('r_'+ROLE)}</small>`:''}</div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header>${installBox()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
 function foot(){return`<div class="foot">${t('version')} ${APP_VERSION} · <span style="color:${online?'var(--ok)':'var(--bad)'}">●</span> ${online?t('on_line'):t('off_line')}${SLUG?' · '+esc(SLUG):''} · Tayyor</div>`}
 function installBox(){if(isStandalone)return'';if(installEv)return`<button class="btn full" style="margin:6px 0" onclick="doInstall()">📲 ${t('install')}</button>`;if(isIOS)return`<p class="sub">📲 ${t('ios_hint')}</p>`;return''}
-function gateHTML(){const g=UI.g,reg=UI.gate==='register';
-  if(!reg)return head()+`<h2>${t('r_'+ROLE)}</h2><div class="card col"><div class="sub">${t('g_code')}</div><input id="gcode" autocapitalize="none" autocomplete="username" value="${esc(g.code||SLUG)}" oninput="UI.g.code=this.value">
+function gateHTML(){const g=UI.g;
+  return head()+`<h2>${t('r_'+ROLE)}</h2><div class="card col"><div class="sub">${t('g_code')}</div><input id="gcode" autocapitalize="none" autocomplete="username" value="${esc(g.code||SLUG)}" oninput="UI.g.code=this.value">
     <div class="sub" style="margin-top:10px">${t('g_pass')}</div><input type="password" autocomplete="current-password" value="${esc(g.pass)}" oninput="UI.g.pass=this.value" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="btn full" style="margin-top:12px" onclick="doLogin()">${t('g_login')}</button></div>
-    <button class="btn sec full" onclick="UI.gate='register';render()">${t('g_create')}</button>${foot()}`;
-  return head()+`<h2>${t('g_create')}</h2><div class="card col"><div class="sub">${t('g_name')}</div><input value="${esc(g.name)}" oninput="onGName(this)">
-    <div class="sub" style="margin-top:10px">${t('g_code')}</div><input id="gcode" autocapitalize="none" value="${esc(g.code)}" oninput="UI.g.code=this.value;UI.g.codeEdited=true"><div class="sub">${t('g_code_hint')}</div>
-    <div class="sub" style="margin-top:10px">${t('g_pass')}</div><input type="password" autocomplete="new-password" value="${esc(g.pass)}" oninput="UI.g.pass=this.value">
-    <div class="sub" style="margin-top:10px">${t('g_pass2')}</div><input type="password" autocomplete="new-password" value="${esc(g.pass2)}" oninput="UI.g.pass2=this.value" onkeydown="if(event.key==='Enter')doRegister()">
-    <button class="btn full" style="margin-top:12px" onclick="doRegister()">${t('g_make')}</button></div>
-    <button class="btn sec full" onclick="UI.gate='login';render()">${t('g_have')}</button>${foot()}`}
+    <button class="btn full" style="margin-top:12px" onclick="doLogin()">${t('g_login')}</button></div>${foot()}`}
 function codeHTML(){return head()+`<h2>${t('c_code_title')}</h2>${UI.noTenant?`<p class="perr" style="font-size:14px">${t('c_none')}</p>`:''}<div class="card col"><input id="gcode" autocapitalize="none" placeholder="samsa-aka" value="${esc(UI.g.code||'')}" oninput="UI.g.code=this.value" onkeydown="if(event.key==='Enter')openCode()"><div class="sub" style="margin-top:6px">${t('c_code_hint')}</div><button class="btn full" style="margin-top:10px" onclick="openCode()">${t('c_code_btn')}</button></div>${foot()}`}
 function openCode(){const c=slugify(UI.g.code);if(c.length<3)return toast(t('g_code_bad'),'bad');reloadAs(c)}
 function seedFresh(name){const s=seed();s.ready={meat:0,pot:0,herb:0,pump:0};s.batches=[];s.name=name;return s}
@@ -615,7 +707,7 @@ function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt);
       h+=`<h2>${t('table',{n:UI.tbl})}</h2>${o?o.lines.map(l=>`<div class="card"><div class="pi">${P(l.pid).emoji} ${esc(pn(P(l.pid)))}</div><div class="step"><button onclick="hallAdd(${UI.tbl},'${l.pid}',-1)">−</button><span>${l.qty}</span><button onclick="hallAdd(${UI.tbl},'${l.pid}',1)">+</button></div></div>`).join('')+`<div class="line"><b>${t('total')}</b><b>${fm(sum)}</b></div><button class="btn ok full" onclick="closeTable(${UI.tbl})">${t('close_table')}</button>`:`<p class="sub">${t('table_empty')}</p>`}
       <h2>+</h2><div class="grid">${S.products.filter(p=>p.on!==false).map(p=>`<button onclick="hallAdd(${UI.tbl},'${p.id}',1)">${p.emoji}<br><small>${esc(pn(p))}</small>${p.stock?`<br><small>${freeR(p.id)}</small>`:''}</button>`).join('')}</div>`}}
   if(UI.tab==='set'){
-    h+=`<div class="card col"><div class="sub">${t('set_name')}</div><input value="${esc(S.name||'')}" onchange="saveName(this.value)"></div>
+    h+=`<div class="card col"><div class="sub">${t('set_retain',{n:S.retain||10})}</div></div>
     <div class="card col"><b>${t('link')}</b><div class="sub" style="word-break:break-all;margin-top:4px">${esc(clientLink())}</div><div id="qr" style="margin-top:8px;max-width:180px"></div><div class="sub" style="margin-top:6px">${t('g_code')}: <b>${esc(SLUG)}</b></div></div>
     <div class="card col"><b>${t('set_pass')}</b><div class="sub" style="margin-top:6px">${t('set_old')}</div><input type="password" autocomplete="current-password" value="${esc(UI.pwOld||'')}" oninput="UI.pwOld=this.value">
       <div class="sub" style="margin-top:8px">${t('set_new')}</div><input type="password" autocomplete="new-password" value="${esc(UI.pwNew||'')}" oninput="UI.pwNew=this.value"><button class="btn full" style="margin-top:10px" onclick="savePwd()">${t('set_save')}</button></div>`}
@@ -639,12 +731,13 @@ function vKitchen(){const k=UI.k,stockP=S.products.filter(p=>p.stock&&p.on!==fal
 function render(){
   const app=document.getElementById('app');let h;
   if(ROLE==='client'){if(!SLUG||UI.noTenant)h=codeHTML();else if(!PUB)h=head()+`<p class="sub" style="margin-top:40px;text-align:center">${t('loading')}</p>`;else h=null}
+  else if(ROLE==='admin'){h=!ATOK()?adLoginHTML():(!AD.list?head()+`<p class="sub" style="margin-top:40px;text-align:center">${t('loading')}</p>`:adminHTML())}
   else{if(!SLUG||!TOK())h=gateHTML();else if(!S)h=head()+`<p class="sub" style="margin-top:40px;text-align:center">${t('loading')}</p>`;else h=null}
   const ae=document.activeElement;
   if(ae&&['INPUT','SELECT'].includes(ae.tagName)&&app.contains(ae)&&ae.type!=='checkbox'){pendingRender=true;return}
   pendingRender=false;
   if(h===null)h=ROLE==='client'?vClient():(ROLE==='desk'?vDesk():vKitchen());
-  app.innerHTML=h+cfmHTML();
+  app.innerHTML=h+cfmHTML()+inputHTML();
   const q=document.getElementById('qr');if(q&&window.qrcode){try{const c=qrcode(0,'M');c.addData(clientLink());c.make();q.innerHTML=c.createSvgTag(4)}catch(e){}}}
 document.addEventListener('focusout',()=>{if(pendingRender)setTimeout(()=>{if(pendingRender)render()},300)});
 
@@ -660,5 +753,6 @@ setInterval(chk,60000);chk();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register(ROOT+'sw.js',{scope:ROOT}).catch(()=>{});
 applyZoom();
 if(ROLE==='client'){render();pullPub().then(()=>render())}
+else if(ROLE==='admin'){render();adRefresh()}
 else{load();render();if(TOK())pull().then(()=>{if(S){lastFid=S.fid;render()}})}
 schedule();

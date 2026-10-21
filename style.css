@@ -85,3 +85,6 @@ header{flex-wrap:wrap}.langs{flex-wrap:wrap}
 .card .sub{margin-bottom:4px}
 
 .perr{color:var(--bad);font-size:12px;margin-top:4px;line-height:1.3}
+
+.cancelred,.cancelred span{color:var(--bad)!important;font-weight:700}
+.toast.bad{background:#b91c1c}

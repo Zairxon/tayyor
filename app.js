@@ -1,5 +1,5 @@
 
-const APP_VERSION='1.7.1';
+const APP_VERSION='1.7.2';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -319,7 +319,7 @@ function delProd(id){if(!confirm(t('confirm_del_prod',{p:pn(P(id))})))return;mut
 function resetDemo(){if(!confirm(t('confirm_reset')))return;localStorage.removeItem('tl.mine');mutate(()=>{const n=seed();for(const k of Object.keys(S))if(k!=='_rev')delete S[k];Object.assign(S,n)})}
 
 /* ---------- ui helpers ---------- */
-function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.getElementById('toasts').appendChild(d);setTimeout(()=>d.remove(),4500)}
+function toast(m,k){const d=document.createElement('div');d.className='toast'+(k?' '+k:'');d.textContent=m;document.getElementById('toasts').appendChild(d);setTimeout(()=>d.remove(),4500)}
 let actx;function beep(n=2){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();for(let i=0;i<n;i++){const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.frequency.value=880;g.gain.value=.15;o.start(actx.currentTime+i*.25);o.stop(actx.currentTime+i*.25+.15)}}catch(e){}}
 function fmtFeed(f){const a=f.a||{};const o=a.oid&&S.orders.find(x=>x.id===a.oid);
   const s=o?o.lines.map(lineTxt).join(', '):'';
@@ -329,7 +329,7 @@ function feedToasts(){if(lastFid===null){lastFid=S.fid;return}
   const mine=JSON.parse(localStorage.getItem('tl.mine')||'[]');const r=route();
   for(const f of S.feed.filter(x=>x.id>lastFid)){
     const ok=r==='desk'||(r==='kitchen'&&['l_new','l_batch','l_done','l_ask','l_cancel','l_cancel_c'].includes(f.k))||(r==='order'&&['l_ordready','l_ans_bake','l_ans_no'].includes(f.k)&&mine.includes(f.a.oid));
-    if(!ok)continue;toast(fmtFeed(f));beep(f.k==='l_ask'?4:f.k==='l_new'||f.k==='l_ordready'?3:1);
+    if(!ok)continue;toast(fmtFeed(f),f.k.startsWith('l_cancel')?'bad':'');beep(f.k==='l_ask'?4:f.k==='l_new'||f.k==='l_ordready'?3:1);
     if(r==='order'){try{navigator.vibrate&&navigator.vibrate(300);window.Notification&&Notification.permission==='granted'&&new Notification('Tayyor',{body:fmtFeed(f)})}catch(e){}}}
   lastFid=S.fid}
 let pendingRender=false;
@@ -441,7 +441,7 @@ function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt);
     h+=open.length?open.map(o=>`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})} ${esc(o.name)}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div>${o.phone?`<div class="sub">☎ ${esc(o.phone)}</div>`:''}
       ${o.lines.map(l=>`<div class="line"><span>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</span><span>${l.rr>=l.qty?`<span class="chip ok">${t('ready')}</span>`:`${l.rr>0?`<span class="chip ok">${t('ready')} ${l.rr}</span>`:''}${l.rb>0?`<span class="chip warn">${t('waiting',{n:l.rb})} · ~${mins(etaLine(o,l)||Date.now())} ${t('min')}</span>`:''}${l.ask>0?`<span class="chip bad">${t('st_ask')}: ${l.ask}</span>`:''}${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}`}${l.want>l.qty?`<span class="chip bad">${t('asked',{w:l.want,q:l.qty})}</span>`:''}</span></div>`).join('')}
       <div class="row" style="margin-top:8px">${isReady(o)?`<button class="btn ok sm" onclick="giveOrder('${o.id}')">${t('give')}</button>`:`<button class="btn sm" onclick="giveOrder('${o.id}',true)" ${o.lines.some(l=>l.rr>0)?'':'disabled style="opacity:.4"'}>${t('give_part')}</button>`}<button class="btn bad sm" onclick="cancelOrder('${o.id}')">${t('cancel')}</button></div></div>`).join(''):`<p class="sub">${t('no_orders')}</p>`;
-    h+=`<h2>🔔</h2>`+S.feed.slice(-8).reverse().map(f=>`<div class="line sub"><span>${fmtFeed(f)}</span><span>${hm(f.t)}</span></div>`).join('')}
+    h+=`<h2>🔔</h2>`+S.feed.slice(-8).reverse().map(f=>`<div class="line sub${f.k.startsWith('l_cancel')?' cancelred':''}"><span>${fmtFeed(f)}</span><span>${hm(f.t)}</span></div>`).join('')}
   if(UI.tab==='stock')h+=invHTML();
   if(UI.tab==='hall'){
     h+=`<div class="grid tb">${tbls().map(i=>`<button class="${hallOrder(i)?'occ':''} ${UI.tbl===i?'sel':''}" onclick="UI.tbl=${i};render()">${i}</button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn sec sm" onclick="addTable()">${t('add_table')}</button>${UI.tbl&&!hallOrder(UI.tbl)?`<button class="btn bad sm" onclick="delTable(${UI.tbl})">${t('del_table')} ${UI.tbl}</button>`:''}</div>`;

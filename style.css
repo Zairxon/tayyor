@@ -46,8 +46,7 @@ input,select{font:inherit;padding:10px;border:1px solid var(--bd);border-radius:
 
 .ask{font-size:26px;margin:6px 0 4px;line-height:1.2}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:6px 0}
-.kpi{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;border-top:4px solid var(--bd)}
-.kpi.ok{border-top-color:var(--ok)}.kpi.bad{border-top-color:var(--bad)}
+.kpi{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px}
 .kl{font-size:12px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
 .kv{font-size:30px;font-weight:800;line-height:1.15;font-variant-numeric:tabular-nums}.kv small{font-size:13px;font-weight:600;color:var(--mut)}
 .ks{font-size:12px;color:var(--mut)}

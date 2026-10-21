@@ -1,5 +1,5 @@
 
-const APP_VERSION='1.7.0';
+const APP_VERSION='1.7.1';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -110,6 +110,12 @@ inv_samsa:["Самса: тайёр сонини тўғрилаш","Samsa: tayyor
 inv_none:["Ҳисоб юритилмайди — қолдиқни киритинг","Hisob yuritilmaydi — qoldiqni kiriting","Учёт не ведётся — введите остаток","Not tracked — enter the stock"],
 rcv_ok:["Қабул қилинди","Qabul qilindi","Принято","Received"],
 out_of_stock:["Тугаган","Tugagan","Нет в наличии","Out of stock"],
+confirm_cancel:["№{no} буюртмани бекор қилайсизми?","№{no} buyurtmani bekor qilasizmi?","Отменить заказ №{no}?","Cancel order #{no}?"],
+l_cancel_c:["Мижоз №{no} буюртмани бекор қилди: {s}","Mijoz №{no} buyurtmani bekor qildi: {s}","Клиент отменил заказ №{no}: {s}","Customer cancelled order #{no}: {s}"],
+confirm_del_table:["{n}-столни ўчирасизми?","{n}-stolni o'chirasizmi?","Удалить стол {n}?","Delete table {n}?"],
+confirm_del_prod:["«{p}» ўчирилсинми?","«{p}» o'chirilsinmi?","Удалить «{p}»?","Delete “{p}”?"],
+confirm_drop_batch:["{p} × {n} партиясини олиб ташлайсизми?","{p} × {n} partiyasini olib tashlaysizmi?","Убрать партию {p} × {n} из духовки?","Remove the batch {p} × {n} from the oven?"],
+confirm_reset:["Жорий маълумотлар демо маълумотлар билан алмаштирилади. Давом этасизми?","Joriy ma'lumotlar demo ma'lumotlar bilan almashtiriladi. Davom etasizmi?","Все текущие данные будут заменены демо-данными. Продолжить?","All current data will be replaced with demo data. Continue?"],
 phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
@@ -277,7 +283,7 @@ function takeOut(bid){mutate(()=>{const b=S.batches.find(x=>x.id===bid);if(!b)re
   for(const o of openP().sort((a,b)=>a.created-b.created))for(const l of o.lines)if(l.pid===b.pid&&l.rb>0&&left>0){const m=Math.min(l.rb,left);l.rb-=m;l.rr+=m;left-=m}
   feed('l_done',{pid:b.pid,n:b.qty});
   for(const o of openP())if(isReady(o)&&!was.has(o.id))feed('l_ordready',{no:o.no,oid:o.id})})}
-function dropBatch(bid){if(!confirm(t('sure')))return;mutate(()=>{const b=S.batches.find(x=>x.id===bid);if(!b)return;S.batches=S.batches.filter(x=>x!==b);
+function dropBatch(bid){const b0=S.batches.find(x=>x.id===bid);if(!b0||!confirm(t('confirm_drop_batch',{p:pn(P(b0.pid)),n:b0.qty})))return;mutate(()=>{const b=S.batches.find(x=>x.id===bid);if(!b)return;S.batches=S.batches.filter(x=>x!==b);
   let over=resv(b.pid).b-bakeTot(b.pid);
   for(const o of openP().sort((a,b)=>b.created-a.created))for(const l of o.lines)if(l.pid===b.pid&&over>0){const m=Math.min(l.rb,over);l.rb-=m;l.qty-=m;over-=m;S.demand[b.pid]=(S.demand[b.pid]||0)+m}})}
 const dayKey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -292,11 +298,13 @@ function askAnswer(oid,pid,bake){const el=document.getElementById('am-'+oid+'-'+
 function giveOrder(oid,partial){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o)return;
   for(const l of o.lines){if(P(l.pid)&&P(l.pid).stock)S.ready[l.pid]=Math.max(0,rdy(l.pid)-l.rr);else if(P(l.pid))invDeduct(l.pid,l.rr);if(partial){l.qty=l.rr;l.rb=0;l.ask=0}}
   o.lines=o.lines.filter(l=>l.qty>0);recSale(o.lines);o.status='done'})}
-function cancelOrder(oid){if(!confirm(t('sure')))return;mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o)return;o.status='cancelled';feed('l_cancel',{no:o.no})})}
+function cancelOrder(oid){const o0=S.orders.find(x=>x.id===oid);if(!o0)return;if(!confirm(t('confirm_cancel',{no:o0.no})))return;
+  mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o)return;o.status='cancelled';feed(ROLE==='client'?'l_cancel_c':'l_cancel',{no:o.no,oid:o.id})});
+  if(ROLE==='client')toast(t('l_cancel',{no:o0.no}))}
 function adj(pid,d){mutate(()=>{S.ready[pid]=Math.max(0,rdy(pid)+d)})}
 const tbls=()=>(S.settings.tableIds&&S.settings.tableIds.length?S.settings.tableIds:Array.from({length:S.settings.tables||12},(_,i)=>i+1));
 function addTable(){mutate(()=>{const ids=tbls().slice();S.settings.tableIds=[...ids,(ids.length?Math.max(...ids):0)+1]})}
-function delTable(n){if(hallOrder(n))return toast(t('table_busy'));if(!confirm(t('sure')))return;mutate(()=>{S.settings.tableIds=tbls().filter(x=>x!==n)});UI.tbl=null;render()}
+function delTable(n){if(hallOrder(n))return toast(t('table_busy'));if(!confirm(t('confirm_del_table',{n})))return;mutate(()=>{S.settings.tableIds=tbls().filter(x=>x!==n)});UI.tbl=null;render()}
 function hallOrder(n){return S.orders.find(o=>o.type==='hall'&&o.table===n&&o.status==='open')}
 function hallAdd(n,pid,d){let fail=false;mutate(()=>{const p=P(pid);if(d>0&&((p.stock&&freeR(pid)<d)||(!p.stock&&invTracked(pid)&&invFree(pid)<d))){fail=true;return}
   let o=hallOrder(n);if(!o){if(d<0)return;o={id:'h'+uid(),no:0,type:'hall',table:n,created:Date.now(),status:'open',lines:[]};S.orders.push(o)}
@@ -307,8 +315,8 @@ function hallAdd(n,pid,d){let fail=false;mutate(()=>{const p=P(pid);if(d>0&&((p.
 function closeTable(n){mutate(()=>{const o=hallOrder(n);if(o){recSale(o.lines);o.status='closed'}});UI.tbl=null;render()}
 function setP(id,f,v){mutate(()=>{const p=P(id);if(!p)return;if(f==='price')p[f]=Math.max(0,+v||0);else if(f==='stock')p.stock=!!v;else if(f.startsWith('n_'))p.names[f.slice(2)]=v})}
 function addProd(){mutate(()=>{const id='p'+uid();S.products.push({id,emoji:'🥟',names:{uzc:'Янги',uzl:'Yangi',ru:'Новое',en:'New'},price:5000,stock:true,on:true})})}
-function delProd(id){if(!confirm(t('sure')))return;mutate(()=>{S.products=S.products.filter(p=>p.id!==id)});render()}
-function resetDemo(){if(!confirm(t('sure')))return;localStorage.removeItem('tl.mine');mutate(()=>{const n=seed();for(const k of Object.keys(S))if(k!=='_rev')delete S[k];Object.assign(S,n)})}
+function delProd(id){if(!confirm(t('confirm_del_prod',{p:pn(P(id))})))return;mutate(()=>{S.products=S.products.filter(p=>p.id!==id)});render()}
+function resetDemo(){if(!confirm(t('confirm_reset')))return;localStorage.removeItem('tl.mine');mutate(()=>{const n=seed();for(const k of Object.keys(S))if(k!=='_rev')delete S[k];Object.assign(S,n)})}
 
 /* ---------- ui helpers ---------- */
 function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.getElementById('toasts').appendChild(d);setTimeout(()=>d.remove(),4500)}
@@ -320,7 +328,7 @@ let lastFid=null;
 function feedToasts(){if(lastFid===null){lastFid=S.fid;return}
   const mine=JSON.parse(localStorage.getItem('tl.mine')||'[]');const r=route();
   for(const f of S.feed.filter(x=>x.id>lastFid)){
-    const ok=r==='desk'||(r==='kitchen'&&['l_new','l_batch','l_done','l_ask','l_cancel'].includes(f.k))||(r==='order'&&['l_ordready','l_ans_bake','l_ans_no'].includes(f.k)&&mine.includes(f.a.oid));
+    const ok=r==='desk'||(r==='kitchen'&&['l_new','l_batch','l_done','l_ask','l_cancel','l_cancel_c'].includes(f.k))||(r==='order'&&['l_ordready','l_ans_bake','l_ans_no'].includes(f.k)&&mine.includes(f.a.oid));
     if(!ok)continue;toast(fmtFeed(f));beep(f.k==='l_ask'?4:f.k==='l_new'||f.k==='l_ordready'?3:1);
     if(r==='order'){try{navigator.vibrate&&navigator.vibrate(300);window.Notification&&Notification.permission==='granted'&&new Notification('Tayyor',{body:fmtFeed(f)})}catch(e){}}}
   lastFid=S.fid}

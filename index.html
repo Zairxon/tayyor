@@ -4,20 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Tayyor</title>
-<link rel="icon" href="client/icon-192.png">
-<meta name="theme-color" content="#d9480f">
+<link rel="icon" href="client/favicon.png">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="wrap">
-<header><div class="brand">🥟 Tayyor</div><div class="langs" id="langs"></div></header>
+<header style="justify-content:flex-end"><div class="langs" id="langs"></div></header>
+<img class="landlogo" src="assets/logo-client.png" alt="Tayyor">
 <p class="sub" id="tag" style="font-size:16px"></p>
 <div class="roles" id="roles"></div>
 <p class="sub" id="hint"></p>
 <div class="foot" id="ver"></div>
 </div>
 <script>
-const V='1.8.1',LI={uzc:0,uzl:1,ru:2,en:3},L=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
+const V='1.9.0',LI={uzc:0,uzl:1,ru:2,en:3},L=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 let lang=localStorage.getItem('tl.lang')||'ru',open_=false;
 const T={tag:["Самса буюртмаси ва заҳираси","Samsa buyurtmasi va zaxirasi","Заказы и запасы самсы","Samsa orders & stock"],
 c:["Буюртма бериш (мижоз)","Buyurtma berish (mijoz)","Заказать (клиент)","Order (customer)"],

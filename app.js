@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.3.0';
+const APP_VERSION='2.4.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -45,7 +45,7 @@ st_ready:["Тайёр! Олиб кетишингиз мумкин","Tayyor! Olib
 st_done:["Топширилди","Topshirildi","Выдан","Handed over"],
 st_cancel:["Бекор қилинди","Bekor qilindi","Отменён","Cancelled"],
 ord_placed:["Буюртма қабул қилинди","Buyurtma qabul qilindi","Заказ принят","Order placed"],
-t_orders:["Буюртмалар","Buyurtmalar","Заказы","Orders"],
+t_orders:["Онлайн буюртмалар","Onlayn buyurtmalar","Онлайн заказы","Online orders"],
 t_hall:["Зал","Zal","Зал","Hall"],
 t_stock:["Омбор","Ombor","Склад","Inventory"],
 t_set:["Созламалар","Sozlamalar","Настройки","Settings"],
@@ -260,6 +260,32 @@ p_7:["7 кун","7 kun","7 дней","7 days"],
 p_all:["Барча муддат","Barcha muddat","Весь срок","All time"],
 a_t_list:["Столоваялар","Stolovayalar","Столовые","Canteens"],
 t_new_short:["+ Буюртма","+ Buyurtma","+ Заказ","+ Order"],
+orders_w:["Буюртмалар","Buyurtmalar","Заказы","Orders"],
+t_report:["Ҳисобот","Hisobot","Отчёт","Report"],
+r_total:["Жами буюртма","Jami buyurtma","Всего заказов","Total orders"],
+r_prod:["Маҳсулотлар бўйича","Mahsulotlar bo'yicha","По товарам","By item"],
+r_profit:["Қўшимчалар фойдаси","Qo'shimchalar foydasi","Прибыль с допов","Profit on extras"],
+r_copy:["Ҳисоботни нусхалаш","Hisobotni nusxalash","Копировать отчёт","Copy the report"],
+r_copied:["Ҳисобот нусхаланди","Hisobot nusxalandi","Отчёт скопирован","Report copied"],
+r_none:["Бу даврда сотув йўқ","Bu davrda sotuv yo'q","За этот период продаж нет","No sales in this period"],
+r_title:["{n}: ҳисобот — {p}","{n}: hisobot — {p}","{n}: отчёт — {p}","{n}: report — {p}"],
+r_by_src:["Манбалар бўйича","Manbalar bo'yicha","По источникам","By source"],
+cred_title:["Кириш маълумотлари","Kirish ma'lumotlari","Данные для входа","Sign-in details"],
+cred_note:["Парол фақат ҳозир кўринади: кейин уни кўриб бўлмайди, фақат янгисини ўрнатиш мумкин.","Parol faqat hozir ko'rinadi: keyin uni ko'rib bo'lmaydi, faqat yangisini o'rnatish mumkin.","Пароль виден только сейчас: потом его увидеть нельзя, можно только задать новый.","The password is shown only now: later it can't be viewed, only replaced."],
+cred_msg:["Tayyor — {n}\nЛогин: {l}\nПарол: {p}\n\nБуюртма (мижозлар учун): {c}\nҚабулхона: {d}\nОшпаз: {k}","Tayyor — {n}\nLogin: {l}\nParol: {p}\n\nBuyurtma (mijozlar uchun): {c}\nQabulxona: {d}\nOshpaz: {k}","Tayyor — {n}\nЛогин: {l}\nПароль: {p}\n\nЗаказ (для клиентов): {c}\nРесепшен: {d}\nПовар: {k}","Tayyor — {n}\nLogin: {l}\nPassword: {p}\n\nOrder (for customers): {c}\nReception: {d}\nKitchen: {k}"],
+cred_copy:["Нусхалаш","Nusxalash","Копировать","Copy"],
+cred_close:["Ёпиш","Yopish","Закрыть","Close"],
+cred_copied:["Кириш маълумотлари нусхаланди","Kirish ma'lumotlari nusxalandi","Данные для входа скопированы","Sign-in details copied"],
+set_contacts:["Столовая алоқа маълумотлари","Stolovaya aloqa ma'lumotlari","Контакты столовой","Canteen contacts"],
+info_phone:["Столовая телефони","Stolovaya telefoni","Телефон столовой","Canteen phone"],
+info_addr:["Манзил","Manzil","Адрес","Address"],
+info_loc:["Харитадаги жойлашув (ҳавола ёки координаталар)","Xaritadagi joylashuv (havola yoki koordinatalar)","Локация на карте (ссылка или координаты)","Map location (link or coordinates)"],
+info_geo:["Жорий жойлашувимни олиш","Joriy joylashuvimni olish","Взять мою текущую позицию","Use my current position"],
+info_geo_ok:["Жойлашув аниқланди","Joylashuv aniqlandi","Позиция определена","Position detected"],
+info_geo_fail:["Жойлашувни аниқлаб бўлмади: рухсат беринг","Joylashuvni aniqlab bo'lmadi: ruxsat bering","Не удалось определить позицию: разрешите доступ к местоположению","Couldn't detect the position: allow location access"],
+info_saved:["Алоқа маълумотлари сақланди","Aloqa ma'lumotlari saqlandi","Контакты сохранены","Contacts saved"],
+info_loc_bad:["Ҳавола (https://…) ёки координаталарни киритинг, масалан 41.3110, 69.2401","Havola (https://…) yoki koordinatalarni kiriting, masalan 41.3110, 69.2401","Укажите ссылку (https://…) или координаты, например 41.3110, 69.2401","Enter a link (https://…) or coordinates, e.g. 41.3110, 69.2401"],
+c_map:["Харитада","Xaritada","На карте","On the map"],
 phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
@@ -277,7 +303,7 @@ d_out:["йўқ","yo'q","нет","sold out"],
 d_ok:["етарли","yetarli","достаточно","in stock"],
 d_sold:["сотилди","sotildi","продано","sold"],
 d_week:["Сўнгги 7 кун тушуми","So'nggi 7 kun tushumi","Выручка за 7 дней","Revenue, last 7 days"],
-d_orders:["Буюртмалар","Buyurtmalar","Заказы","Orders"],
+d_orders:["Онлайн буюртмалар","Onlayn buyurtmalar","Онлайн заказы","Online orders"],
 pcs:["та","ta","шт","pcs"],
 add_table:["+ Стол қўшиш","+ Stol qo'shish","+ Добавить стол","+ Add table"],
 del_table:["Столни ўчириш","Stolni o'chirish","Удалить стол","Delete table"],
@@ -372,11 +398,15 @@ async function flush(){if(syncing||!queue.length||!sb||!S||!TOK())return;syncing
   finally{syncing=false}}
 /* what customers may see: menu, availability, and the status of their own orders (no names, phones or costs) */
 function supply(pid){const out=[];let skip=resv(pid).b;for(const b of S.batches.filter(x=>x.pid===pid).sort((a,c)=>a.end-c.end)){let cap=b.qty;const u=Math.min(skip,cap);skip-=u;cap-=u;if(cap>0)out.push([cap,b.end])}return out}
+const parseLoc=s=>{s=(s||'').trim();if(!s)return null;if(/^https?:\/\//i.test(s))return{link:s};const m=/^(-?\d{1,3}(?:\.\d+)?)\s*[,;\s]\s*(-?\d{1,3}(?:\.\d+)?)$/.exec(s);return m&&Math.abs(+m[1])<=90&&Math.abs(+m[2])<=180?{lat:+m[1],lng:+m[2]}:null};
+function buildInfo(){const i=S.info||{},loc=parseLoc(i.loc);let map='';
+  if(loc&&loc.link)map=loc.link;else if(loc)map='https://www.google.com/maps/search/?api=1&query='+loc.lat+','+loc.lng;else if(i.addr)map='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(i.addr+' '+(S.name||''));
+  return{phone:i.phone?'+998 '+fmtPh(i.phone):'',tel:i.phone?'+998'+i.phone:'',addr:i.addr||'',map}}
 function buildPub(){const fr={},fb={},sup={},iv={};
   for(const p of S.products){if(p.on===false)continue;if(p.stock){fr[p.id]=freeR(p.id);fb[p.id]=freeB(p.id);sup[p.id]=supply(p.id)}else if(invTracked(p.id))iv[p.id]=invFree(p.id)}
   const orders={};for(const o of S.orders)if(o.type==='pickup'&&o.cid&&(o.status==='open'||Date.now()-o.created<2*864e5))
     orders[o.id]={no:o.no,st:o.status,at:o.pickupAt,lines:o.lines.map(l=>({pid:l.pid,qty:l.qty,rr:l.rr,rb:l.rb,ask:l.ask||0,dec:l.declined||0,e:l.rb>0?(etaLine(o,l)||0):0}))};
-  return{products:S.products.filter(p=>p.on!==false).map(p=>({id:p.id,emoji:p.emoji,names:p.names,price:p.price,stock:!!p.stock})),fr,fb,sup,iv,orders}}
+  return{info:buildInfo(),products:S.products.filter(p=>p.on!==false).map(p=>({id:p.id,emoji:p.emoji,names:p.names,price:p.price,stock:!!p.stock})),fr,fb,sup,iv,orders}}
 /* customer side */
 async function pullPub(){if(!sb||!SLUG)return false;const mine=mineIds(),key=mine.join(',');
   try{const{data,error}=await sb.rpc('tayyor_pub_get',{p_slug:SLUG,p_since:(PUB&&key===pubIds)?PUB._rev:-1,p_ids:mine});if(error)throw error;
@@ -516,7 +546,7 @@ function dropBatchDo(bid){mutate(()=>{const b=S.batches.find(x=>x.id===bid);if(!
   for(const o of openP().sort((a,b)=>b.created-a.created))for(const l of o.lines)if(l.pid===b.pid&&over>0){const m=Math.min(l.rb,over);l.rb-=m;l.qty-=m;over-=m;S.demand[b.pid]=(S.demand[b.pid]||0)+m}})}
 const dayKey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 function recSale(lines){S.sold=S.sold||{};const k=dayKey(),d=S.sold[k]=S.sold[k]||{};
-  for(const l of lines){const p=P(l.pid);if(!p||l.qty<=0)continue;const e=d[l.pid]=d[l.pid]||{q:0,s:0};e.q+=l.qty;e.s+=l.qty*p.price;e.c=(e.c||0)+(!p.stock&&invOf(l.pid)?invOf(l.pid).cost*l.qty:0)}
+  for(const l of lines){const p=P(l.pid);if(!p||l.qty<=0)continue;const e=d[l.pid]=d[l.pid]||{q:0,s:0};e.q+=l.qty;e.s+=l.qty*p.price;if(!p.stock&&invOf(l.pid)){e.c=(e.c||0)+invOf(l.pid).cost*l.qty;e.tr=(e.tr||0)+l.qty*p.price}}
   for(const key of Object.keys(S.sold))if(key<dayKey(new Date(Date.now()-(S.retain||10)*864e5)))delete S.sold[key]}
 const askN=pid=>openP().reduce((a,o)=>a+o.lines.filter(l=>l.pid===pid).reduce((b,l)=>b+(l.ask||0),0),0);
 function askAnswer(oid,pid,bake){const el=document.getElementById('am-'+oid+'-'+pid),m=Math.max(1,+(el&&el.value)||(S.lastMin&&S.lastMin[pid])||25),bid=uid();
@@ -587,6 +617,14 @@ async function doLogin(){const g=UI.g,code=slugify(g.code||SLUG);
   try{localStorage.setItem('tl.tok.'+code,r.token);localStorage.setItem('tl.slug',code)}catch(e){}
   g.pass='';reloadAs(code)}
 async function logout(){try{await sb.rpc('tayyor_logout',{p_slug:SLUG,p_token:TOK()})}catch(e){}authLost()}
+function onInfoPhone(el){let d=el.value.replace(/\D/g,'').slice(3);if(d.length>9&&d.startsWith('998'))d=d.slice(3);d=d.slice(0,15);el.value=d?'+998 '+fmtPh(d):'+998 ';el.dataset.d=d;const e=document.getElementById('ipErr');if(e)e.style.display=d.length>9||(d&&d.length!==9)?'block':'none'}
+function saveInfo(){const ip=document.getElementById('ip'),d=ip?(ip.dataset.d!==undefined?ip.dataset.d:ip.value.replace(/\D/g,'').slice(3)):((S.info||{}).phone||'');
+  if(d&&d.length!==9){toast(t('phone_bad'),'bad');return}
+  const addr=(document.getElementById('ia')||{}).value||'',loc=((document.getElementById('il')||{}).value||'').trim();
+  if(loc&&!parseLoc(loc)){toast(t('info_loc_bad'),'bad');render();return}
+  mutate(()=>{S.info={phone:d,addr:addr.trim().slice(0,160),loc:loc.slice(0,300)}});toast(t('info_saved'))}
+function geoFill(){if(!navigator.geolocation)return toast(t('info_geo_fail'),'bad');
+  navigator.geolocation.getCurrentPosition(p=>{const el=document.getElementById('il');if(el)el.value=p.coords.latitude.toFixed(6)+', '+p.coords.longitude.toFixed(6);saveInfo();toast(t('info_geo_ok'))},()=>toast(t('info_geo_fail'),'bad'),{enableHighAccuracy:true,timeout:15000})}
 async function savePwd(){const n=UI.pwNew||'';if(n.length<4)return toast(t('g_pass_short'),'bad');let ok=false;
   try{const x=await sb.rpc('tayyor_set_password',{p_slug:SLUG,p_token:TOK(),p_old:UI.pwOld||'',p_new:n});ok=x.data===true}catch(e){}
   if(ok){UI.pwOld=UI.pwNew='';toast(t('set_pass_ok'));render()}else toast(t('set_pass_bad'),'bad')}
@@ -616,11 +654,11 @@ async function adCreate(){const f=AD.f,name=(f.name||'').trim(),code=slugify(f.c
   const s0=seedFresh(name),keep=S;S=s0;const pub=buildPub();S=keep;let r;
   try{const x=await sb.rpc('tayyor_admin_create',{p_token:ATOK(),p_slug:code,p_name:name,p_pass:f.pass,p_days:days,p_state:s0,p_pub:pub,p_fee:fee,p_paid_until:until});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
   if(!r||!r.ok){if(r&&r.err==='auth'){adOut();return}return toast(t(r&&r.err==='taken'?'g_taken':r&&r.err==='pass'?'g_pass_short':r&&r.err==='fee'?'a_fee_bad':'g_code_bad'),'bad')}
-  toast(t('a_created_ok',{n:name,l:code}));AD.f=newForm();AD.form=false;adRefresh()}
+  toast(t('a_created_ok',{n:name,l:code}));showCreds(name,code,f.pass);AD.f=newForm();AD.form=false;adRefresh()}
 async function adUpdate(slug,o,okKey,okArgs){let r;
   try{const x=await sb.rpc('tayyor_admin_update',{p_token:ATOK(),p_slug:slug,p_name:o.name??null,p_pass:o.pass??null,p_days:o.days??null,p_disabled:o.disabled??null,p_fee:o.fee??null,p_paid_until:o.until??null,p_notify:o.notify??null});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
   if(!r||!r.ok){if(r&&r.err==='auth'){adOut();return}return toast(t(r&&r.err==='days'?'a_days_bad':r&&r.err==='pass'?'g_pass_short':r&&r.err==='fee'?'a_fee_bad':'g_fail'),'bad')}
-  toast(t(okKey,okArgs));adRefresh()}
+  toast(t(okKey,okArgs));adRefresh();return true}
 function adFee(slug){const c=adItem(slug);askInput(t('a_fee_t',{n:c.name}),fmtNum(c.fee||0),'text',v=>{const n=Math.floor(+v.replace(/\s/g,''));if(!(n>=0))return toast(t('a_fee_bad'),'bad');adUpdate(slug,{fee:n},'a_saved')},'num')}
 function adUntil(slug){const c=adItem(slug);askInput(t('a_date_t',{n:c.name}),dMY(c.until)||'','text',v=>{const d=parseDMY(v);if(!d)return toast(t('a_date_bad'),'bad');adUpdate(slug,{until:d},'a_saved')},'date')}
 function adNotify(slug,v){const n=Math.floor(+v);if(!(n>=0&&n<=60)){toast(t('a_days_bad'),'bad');render();return}adUpdate(slug,{notify:n},'a_saved')}
@@ -632,7 +670,7 @@ const newForm=()=>({name:'',code:'',pass:'',days:10,fee:0,until:(()=>{const d=ad
 const adItem=slug=>(AD.list||[]).find(x=>x.slug===slug);
 function adDays(slug,v){const d=Math.floor(+v);if(!(d>=1&&d<=365)){toast(t('a_days_bad'),'bad');render();return}adUpdate(slug,{days:d},'a_days_ok',{n:adItem(slug).name,d})}
 function adRename(slug){const c=adItem(slug);askInput(t('a_rename_t',{n:c.name}),c.name,'text',v=>{v=v.trim();if(!v||v===c.name)return;adUpdate(slug,{name:v},'a_name_ok',{n:v})})}
-function adPass(slug){const c=adItem(slug);askInput(t('a_pass_t',{n:c.name}),'', 'text',v=>{if(v.length<4)return toast(t('g_pass_short'),'bad');adUpdate(slug,{pass:v},'a_pass_ok',{n:c.name})})}
+function adPass(slug){const c=adItem(slug);askInput(t('a_pass_t',{n:c.name}),'', 'text',v=>{if(v.length<4)return toast(t('g_pass_short'),'bad');adUpdate(slug,{pass:v},'a_pass_ok',{n:c.name}).then(ok=>{if(ok)showCreds(c.name,slug,v)})})}
 function adToggle(slug){const c=adItem(slug),off=!c.disabled;askConfirm(t(off?'a_c_disable':'a_c_enable',{n:c.name}),()=>adUpdate(slug,{disabled:off},off?'a_off_ok':'a_on_ok',{n:c.name}))}
 function adDelete(slug){const c=adItem(slug);askConfirm(t('a_c_del',{n:c.name}),async()=>{let r;
   try{const x=await sb.rpc('tayyor_admin_delete',{p_token:ATOK(),p_slug:slug});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
@@ -679,6 +717,11 @@ function adminHTML(){const f=AD.f,tab=AD.tab||'list';
     <div class="sub" style="margin-top:8px">${t('a_links')}</div><div class="chips"><button class="chip2" onclick="adCopy('${c.slug}','client')">${t('a_link_client')}</button><button class="chip2" onclick="adCopy('${c.slug}','desk')">${t('a_link_desk')}</button><button class="chip2" onclick="adCopy('${c.slug}','kitchen')">${t('a_link_kitchen')}</button></div>
     <div class="chips" style="margin-top:10px"><button class="btn sec sm" onclick="adRename('${c.slug}')">${t('a_rename')}</button><button class="btn sec sm" onclick="adPass('${c.slug}')">${t('a_setpass')}</button><button class="btn sec sm" onclick="adToggle('${c.slug}')">${t(c.disabled?'a_enable':'a_disable')}</button><button class="btn bad sm" onclick="adDelete('${c.slug}')">${t('del')}</button></div></div>`}).join(''):`<p class="sub">${t('a_none')}</p>`;
   return h+foot()}
+function showCreds(name,slug,pass){UI.cred={name,slug,pass};render()}
+function credText(){const c=UI.cred;return t('cred_msg',{n:c.name,l:c.slug,p:c.pass,c:ROOT+'client/?s='+c.slug,d:ROOT+'desk/?s='+c.slug,k:ROOT+'kitchen/?s='+c.slug}).replace(/\\\\n/g,'\n')}
+async function credCopy(){try{await navigator.clipboard.writeText(credText());toast(t('cred_copied'))}catch(e){toast(t('g_fail'),'bad')}}
+function credClose(){UI.cred=null;render()}
+function credHTML(){return UI.cred?`<div class="modal"><div><p class="cfm">${t('cred_title')}</p><pre class="cred">${esc(credText())}</pre><div class="sub" style="margin:8px 0 12px">${t('cred_note')}</div><div class="row"><button class="btn sec" onclick="credClose()">${t('cred_close')}</button><button class="btn" onclick="credCopy()">📋 ${t('cred_copy')}</button></div></div></div>`:''}
 function askInput(title,value,type,fn,mask){UI.inp={title,value,type,fn,mask};render()}
 function inpYes(){const i=UI.inp,v=(document.getElementById('inpv')||{}).value||'';UI.inp=null;render();if(i&&i.fn)i.fn(v)}
 function inpNo(){UI.inp=null;render()}
@@ -697,7 +740,9 @@ function billText(){const b=S&&S.bill;if(!b||!b.until)return null;const n=leftDa
   let m=n<0?t('bill_late',{d,n:-n}):n===0?t('bill_today',{d}):t('bill_soon',{d,n});if(b.fee>0)m+='. '+t('bill_amount',{a:fm(b.fee)});return{m,late:n<0}}
 function billBanner(){if(ROLE!=='desk'&&ROLE!=='kitchen')return'';const b=billText();return b?`<div class="bill${b.late?' late':''}">${esc(b.m)}</div>`:''}
 function billToast(){const b=billText();if(!b)return;const k='tl.bill.'+SLUG+'.'+dayKey();try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}toast(b.m,b.late?'bad':'')}
-function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt=""><span class="bn">Tayyor</span></div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header><div class="hmid">${((ROLE==='client'?(PUB&&PUB.name):ROLE==='admin'?'':(S&&S.name))||'')?`<span class="bc">${esc(ROLE==='client'?PUB.name:S.name)}</span>`:''}<span class="br">${t(ROLE==='client'?'role_client':'r_'+ROLE)}</span></div>${installBox()}${billBanner()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
+function contactHTML(){const i=PUB&&PUB.info;if(!i||(!i.phone&&!i.map))return'';
+  return`<div class="contact">${i.phone?`<a class="chip2" href="tel:${esc(i.tel)}">📞 ${esc(i.phone)}</a>`:''}${i.map?`<a class="chip2" href="${esc(i.map)}" target="_blank" rel="noopener">📍 ${esc(i.addr||t('c_map'))}</a>`:''}</div>`}
+function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt=""><span class="bn">Tayyor</span></div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header><div class="hmid">${((ROLE==='client'?(PUB&&PUB.name):ROLE==='admin'?'':(S&&S.name))||'')?`<span class="bc">${esc(ROLE==='client'?PUB.name:S.name)}</span>`:''}<span class="br">${t(ROLE==='client'?'role_client':'r_'+ROLE)}</span></div>${ROLE==='client'?contactHTML():''}${installBox()}${billBanner()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
 function foot(){return`<div class="foot">${t('version')} ${APP_VERSION} · <span style="color:${online?'var(--ok)':'var(--bad)'}">●</span> ${online?t('on_line'):t('off_line')}${SLUG?' · '+esc(SLUG):''} · Tayyor</div>`}
 function installBox(){if(isStandalone)return'';if(installEv)return`<button class="btn full" style="margin:6px 0" onclick="doInstall()">📲 ${t('install')}</button>`;if(isIOS)return`<p class="sub">📲 ${t('ios_hint')}</p>`;return''}
 function gateHTML(){const g=UI.g;
@@ -762,7 +807,7 @@ function doReceive(){const r=UI.rcv||{},ex=S.products.filter(p=>!p.stock);let pi
 function invHTML(){const ex=S.products.filter(p=>!p.stock&&p.on!==false),r=UI.rcv||{},sel=r.pid==='__new'?'__new':(r.pid&&P(r.pid)&&!P(r.pid).stock?r.pid:(ex[0]&&ex[0].id));
   const kpi=(l,v)=>`<div class="kpi"><div class="kl">${l}</div><div class="kv" style="font-size:22px">${v}</div></div>`;
   const val=ex.reduce((a,p)=>a+(invOf(p.id)?invOf(p.id).q*invOf(p.id).cost:0),0),td=(S.sold&&S.sold[dayKey()])||{};let rev=0,prof=0;
-  for(const p of ex){const e=td[p.id];if(e){rev+=e.s;prof+=e.s-(e.c||0)}}
+  for(const p of ex){const e=td[p.id];if(e){rev+=e.s;prof+=(e.tr||0)-(e.c||0)}}
   let h=`<div class="kpis">${kpi(t('inv_value'),fm(val))}${kpi(t('inv_rev'),fm(rev))}${kpi(t('inv_profit'),fm(prof))}</div>`;
   h+=`<div class="card col"><b>${t('inv_receive')}</b><div class="chips" style="margin-top:8px">${ex.map(p=>`<button class="chip2${p.id===sel?' on':''}" onclick="rcvSel('${p.id}')">${p.emoji} ${esc(pn(p))}</button>`).join('')}<button class="chip2${sel==='__new'?' on':''}" onclick="rcvSel('__new')">+ ${t('inv_new')}</button></div>${sel==='__new'?`<div class="row" style="margin-top:8px"><div><div class="sub">${t('nm_uz')}</div><input value="${esc(r.nm||'')}" oninput="UI.rcv={...(UI.rcv||{}),pid:'__new',nm:this.value}"></div><div><div class="sub">${t('inv_price')}</div><input type="number" min="0" inputmode="numeric" value="${esc(r.pr||'')}" oninput="UI.rcv={...(UI.rcv||{}),pid:'__new',pr:this.value}"></div></div>`:''}
     <div class="row" style="margin-top:8px"><div><div class="sub">${t('inv_qty')}</div><input type="number" min="1" inputmode="numeric" value="${esc(r.q||'')}" oninput="UI.rcv={...(UI.rcv||{}),pid:'${sel}',q:this.value}"></div>
@@ -797,9 +842,22 @@ function dashHTML(){
   return h}
 function srcStats(period){const out={app:{n:0,s:0},phone:{n:0,s:0},live:{n:0,s:0},hall:{n:0,s:0}},days=period==='today'?1:period==='7'?7:9999,from=dayKey(new Date(Date.now()-(days-1)*864e5));
   for(const [k,d] of Object.entries(S.src||{}))if(k>=from)for(const s in out)if(d[s]){out[s].n+=d[s].n;out[s].s+=d[s].s}return out}
-function srcHTML(){const per=UI.srcp||'today',st=srcStats(per),tot=Object.values(st).reduce((a,x)=>a+x.n,0),mx=Math.max(...Object.values(st).map(x=>x.n)),ic={app:'📱',phone:'☎',live:'🛒',hall:'🍽'};
-  return`<h2>${t('d_src_title')}</h2><div class="chips" style="margin-bottom:8px">${[['today',t('p_today')],['7',t('p_7')],['all',t('p_all')]].map(([k,l])=>`<button class="chip2${per===k?' on':''}" onclick="UI.srcp='${k}';render()">${l}</button>`).join('')}</div>
-  <div class="tiles">${['app','phone','live','hall'].map(s=>{const x=st[s];return`<div class="tile${x.n>0&&x.n===mx?' top':''}"><div class="th">${ic[s]} ${t('src_'+s)}</div><div class="tv">${x.n}</div><div class="tl">${t('d_orders')}</div><div class="tr"><span>${t('k_rev')}</span><b>${fm(x.s)}</b></div><div class="tr"><span>%</span><b>${tot?Math.round(100*x.n/tot):0}%</b></div></div>`}).join('')}</div>`}
+const periodName=p=>t(p==='today'?'p_today':p==='7'?'p_7':'p_all');
+function soldStats(per){const days=per==='today'?1:per==='7'?7:9999,from=dayKey(new Date(Date.now()-(days-1)*864e5)),by={};let rev=0,prof=0;
+  for(const [k,d] of Object.entries(S.sold||{}))if(k>=from)for(const [pid,e] of Object.entries(d)){const x=by[pid]=by[pid]||{q:0,s:0};x.q+=e.q;x.s+=e.s;rev+=e.s;prof+=(e.tr||0)-(e.c||0)}
+  return{by,rev,prof}}
+function reportHTML(){const per=UI.srcp||'today',st=srcStats(per),ss=soldStats(per),orders=Object.values(st).reduce((a,x)=>a+x.n,0),mx=Math.max(...Object.values(st).map(x=>x.n)),ic={app:'📱',phone:'☎',live:'🛒',hall:'🍽'};
+  const rows=Object.entries(ss.by).sort((a,b)=>b[1].s-a[1].s);
+  const kpi=(l,v)=>`<div class="kpi"><div class="kl">${l}</div><div class="kv" style="font-size:22px">${v}</div></div>`;
+  return`<div class="chips" style="margin:6px 0 10px">${[['today',t('p_today')],['7',t('p_7')],['all',t('p_all')]].map(([k,l])=>`<button class="chip2${per===k?' on':''}" onclick="UI.srcp='${k}';render()">${l}</button>`).join('')}</div>
+  <div class="kpis">${kpi(t('r_total'),orders)}${kpi(t('k_rev'),fm(ss.rev))}${kpi(t('r_profit'),fm(ss.prof))}</div>
+  <h2>${t('d_src_title')}</h2><div class="tiles">${['app','phone','live','hall'].map(s=>{const x=st[s];return`<div class="tile${x.n>0&&x.n===mx?' top':''}"><div class="th">${ic[s]} ${t('src_'+s)}</div><div class="tv">${x.n}</div><div class="tl">${t('orders_w')}</div><div class="tr"><span>${t('k_rev')}</span><b>${fm(x.s)}</b></div><div class="tr"><span>%</span><b>${orders?Math.round(100*x.n/orders):0}%</b></div></div>`}).join('')}</div>
+  <h2>${t('r_prod')}</h2>${rows.length?`<div class="card col">${rows.map(([pid,x])=>`<div class="line"><span>${P(pid)?P(pid).emoji+' '+esc(pn(P(pid))):'?'} × ${x.q}</span><b>${fm(x.s)}</b></div>`).join('')}</div>`:`<p class="sub">${t('r_none')}</p>`}
+  <button class="btn full" style="margin-top:10px" onclick="reportCopy()">📋 ${t('r_copy')}</button>`}
+function reportText(){const per=UI.srcp||'today',st=srcStats(per),ss=soldStats(per),orders=Object.values(st).reduce((a,x)=>a+x.n,0),rows=Object.entries(ss.by).sort((a,b)=>b[1].s-a[1].s);
+  return [t('r_title',{n:S.name||'Tayyor',p:periodName(per)}),t('r_total')+': '+orders+' · '+t('k_rev')+': '+fm(ss.rev),'',t('r_by_src')+':',
+    ...['app','phone','live','hall'].map(s=>'• '+t('src_'+s)+': '+st[s].n+' · '+fm(st[s].s)),'',t('r_prod')+':',...rows.map(([pid,x])=>'• '+(P(pid)?pn(P(pid)):'?')+' × '+x.q+' — '+fm(x.s))].join('\n')}
+async function reportCopy(){try{await navigator.clipboard.writeText(reportText());toast(t('r_copied'))}catch(e){toast(t('g_fail'),'bad')}}
 function deskNewHTML(){const src=UI.nsrc||'phone',items=S.products.filter(p=>p.on!==false),tot=items.reduce((a,p)=>a+(UI.cart[p.id]||0)*p.price,0);
   let h=`<div class="chips" style="margin:6px 0 8px">${[['phone','☎ '+t('n_phone')],['live','🛒 '+t('n_live')]].map(([k,l])=>`<button class="chip2${src===k?' on':''}" onclick="UI.nsrc='${k}';render()">${l}</button>`).join('')}</div>`;
   h+=items.map(p=>`<div class="card"><div class="pe">${p.emoji}</div><div class="pi"><b>${esc(pn(p))}</b><div class="sub">${fm(p.price)}</div>${prodStatus(p)}</div><div class="step"><button onclick="cartAdd('${p.id}',-1)">−</button><span>${UI.cart[p.id]||0}</span><button onclick="cartAdd('${p.id}',1)">+</button></div></div>`).join('');
@@ -814,14 +872,15 @@ function deskNewHTML(){const src=UI.nsrc||'phone',items=S.products.filter(p=>p.o
     <button class="btn sec full" onclick="UI.modal=null;render()">${t('cancel')}</button></div></div>`}
   return h}
 function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt);
-  let h=head()+`<div class="tabs">${[['orders',t('t_orders')+(open.length?`<span class="badge">${open.length}</span>`:'')],['new',t('t_new_short')],['hall',t('t_hall')],['stock',t('t_stock')],['set',t('t_set')]].map(([k,l])=>`<button class="${UI.tab===k?'on':''}" onclick="UI.tab='${k}';render()">${l}</button>`).join('')}</div>`;
+  let h=head()+`<div class="tabs">${[['orders',t('t_orders')+(open.length?`<span class="badge">${open.length}</span>`:'')],['new',t('t_new_short')],['hall',t('t_hall')],['stock',t('t_stock')],['report',t('t_report')],['set',t('t_set')]].map(([k,l])=>`<button class="${UI.tab===k?'on':''}" onclick="UI.tab='${k}';render()">${l}</button>`).join('')}</div>`;
   if(UI.tab==='orders'){
-    h+=dashHTML()+srcHTML()+`<h2>${t('d_orders')}</h2>`;
+    h+=dashHTML()+`<h2>${t('d_orders')}</h2>`;
     h+=open.length?open.map(o=>`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})} ${esc(o.name)}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div><div class="sub"><span class="chip">${o.src==='phone'?'☎ '+t('src_phone'):'📱 '+t('src_app')}</span> ${o.phone?esc(o.phone):''}</div>
       ${o.lines.map(l=>`<div class="line"><span>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</span><span>${l.rr>=l.qty?`<span class="chip ok">${t('ready')}</span>`:`${l.rr>0?`<span class="chip ok">${t('ready')} ${l.rr}</span>`:''}${l.rb>0?`<span class="chip warn">${t('waiting',{n:l.rb})} · ~${mins(etaLine(o,l)||Date.now())} ${t('min')}</span>`:''}${l.ask>0?`<span class="chip bad">${t('st_ask')}: ${l.ask}</span>`:''}${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}`}${l.want>l.qty?`<span class="chip bad">${t('asked',{w:l.want,q:l.qty})}</span>`:''}</span></div>`).join('')}
       <div class="row" style="margin-top:8px">${isReady(o)?`<button class="btn ok sm" onclick="giveOrder('${o.id}')">${t('give')}</button>`:`<button class="btn sm" onclick="giveOrder('${o.id}',true)" ${o.lines.some(l=>l.rr>0)?'':'disabled style="opacity:.4"'}>${t('give_part')}</button>`}<button class="btn bad sm" onclick="cancelOrder('${o.id}')">${t('cancel')}</button></div></div>`).join(''):`<p class="sub">${t('no_orders')}</p>`;
     h+=`<h2>🔔</h2>`+S.feed.slice(-8).reverse().map(f=>`<div class="line sub${f.k.startsWith('l_cancel')?' cancelred':''}"><span>${fmtFeed(f,'desk')}</span><span>${hm(f.t)}</span></div>`).join('')}
   if(UI.tab==='new')h+=deskNewHTML();
+  if(UI.tab==='report')h+=reportHTML();
   if(UI.tab==='stock')h+=invHTML();
   if(UI.tab==='hall'){
     h+=`<div class="grid tb">${tbls().map(i=>`<button class="${hallOrder(i)?'occ':''} ${UI.tbl===i?'sel':''}" onclick="UI.tbl=${i};render()">${i}</button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn sec sm" onclick="addTable()">${t('add_table')}</button>${UI.tbl&&!hallOrder(UI.tbl)?`<button class="btn bad sm" onclick="delTable(${UI.tbl})">${t('del_table')} ${UI.tbl}</button>`:''}</div>`;
@@ -829,7 +888,13 @@ function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt);
       h+=`<h2>${t('table',{n:UI.tbl})}</h2>${o?o.lines.map(l=>`<div class="card"><div class="pi">${P(l.pid).emoji} ${esc(pn(P(l.pid)))}</div><div class="step"><button onclick="hallAdd(${UI.tbl},'${l.pid}',-1)">−</button><span>${l.qty}</span><button onclick="hallAdd(${UI.tbl},'${l.pid}',1)">+</button></div></div>`).join('')+`<div class="line"><b>${t('total')}</b><b>${fm(sum)}</b></div><button class="btn ok full" onclick="closeTable(${UI.tbl})">${t('close_table')}</button>`:`<p class="sub">${t('table_empty')}</p>`}
       <h2>+</h2><div class="grid pg">${S.products.filter(p=>p.on!==false).map(p=>ptile(`hallAdd(${UI.tbl},'${p.id}',1)`,p.emoji,pn(p),p.stock?freeR(p.id):(invTracked(p.id)?invFree(p.id):'—'))).join('')}</div>`}}
   if(UI.tab==='set'){
+    const inf=S.info||{},locBad=inf.loc&&!parseLoc(inf.loc);
     h+=`<div class="card col"><div class="sub">${t('set_retain',{n:S.retain||10})}</div></div>
+    <div class="card col"><b>${t('set_contacts')}</b>
+      <div class="sub" style="margin-top:8px">${t('info_phone')}</div><input id="ip" type="tel" placeholder="+998 90 123 45 67" value="${esc(inf.phone?'+998 '+fmtPh(inf.phone):'')}" oninput="onInfoPhone(this)" onfocus="if(!this.value)this.value='+998 '" onchange="saveInfo()"><div id="ipErr" class="perr" style="display:none">${t('phone_bad')}</div>
+      <div class="sub" style="margin-top:8px">${t('info_addr')}</div><input id="ia" value="${esc(inf.addr||'')}" onchange="saveInfo()">
+      <div class="sub" style="margin-top:8px">${t('info_loc')}</div><input id="il" autocapitalize="none" value="${esc(inf.loc||'')}" onchange="saveInfo()"><div class="perr" style="display:${locBad?'block':'none'}">${t('info_loc_bad')}</div>
+      <button class="btn sec full" style="margin-top:8px" onclick="geoFill()">📍 ${t('info_geo')}</button></div>
     <div class="card col"><b>${t('link')}</b><div class="sub" style="word-break:break-all;margin-top:4px">${esc(clientLink())}</div><div id="qr" style="margin-top:8px;max-width:180px"></div><div class="sub" style="margin-top:6px">${t('g_code')}: <b>${esc(SLUG)}</b></div></div>
     <div class="card col"><b>${t('set_pass')}</b><div class="sub" style="margin-top:6px">${t('set_old')}</div><input type="password" autocomplete="current-password" value="${esc(UI.pwOld||'')}" oninput="UI.pwOld=this.value">
       <div class="sub" style="margin-top:8px">${t('set_new')}</div><input type="password" autocomplete="new-password" value="${esc(UI.pwNew||'')}" oninput="UI.pwNew=this.value"><button class="btn full" style="margin-top:10px" onclick="savePwd()">${t('set_save')}</button></div>`}
@@ -859,7 +924,7 @@ function render(){
   if(ae&&['INPUT','SELECT'].includes(ae.tagName)&&app.contains(ae)&&ae.type!=='checkbox'){pendingRender=true;return}
   pendingRender=false;
   if(h===null)h=ROLE==='client'?vClient():(ROLE==='desk'?vDesk():vKitchen());
-  app.innerHTML=h+cfmHTML()+inputHTML();
+  app.innerHTML=h+cfmHTML()+inputHTML()+credHTML();
   const q=document.getElementById('qr');if(q&&window.qrcode){try{const c=qrcode(0,'M');c.addData(clientLink());c.make();q.innerHTML=c.createSvgTag(4)}catch(e){}}}
 document.addEventListener('focusout',()=>{if(pendingRender)setTimeout(()=>{if(pendingRender)render()},300)});
 

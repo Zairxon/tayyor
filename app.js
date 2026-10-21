@@ -1,5 +1,5 @@
 
-const APP_VERSION='1.7.3';
+const APP_VERSION='1.8.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -120,6 +120,8 @@ confirm_del_table:["{n}-столни ўчирасизми?","{n}-stolni o'chiras
 confirm_del_prod:["«{p}» ўчирилсинми?","«{p}» o'chirilsinmi?","Удалить «{p}»?","Delete “{p}”?"],
 confirm_drop_batch:["{p} × {n} партиясини олиб ташлайсизми?","{p} × {n} partiyasini olib tashlaysizmi?","Убрать партию {p} × {n} из духовки?","Remove the batch {p} × {n} from the oven?"],
 confirm_reset:["Жорий маълумотлар демо маълумотлар билан алмаштирилади. Давом этасизми?","Joriy ma'lumotlar demo ma'lumotlar bilan almashtiriladi. Davom etasizmi?","Все текущие данные будут заменены демо-данными. Продолжить?","All current data will be replaced with demo data. Continue?"],
+zoom_out:["Кичрайтириш","Kichraytirish","Уменьшить","Smaller"],
+zoom_in:["Катталаштириш","Kattalashtirish","Увеличить","Larger"],
 phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
@@ -346,6 +348,9 @@ let pendingRender=false;
 function afterChange(){feedToasts();render()}
 const ROLE=window.ROLE||'client',ROOT=new URL('../',location.href).href,route=()=>ROLE==='client'?'order':ROLE;
 const clientLink=()=>ROOT+'client/'+(SLUG!=='demo'?'?s='+SLUG:'');
+let zoomV=1;try{zoomV=Math.min(1.4,Math.max(0.6,+localStorage.getItem('tl.zoom')||1))}catch(e){}
+function applyZoom(){document.body.style.zoom=zoomV===1?'':zoomV}
+function zoomBy(d){zoomV=Math.round(Math.min(1.4,Math.max(0.6,zoomV+d))*10)/10;try{localStorage.setItem('tl.zoom',zoomV)}catch(e){}applyZoom();render()}
 function setLang(l){lang=l;localStorage.setItem('tl.lang',l);document.documentElement.lang=l==='en'?'en':l==='ru'?'ru':'uz';render()}
 const authed=()=>sessionStorage.getItem('tl.auth')==='1';
 async function login(){const v=document.getElementById('pin').value;let ok=false;
@@ -362,7 +367,7 @@ function hm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,'0')
 function mmss(ms){ms=Math.max(0,ms);const s=Math.ceil(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 
 /* ---------- views ---------- */
-function head(){return`<header><div class="brand">🥟 Tayyor${ROLE!=='client'?` <small style="font-weight:600;color:var(--mut)">${t('r_'+ROLE)}</small>`:''}</div><div class="langs">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="setLang('${c}')">${n}</button>`).join('')}</div></header>${installBox()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
+function head(){return`<header><div class="brand">🥟 Tayyor${ROLE!=='client'?` <small style="font-weight:600;color:var(--mut)">${t('r_'+ROLE)}</small>`:''}</div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button>${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="setLang('${c}')">${n}</button>`).join('')}</div></header>${installBox()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
 function foot(){return`<div class="foot">${t('version')} ${APP_VERSION} · <span style="color:${online?'var(--ok)':'var(--bad)'}">●</span> ${online?t('on_line'):t('off_line')}${SLUG!=='demo'?' · '+esc(SLUG):''}</div>`}
 function installBox(){if(isStandalone)return'';if(installEv)return`<button class="btn full" style="margin:6px 0" onclick="doInstall()">📲 ${t('install')}</button>`;if(isIOS)return`<p class="sub">📲 ${t('ios_hint')}</p>`;return''}
 function vPin(){return`${head()}<h2>${t('pin')}</h2><input id="pin" type="password" inputmode="numeric" onkeydown="if(event.key==='Enter')login()" autofocus><div class="row" style="margin-top:10px"><button class="btn" onclick="login()">${t('pin_ok')}</button></div>${foot()}`}
@@ -501,5 +506,5 @@ async function chk(){try{const r=await fetch(ROOT+'version.json?'+Date.now(),{ca
 async function doUpdate(){try{const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs)await r.unregister();for(const k of await caches.keys())await caches.delete(k)}catch(e){}location.reload()}
 setInterval(chk,60000);chk();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register(ROOT+'sw.js',{scope:ROOT}).catch(()=>{});
-load();render();
+applyZoom();load();render();
 (async()=>{await pull();if(S){lastFid=S.fid;render()}startSync();booted=true})();

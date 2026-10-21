@@ -83,3 +83,5 @@ header{flex-wrap:wrap}.langs{flex-wrap:wrap}
 .grid button small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;font-weight:600;line-height:1.2;max-width:100%}
 .grid.tb button{min-height:52px;font-size:18px}
 .card .sub{margin-bottom:4px}
+
+.perr{color:var(--bad);font-size:12px;margin-top:4px;line-height:1.3}

@@ -1,5 +1,5 @@
 
-const APP_VERSION='1.3.4';
+const APP_VERSION='1.4.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -71,6 +71,9 @@ l_done:["Тайёр: {p} × {n}","Tayyor: {p} × {n}","Готово: {p} × {n}"
 l_ordready:["Буюртма №{no} тўлиқ тайёр","Buyurtma №{no} to'liq tayyor","Заказ №{no} полностью готов","Order #{no} is fully ready"],
 l_cancel:["Буюртма №{no} бекор қилинди","Buyurtma №{no} bekor qilindi","Заказ №{no} отменён","Order #{no} cancelled"],
 price:["Нарх","Narx","Цена","Price"],
+pick_custom:["Бошқа вақт (қўлда)","Boshqa vaqt (qo'lda)","Своё время (вручную)","Custom time (manual)"],
+pick_past:["Вақтни тўғри киритинг: у ўтиб кетган","Vaqtni to'g'ri kiriting: u o'tib ketgan","Укажите время: оно уже прошло","Enter a valid time: it has already passed"],
+phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
 k_rev:["Тушум","Tushum","Выручка","Revenue"],
@@ -197,10 +200,22 @@ const lineTxt=l=>pn(P(l.pid))+' × '+l.qty;
 /* ---------- actions ---------- */
 let UI={tab:'orders',cart:{},pick:0,name:'',phone:'',modal:null,tbl:null,k:{pid:'meat',qty:20,min:null},upd:false};
 function cartAdd(pid,d){UI.cart[pid]=Math.max(0,(UI.cart[pid]||0)+d);render()}
-function tryOrder(){const a=analyze(UI.cart);if(!a.length)return toast(t('cart_empty'));
+const fmtPh=d=>[(d||'').slice(0,2),(d||'').slice(2,5),(d||'').slice(5,7),(d||'').slice(7,9),(d||'').slice(9)].filter(Boolean).join(' ');
+const phoneView=d=>d?'+998 '+fmtPh(d):'';
+const phoneOk=d=>!d||d.length===9;
+const phoneShowErr=()=>!phoneOk(UI.phone)&&(UI.phone.length>9||UI.phTouched);
+function phoneErr(){return`<div id="phErr" class="perr" style="display:${phoneShowErr()?'block':'none'}">${t('phone_bad')}</div>`}
+function phUpd(){const e=document.getElementById('phErr');if(e)e.style.display=phoneShowErr()?'block':'none';const i=document.getElementById('ph');if(i)i.style.borderColor=phoneShowErr()?'var(--bad)':''}
+function onPhone(el){let d=el.value.replace(/\D/g,'').slice(3);if(d.length>9&&d.startsWith('998'))d=d.slice(3);d=d.slice(0,15);UI.phone=d;el.value=d?phoneView(d):'+998 ';phUpd()}
+function phBlur(el){UI.phTouched=true;if(!UI.phone)el.value='';phUpd()}
+function pickSel(v){UI.pick=+v;const e=document.getElementById('pt');if(e){e.style.display=UI.pick===-1?'block':'none';if(UI.pick===-1)e.focus()}}
+function pickAt(){if(UI.pick!==-1)return Date.now()+UI.pick*60000;const m=(UI.pickTime||'').split(':').map(Number);if(m.length<2||isNaN(m[0]))return null;const d=new Date();d.setHours(m[0],m[1],0,0);return d.getTime()}
+function tryOrder(){if(UI.pick===-1){const at=pickAt();if(at===null||at<Date.now()-60000){toast(t('pick_past'));const e=document.getElementById('pt');if(e)e.focus();return}}
+  if(!phoneOk(UI.phone)){UI.phTouched=true;phUpd();toast(t('phone_bad'));const i=document.getElementById('ph');if(i)i.focus();return}
+  const a=analyze(UI.cart);if(!a.length)return toast(t('cart_empty'));
   if(a.some(x=>x.stock&&x.take<x.want))UI.modal=a;else placeOrder('all');render()}
 function placeOrder(mode){UI.modal=null;let oid=null;
-  const cart={...UI.cart},cname=UI.name.trim(),cphone=UI.phone.trim(),cpick=UI.pick,coid='o'+uid();
+  const cart={...UI.cart},cname=UI.name.trim(),cphone=UI.phone?'+998 '+fmtPh(UI.phone):'',cat=pickAt()||Date.now(),coid='o'+uid();
   mutate(()=>{const lines=[];oid=null;
     for(const a of analyze(cart)){
       if(!a.stock){lines.push({pid:a.pid,qty:a.want,rr:a.want,rb:0,want:a.want});continue}
@@ -209,7 +224,7 @@ function placeOrder(mode){UI.modal=null;let oid=null;
       if(qty>0)lines.push({pid:a.pid,qty,rr:a.take,rb,want:a.want})}
     if(!lines.some(l=>P(l.pid).stock)){return}
     const no=S.next++;oid=coid;
-    S.orders.push({id:oid,no,type:'pickup',name:cname,phone:cphone,pickupAt:Date.now()+cpick*60000,created:Date.now(),status:'open',lines});
+    S.orders.push({id:oid,no,type:'pickup',name:cname,phone:cphone,pickupAt:cat,created:Date.now(),status:'open',lines});
     feed('l_new',{no,oid})});
   if(oid){const mine=JSON.parse(localStorage.getItem('tl.mine')||'[]');mine.unshift(oid);localStorage.setItem('tl.mine',JSON.stringify(mine.slice(0,20)));
     UI.cart={};toast(t('ord_placed'));try{window.Notification&&Notification.permission==='default'&&Notification.requestPermission()}catch(e){}}
@@ -306,8 +321,8 @@ function vClient(){const items=S.products.filter(p=>p.on!==false);
   let h=head()+`<h1 class="ask">${t('what_order')}</h1>`;
   if(mine.length)h+=`<h2>${t('my_orders')}</h2>`+mine.map(o=>`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><span class="sub">${t('at_time',{t:hm(o.pickupAt)})}</span></div>${o.lines.map(l=>`<div class="line"><span>${esc(pn(P(l.pid)))} × ${l.qty}</span>${l.rb>0?`<span class="sub">${t('waiting',{n:l.rb})}</span>`:''}</div>`).join('')}${orderStatus(o)}</div>`).join('');
   h+=items.map(p=>`<div class="card"><div class="pe">${p.emoji}</div><div class="pi"><b>${esc(pn(p))}</b><div class="sub">${fm(p.price)}</div>${prodStatus(p)}</div><div class="step"><button onclick="cartAdd('${p.id}',-1)">−</button><span>${UI.cart[p.id]||0}</span><button onclick="cartAdd('${p.id}',1)">+</button></div></div>`).join('');
-  h+=`<h2>${t('pickup_when')}</h2><select onchange="UI.pick=+this.value">${[[0,t('now')],[30,t('in_min',{n:30})],[60,t('in_hour')],[90,t('in_min',{n:90})],[120,t('in_min',{n:120})]].map(([v,l])=>`<option value="${v}"${UI.pick===v?' selected':''}>${l}</option>`).join('')}</select>
-  <div class="row" style="margin-top:8px"><input placeholder="${t('name')}" value="${esc(UI.name)}" oninput="UI.name=this.value"><input placeholder="${t('phone')}" inputmode="tel" value="${esc(UI.phone)}" oninput="UI.phone=this.value"></div>${foot()}
+  h+=`<h2>${t('pickup_when')}</h2><select onchange="pickSel(this.value)">${[[0,t('now')],[30,t('in_min',{n:30})],[60,t('in_hour')],[90,t('in_min',{n:90})],[120,t('in_min',{n:120})],[-1,t('pick_custom')]].map(([v,l])=>`<option value="${v}"${UI.pick===v?' selected':''}>${l}</option>`).join('')}</select><input type="time" id="pt" value="${esc(UI.pickTime||'')}" onchange="UI.pickTime=this.value" style="margin-top:8px;display:${UI.pick===-1?'block':'none'}">
+  <div class="row" style="margin-top:8px"><input placeholder="${t('name')}" value="${esc(UI.name)}" oninput="UI.name=this.value"><div style="flex:1;min-width:140px"><input id="ph" type="tel" placeholder="+998 90 123 45 67" autocomplete="tel" value="${esc(phoneView(UI.phone))}" oninput="onPhone(this)" onfocus="if(!this.value)this.value='+998 '" onblur="phBlur(this)">${phoneErr()}</div></div>${foot()}
   <div class="bar"><div><div class="sub">${t('total')}</div><b style="font-size:20px">${fm(tot)}</b></div><button class="btn" onclick="tryOrder()">${t('do_order')}</button></div>`;
   if(UI.modal){const a=UI.modal.filter(x=>x.stock&&x.take<x.want),anyW=a.some(x=>x.wait>0),anyT=UI.modal.some(x=>x.take>0&&x.stock);
     h+=`<div class="modal" onclick="if(event.target===this){UI.modal=null;render()}"><div><h2 style="margin-top:0">${t('short_title')}</h2>${a.map(x=>`<div class="card col"><b>${t('short_line',{p:esc(pn(P(x.pid))),w:x.want,r:x.take})}</b>${x.wait>0?`<div class="chip warn">${t('short_wait',{n:x.wait,m:mins(x.at)})}</div>`:''}${x.none>0?`<div class="chip bad">${t('short_none',{n:x.none})}</div>`:''}</div>`).join('')}

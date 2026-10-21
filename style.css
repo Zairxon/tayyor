@@ -88,3 +88,7 @@ header{flex-wrap:wrap}.langs{flex-wrap:wrap}
 
 .cancelred,.cancelred span{color:var(--bad)!important;font-weight:700}
 .toast.bad{background:#b91c1c}
+
+.langs{position:relative}
+.lmenu{position:absolute;right:0;top:36px;z-index:30;background:#fff;border:1px solid var(--bd);border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:4px;min-width:130px;box-shadow:0 8px 24px rgba(16,24,40,.15)}
+.lmenu button{padding:9px 12px;font-size:14px;text-align:left}

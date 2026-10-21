@@ -17,8 +17,8 @@
 <div class="foot" id="ver"></div>
 </div>
 <script>
-const V='1.8.0',LI={uzc:0,uzl:1,ru:2,en:3},L=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
-let lang=localStorage.getItem('tl.lang')||'ru';
+const V='1.8.1',LI={uzc:0,uzl:1,ru:2,en:3},L=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
+let lang=localStorage.getItem('tl.lang')||'ru',open_=false;
 const T={tag:["Самса буюртмаси ва заҳираси","Samsa buyurtmasi va zaxirasi","Заказы и запасы самсы","Samsa orders & stock"],
 c:["Буюртма бериш (мижоз)","Buyurtma berish (mijoz)","Заказать (клиент)","Order (customer)"],
 d:["Қабулхона иловаси","Qabulxona ilovasi","Приложение ресепшена","Reception app"],
@@ -30,7 +30,7 @@ const q=location.search,hs=location.hash;
 const legacy={'#/order':'client/','#/desk':'desk/','#/kitchen':'kitchen/'};
 if(legacy[hs])location.replace(legacy[hs]+q);
 function draw(){
- document.getElementById('langs').innerHTML=L.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="lang='${c}';localStorage.setItem('tl.lang',lang);draw()">${n}</button>`).join('');
+ document.getElementById('langs').innerHTML=`<button onclick="open_=!open_;draw()">🌐 ${{uzc:'ЎЗ',uzl:'UZ',ru:'RU',en:'EN'}[lang]}</button>`+(open_?`<div class="lmenu">${L.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="lang='${c}';open_=false;localStorage.setItem('tl.lang',lang);draw()">${n}</button>`).join('')}</div>`:'');
  document.getElementById('tag').textContent=t('tag');
  document.getElementById('roles').innerHTML=`<button onclick="location.href='client/${q}'">🛒 ${t('c')}</button><button onclick="location.href='desk/${q}'" style="border-left:8px solid #1c7ed6">🖥 ${t('d')}</button><button onclick="location.href='kitchen/${q}'" style="border-left:8px solid #b91c1c">🔥 ${t('k')}</button>`;
  document.getElementById('hint').textContent=t('h');

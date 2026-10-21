@@ -1,5 +1,5 @@
 
-const APP_VERSION='1.8.0';
+const APP_VERSION='1.8.1';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -351,6 +351,8 @@ const clientLink=()=>ROOT+'client/'+(SLUG!=='demo'?'?s='+SLUG:'');
 let zoomV=1;try{zoomV=Math.min(1.4,Math.max(0.6,+localStorage.getItem('tl.zoom')||1))}catch(e){}
 function applyZoom(){document.body.style.zoom=zoomV===1?'':zoomV}
 function zoomBy(d){zoomV=Math.round(Math.min(1.4,Math.max(0.6,zoomV+d))*10)/10;try{localStorage.setItem('tl.zoom',zoomV)}catch(e){}applyZoom();render()}
+const LCODE={uzc:'ЎЗ',uzl:'UZ',ru:'RU',en:'EN'};
+document.addEventListener('click',e=>{if(UI.langOpen&&!e.target.closest('.langs')){UI.langOpen=false;render()}});
 function setLang(l){lang=l;localStorage.setItem('tl.lang',l);document.documentElement.lang=l==='en'?'en':l==='ru'?'ru':'uz';render()}
 const authed=()=>sessionStorage.getItem('tl.auth')==='1';
 async function login(){const v=document.getElementById('pin').value;let ok=false;
@@ -367,7 +369,7 @@ function hm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,'0')
 function mmss(ms){ms=Math.max(0,ms);const s=Math.ceil(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 
 /* ---------- views ---------- */
-function head(){return`<header><div class="brand">🥟 Tayyor${ROLE!=='client'?` <small style="font-weight:600;color:var(--mut)">${t('r_'+ROLE)}</small>`:''}</div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button>${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="setLang('${c}')">${n}</button>`).join('')}</div></header>${installBox()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
+function head(){return`<header><div class="brand">🥟 Tayyor${ROLE!=='client'?` <small style="font-weight:600;color:var(--mut)">${t('r_'+ROLE)}</small>`:''}</div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header>${installBox()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
 function foot(){return`<div class="foot">${t('version')} ${APP_VERSION} · <span style="color:${online?'var(--ok)':'var(--bad)'}">●</span> ${online?t('on_line'):t('off_line')}${SLUG!=='demo'?' · '+esc(SLUG):''}</div>`}
 function installBox(){if(isStandalone)return'';if(installEv)return`<button class="btn full" style="margin:6px 0" onclick="doInstall()">📲 ${t('install')}</button>`;if(isIOS)return`<p class="sub">📲 ${t('ios_hint')}</p>`;return''}
 function vPin(){return`${head()}<h2>${t('pin')}</h2><input id="pin" type="password" inputmode="numeric" onkeydown="if(event.key==='Enter')login()" autofocus><div class="row" style="margin-top:10px"><button class="btn" onclick="login()">${t('pin_ok')}</button></div>${foot()}`}

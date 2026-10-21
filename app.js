@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.2.0';
+const APP_VERSION='2.3.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -243,6 +243,23 @@ k_late:["Кечиккан","Kechikkan","Просрочено","Overdue"],
 a_al_soon:["«{n}»: тўлов муддати {d} кундан кейин ({date})","«{n}»: to'lov muddati {d} kundan keyin ({date})","«{n}»: срок оплаты через {d} дн. ({date})","“{n}”: payment due in {d} days ({date})"],
 a_al_today:["«{n}»: тўлов муддати бугун","«{n}»: to'lov muddati bugun","«{n}»: срок оплаты сегодня","“{n}”: payment is due today"],
 a_al_late:["«{n}»: тўлов муддати {d} кун олдин ўтди","«{n}»: to'lov muddati {d} kun oldin o'tdi","«{n}»: срок оплаты прошёл {d} дн. назад","“{n}”: payment is {d} days overdue"],
+do_phone:["Буюртмани қабул қилиш","Buyurtmani qabul qilish","Принять заказ","Accept the order"],
+do_live:["Сотиш","Sotish","Продать","Sell"],
+n_phone:["Телефон орқали","Telefon orqali","По телефону","By phone"],
+n_live:["Жонли (жойида)","Jonli (joyida)","Живой (на месте)","Walk-in (on the spot)"],
+phone_ok:["Телефон буюртмаси №{no} қабул қилинди","Telefon buyurtmasi №{no} qabul qilindi","Заказ по телефону №{no} принят","Phone order #{no} accepted"],
+live_ok:["Жонли буюртма сотилди: {a}","Jonli buyurtma sotildi: {a}","Живой заказ продан: {a}","Walk-in order sold: {a}"],
+live_short:["{p}: тайёр етарли эмас","{p}: tayyor yetarli emas","{p}: готового не хватает","{p}: not enough ready"],
+src_app:["Илова","Ilova","Приложение","App"],
+src_phone:["Телефон","Telefon","Телефон","Phone"],
+src_live:["Жонли буюртма","Jonli buyurtma","Живой заказ","Walk-in"],
+src_hall:["Зал","Zal","Зал","Hall"],
+d_src_title:["Буюртмалар қаердан","Buyurtmalar qayerdan","Откуда заказы","Where orders come from"],
+p_today:["Бугун","Bugun","Сегодня","Today"],
+p_7:["7 кун","7 kun","7 дней","7 days"],
+p_all:["Барча муддат","Barcha muddat","Весь срок","All time"],
+a_t_list:["Столоваялар","Stolovayalar","Столовые","Canteens"],
+t_new_short:["+ Буюртма","+ Buyurtma","+ Заказ","+ Order"],
 phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
@@ -385,7 +402,7 @@ function makeOrder(p){if(S.orders.some(o=>o.id===p.id))return null;
     const rb=mode==='all'?a.wait:0,ask=mode==='all'?a.none:0,qty=a.take+rb+ask;
     if(qty>0)lines.push({pid:a.pid,qty,rr:a.take,rb,ask,want:a.want})}
   const no=S.next++;
-  S.orders.push({id:p.id,no,type:'pickup',cid:1,name:String(p.name||'').slice(0,60),phone:String(p.phone||'').slice(0,20),pickupAt:+p.at||Date.now(),created:Date.now(),status:lines.length?'open':'cancelled',lines});
+  S.orders.push({id:p.id,no,type:'pickup',cid:p.src?0:1,src:p.src||'app',name:String(p.name||'').slice(0,60),phone:String(p.phone||'').slice(0,20),pickupAt:+p.at||Date.now(),created:Date.now(),status:lines.length?'open':'cancelled',lines});
   if(lines.length){feed('l_new',{no,oid:p.id});for(const l of lines)if(l.ask>0)feed('l_ask',{no,oid:p.id,pid:l.pid,n:l.ask})}
   return no}
 async function processInbox(){if(!sb||!TOK()||inboxBusy)return;inboxBusy=true;
@@ -438,7 +455,7 @@ function askConfirm(msg,fn){UI.cfm={msg,fn};render()}
 function cfmYes(){const f=UI.cfm&&UI.cfm.fn;UI.cfm=null;render();if(f)f()}
 function cfmNo(){UI.cfm=null;render()}
 function cfmHTML(){return UI.cfm?`<div class="modal" onclick="if(event.target===this)cfmNo()"><div><p class="cfm">${esc(UI.cfm.msg)}</p><div class="row"><button class="btn sec" onclick="cfmNo()">${t('back')}</button><button class="btn bad" onclick="cfmYes()">${t('do_it')}</button></div></div></div>`:''}
-function cartAdd(pid,d){const p=P(pid);if(d>0&&p&&!p.stock&&invTracked(pid)&&(UI.cart[pid]||0)+d>invFree(pid))return toast(t('out_of_stock'));UI.cart[pid]=Math.max(0,(UI.cart[pid]||0)+d);render()}
+function cartAdd(pid,d){const p=P(pid);if(d>0&&p&&p.stock&&ROLE==='desk'&&UI.tab==='new'&&(UI.nsrc||'phone')==='live'&&(UI.cart[pid]||0)+d>freeR(pid))return toast(t('no_stock'));if(d>0&&p&&!p.stock&&invTracked(pid)&&(UI.cart[pid]||0)+d>invFree(pid))return toast(t('out_of_stock'));UI.cart[pid]=Math.max(0,(UI.cart[pid]||0)+d);render()}
 const fmtPh=d=>[(d||'').slice(0,2),(d||'').slice(2,5),(d||'').slice(5,7),(d||'').slice(7,9),(d||'').slice(9)].filter(Boolean).join(' ');
 const phoneView=d=>d?'+998 '+fmtPh(d):'';
 const phoneOk=d=>!d||d.length===9;
@@ -455,7 +472,22 @@ function tryOrder(){if(UI.pick===-1){const at=pickAt();if(at===null||at<Date.now
   const a=analyze(UI.cart);if(!a.length)return toast(t('cart_empty'));
   if(a.some(x=>x.stock&&x.take<x.want))UI.modal=a;else placeOrder('all');render()}
 function newId(){const a=new Uint8Array(10);crypto.getRandomValues(a);return Array.from(a,b=>(b%36).toString(36)).join('')}
-function placeOrder(mode){return submitOrder(mode)}
+function placeOrder(mode){return ROLE==='client'?submitOrder(mode):deskPlace(mode)}
+function deskPlace(mode){UI.modal=null;const cart=Object.entries(UI.cart).filter(([,q])=>q>0);if(!cart.length){render();return}
+  const meta={id:'o'+newId(),items:cart,mode,name:UI.name.trim(),phone:UI.phone?'+998 '+fmtPh(UI.phone):'',at:pickAt()||Date.now(),src:'phone'};let no=null;
+  mutate(()=>{no=makeOrder(meta)});UI.cart={};UI.name='';UI.phone='';UI.pick=0;UI.pickTime='';UI.phTouched=false;UI.tab='orders';
+  toast(t('phone_ok',{no}));render()}
+function recSrc(src,sum){S.src=S.src||{};const k=dayKey(),d=S.src[k]=S.src[k]||{},e=d[src]=d[src]||{n:0,s:0};e.n++;e.s+=sum;
+  const old=dayKey(new Date(Date.now()-(S.retain||10)*864e5));for(const key of Object.keys(S.src))if(key<old)delete S.src[key]}
+const linesSum=ls=>ls.reduce((a,l)=>a+l.qty*(P(l.pid)?P(l.pid).price:0),0);
+function liveSell(){const cart=Object.entries(UI.cart).filter(([,q])=>q>0);if(!cart.length)return toast(t('cart_empty'));
+  for(const [pid,q] of cart){const p=P(pid);if(!p)continue;if(p.stock?q>freeR(pid):(invTracked(pid)&&q>invFree(pid)))return toast(t('live_short',{p:pn(p)}),'bad')}
+  const id='l'+newId();let sum=0;
+  mutate(()=>{const lines=cart.map(([pid,q])=>({pid,qty:q,rr:0,rb:0}));
+    for(const l of lines){const p=P(l.pid);if(!p)continue;if(p.stock)S.ready[l.pid]=Math.max(0,rdy(l.pid)-l.qty);else invDeduct(l.pid,l.qty)}
+    sum=linesSum(lines);S.orders.push({id,no:0,type:'live',src:'live',created:Date.now(),status:'closed',lines});recSale(lines);recSrc('live',sum)});
+  UI.cart={};toast(t('live_ok',{a:fm(sum)}));render()}
+
 async function submitOrder(mode){UI.modal=null;const cart=Object.entries(UI.cart).filter(([,q])=>q>0);
   if(!cart.length){render();return}
   const id=newId(),payload={id,items:cart,mode,name:UI.name.trim().slice(0,60),phone:UI.phone?'+998 '+fmtPh(UI.phone):'',at:pickAt()||Date.now()};
@@ -493,7 +525,7 @@ function askAnswer(oid,pid,bake){const el=document.getElementById('am-'+oid+'-'+
     else{l.qty-=n;l.ask=0;l.declined=(l.declined||0)+n;feed('l_ans_no',{no:o.no,oid,pid,n});o.lines=o.lines.filter(x=>x.qty>0);if(!o.lines.length){o.status='cancelled';feed('l_cancel',{no:o.no})}}})}
 function giveOrder(oid,partial){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o)return;
   for(const l of o.lines){if(P(l.pid)&&P(l.pid).stock)S.ready[l.pid]=Math.max(0,rdy(l.pid)-l.rr);else if(P(l.pid))invDeduct(l.pid,l.rr);if(partial){l.qty=l.rr;l.rb=0;l.ask=0}}
-  o.lines=o.lines.filter(l=>l.qty>0);recSale(o.lines);o.status='done'})}
+  o.lines=o.lines.filter(l=>l.qty>0);recSale(o.lines);recSrc(o.src||(o.cid?'app':'phone'),linesSum(o.lines));o.status='done'})}
 function cancelOrder(oid){const o0=S.orders.find(x=>x.id===oid);if(!o0)return;askConfirm(t('confirm_cancel',{no:o0.no}),()=>cancelOrderDo(oid))}
 function cancelOrderDo(oid){const o0=S.orders.find(x=>x.id===oid);if(!o0)return;
   mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o)return;o.status='cancelled';feed(ROLE==='client'?'l_cancel_c':'l_cancel',{no:o.no,oid:o.id})});
@@ -509,7 +541,7 @@ function hallAdd(n,pid,d){let fail=false;mutate(()=>{const p=P(pid);if(d>0&&((p.
   l.qty+=d;if(p.stock)S.ready[pid]=Math.max(0,rdy(pid)-d);else invDeduct(pid,d);
   if(l.qty<=0)o.lines=o.lines.filter(x=>x!==l);if(!o.lines.length)S.orders=S.orders.filter(x=>x!==o)});
   if(fail)toast(t('no_stock'))}
-function closeTable(n){mutate(()=>{const o=hallOrder(n);if(o){recSale(o.lines);o.status='closed'}});UI.tbl=null;render()}
+function closeTable(n){mutate(()=>{const o=hallOrder(n);if(o){recSale(o.lines);recSrc('hall',linesSum(o.lines));o.status='closed'}});UI.tbl=null;render()}
 function setP(id,f,v){mutate(()=>{const p=P(id);if(!p)return;if(f==='price')p[f]=Math.max(0,+v||0);else if(f==='stock')p.stock=!!v;else if(f.startsWith('n_'))p.names[f.slice(2)]=v})}
 function addProd(){mutate(()=>{const id='p'+uid();S.products.push({id,emoji:'🥟',names:{uzc:'Янги',uzl:'Yangi',ru:'Новое',en:'New'},price:5000,stock:true,on:true})})}
 function delProd(id){askConfirm(t('confirm_del_prod',{p:pn(P(id))}),()=>{mutate(()=>{S.products=S.products.filter(p=>p.id!==id)});render()})}
@@ -561,7 +593,7 @@ async function savePwd(){const n=UI.pwNew||'';if(n.length<4)return toast(t('g_pa
 
 const ATK='tl.atok';
 const ATOK=()=>{try{return localStorage.getItem(ATK)}catch(e){return null}};
-let AD={list:null,origins:[],form:false,f:null,pass:'',old:'',nw:'',orig:null,alerted:false};
+let AD={list:null,origins:[],form:false,f:null,pass:'',old:'',nw:'',orig:null,alerted:false,tab:'list'};
 function adOut(){try{localStorage.removeItem(ATK)}catch(e){}AD.list=null;render()}
 async function adLogin(){let r;try{const x=await sb.rpc('tayyor_admin_login',{p_pass:AD.pass||''});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
   if(!r||!r.ok)return toast(t(r&&r.err==='locked'?'a_locked':r&&r.err==='origin'?'g_origin':'a_bad'),'bad');
@@ -575,6 +607,8 @@ function adGen(){const a='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ2345678
 function adName(el){AD.f.name=el.value;if(!AD.f.edited){AD.f.code=slugify(el.value);const c=document.getElementById('acode');if(c)c.value=AD.f.code}}
 const parseDMY=s=>{const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec((s||'').trim());if(!m)return null;const d=new Date(+m[3],+m[2]-1,+m[1]);return d.getFullYear()==+m[3]&&d.getMonth()==+m[2]-1&&d.getDate()==+m[1]?m[3]+'-'+m[2]+'-'+m[1]:null};
 function addMonthYmd(ymd){const y=+ymd.slice(0,4),m=+ymd.slice(5,7),d=+ymd.slice(8,10),ny=m===12?y+1:y,nm=m===12?1:m+1,dim=new Date(ny,nm,0).getDate();return ny+'-'+String(nm).padStart(2,'0')+'-'+String(Math.min(d,dim)).padStart(2,'0')}
+function fmtNum(v){return String(v==null?'':v).replace(/\D/g,'').replace(/\B(?=(\d{3})+(?!\d))/g,' ')}
+function maskNum(el){el.value=fmtNum(el.value)}
 function maskDate(el){const d=el.value.replace(/\D/g,'').slice(0,8);el.value=d.length>4?d.slice(0,2)+'.'+d.slice(2,4)+'.'+d.slice(4):d.length>2?d.slice(0,2)+'.'+d.slice(2):d}
 async function adCreate(){const f=AD.f,name=(f.name||'').trim(),code=slugify(f.code||name),days=Math.floor(+f.days||10),fee=Math.floor(+String(f.fee||0).replace(/\s/g,'')),until=parseDMY(f.until);
   if(!name)return toast(t('g_name_need'),'bad');if(code.length<3)return toast(t('g_code_bad'),'bad');if((f.pass||'').length<4)return toast(t('g_pass_short'),'bad');if(days<1||days>365)return toast(t('a_days_bad'),'bad');
@@ -587,7 +621,7 @@ async function adUpdate(slug,o,okKey,okArgs){let r;
   try{const x=await sb.rpc('tayyor_admin_update',{p_token:ATOK(),p_slug:slug,p_name:o.name??null,p_pass:o.pass??null,p_days:o.days??null,p_disabled:o.disabled??null,p_fee:o.fee??null,p_paid_until:o.until??null,p_notify:o.notify??null});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
   if(!r||!r.ok){if(r&&r.err==='auth'){adOut();return}return toast(t(r&&r.err==='days'?'a_days_bad':r&&r.err==='pass'?'g_pass_short':r&&r.err==='fee'?'a_fee_bad':'g_fail'),'bad')}
   toast(t(okKey,okArgs));adRefresh()}
-function adFee(slug){const c=adItem(slug);askInput(t('a_fee_t',{n:c.name}),String(c.fee||0),'text',v=>{const n=Math.floor(+v.replace(/\s/g,''));if(!(n>=0))return toast(t('a_fee_bad'),'bad');adUpdate(slug,{fee:n},'a_saved')})}
+function adFee(slug){const c=adItem(slug);askInput(t('a_fee_t',{n:c.name}),fmtNum(c.fee||0),'text',v=>{const n=Math.floor(+v.replace(/\s/g,''));if(!(n>=0))return toast(t('a_fee_bad'),'bad');adUpdate(slug,{fee:n},'a_saved')},'num')}
 function adUntil(slug){const c=adItem(slug);askInput(t('a_date_t',{n:c.name}),dMY(c.until)||'','text',v=>{const d=parseDMY(v);if(!d)return toast(t('a_date_bad'),'bad');adUpdate(slug,{until:d},'a_saved')},'date')}
 function adNotify(slug,v){const n=Math.floor(+v);if(!(n>=0&&n<=60)){toast(t('a_days_bad'),'bad');render();return}adUpdate(slug,{notify:n},'a_saved')}
 function adPay(slug){const c=adItem(slug),today=dayKey(),base=c.until&&c.until>=today?c.until:today,nu=addMonthYmd(base);
@@ -616,19 +650,24 @@ function adAlerts(){const out=[];for(const c of (AD.list||[])){if(c.disabled||!c
 function adAlertsToast(){if(AD.alerted)return;AD.alerted=true;const a=adAlerts();a.slice(0,3).forEach((x,i)=>setTimeout(()=>toast(x.m,x.late?'bad':''),i*700))}
 function adLoginHTML(){return head()+`<h2>${t('a_pass_admin')}</h2><div class="card col"><input type="password" autocomplete="current-password" value="${esc(AD.pass)}" oninput="AD.pass=this.value" onkeydown="if(event.key==='Enter')adLogin()"><button class="btn full" style="margin-top:12px" onclick="adLogin()">${t('g_login')}</button></div>${foot()}`}
 const kb=n=>n>=1048576?(n/1048576).toFixed(1)+' МБ':Math.max(1,Math.round(n/1024))+' КБ';
-function adminHTML(){const f=AD.f;const act=(AD.list||[]).filter(c=>!c.disabled),income=act.reduce((a,c)=>a+(c.fee||0),0),al=adAlerts(),soon=al.filter(x=>!x.late).length,late=al.filter(x=>x.late).length;
+function adminHTML(){const f=AD.f,tab=AD.tab||'list';
+  let h=head()+`<div class="tabs">${[['list',t('a_t_list')],['set',t('t_set')]].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="AD.tab='${k}';render()">${l}</button>`).join('')}</div>`;
+  if(tab==='set')return h+`<div class="card col"><b>${t('a_origins')}</b><input style="margin-top:8px" value="${esc(AD.orig||'')}" oninput="AD.orig=this.value"><div class="sub" style="margin-top:4px">${t('a_origins_hint')}</div><button class="btn sec full" style="margin-top:8px" onclick="adSaveOrigins()">${t('set_save')}</button></div>
+    <div class="card col"><b>${t('a_pass_admin')}</b><div class="sub" style="margin-top:6px">${t('set_old')}</div><input type="password" autocomplete="current-password" value="${esc(AD.old)}" oninput="AD.old=this.value"><div class="sub" style="margin-top:8px">${t('set_new')}</div><input type="password" autocomplete="new-password" value="${esc(AD.nw)}" oninput="AD.nw=this.value"><button class="btn full" style="margin-top:10px" onclick="adSavePass()">${t('set_save')}</button></div>
+    <div class="row" style="margin-top:16px"><button class="btn sec sm" onclick="adLogout()">${t('exit')}</button></div>`+foot();
+  const act=(AD.list||[]).filter(c=>!c.disabled),income=act.reduce((a,c)=>a+(c.fee||0),0),al=adAlerts(),soon=al.filter(x=>!x.late).length,late=al.filter(x=>x.late).length;
   const kpi=(l,v)=>`<div class="kpi"><div class="kl">${l}</div><div class="kv" style="font-size:22px">${v}</div></div>`;
-  let h=head()+`<div class="kpis">${kpi(t('k_due_total'),fm(income))}${kpi(t('k_soon'),soon)}${kpi(t('k_late'),late)}</div>`+al.map(x=>`<div class="bill${x.late?' late':''}">${esc(x.m)}</div>`).join('');
+  h+=`<div class="kpis">${kpi(t('k_due_total'),fm(income))}${kpi(t('k_soon'),soon)}${kpi(t('k_late'),late)}</div>`+al.map(x=>`<div class="bill${x.late?' late':''}">${esc(x.m)}</div>`).join('');
   h+=`<div class="row" style="margin:8px 0"><button class="btn" onclick="AD.form=!AD.form;render()">${t('a_add')}</button><button class="btn sec" style="flex:0 0 auto" onclick="adRefresh()">${t('a_refresh')}</button></div>`;
-  if(AD.form)h+=`<div class="card col"><div class="sub">${t('g_name')}</div><input value="${esc(f.name)}" oninput="adName(this)">
+  if(AD.form)h+=`<div class="card col canteen"><div class="sub">${t('g_name')}</div><input value="${esc(f.name)}" oninput="adName(this)">
     <div class="sub" style="margin-top:10px">${t('g_code')}</div><input id="acode" autocapitalize="none" value="${esc(f.code)}" oninput="AD.f.code=this.value;AD.f.edited=true"><div class="sub">${t('g_code_hint')}</div>
     <div class="sub" style="margin-top:10px">${t('g_pass')}</div><div class="row" style="flex-wrap:nowrap"><input value="${esc(f.pass)}" autocomplete="off" oninput="AD.f.pass=this.value"><button class="btn sec sm" style="flex:0 0 auto" onclick="adGen()">${t('a_gen')}</button></div>
-    <div class="row" style="margin-top:10px"><div><div class="sub">${t('a_fee')}</div><input inputmode="numeric" value="${esc(f.fee)}" oninput="AD.f.fee=this.value"></div><div><div class="sub">${t('a_paid_until')}</div><input inputmode="numeric" maxlength="10" value="${esc(f.until)}" oninput="maskDate(this);AD.f.until=this.value"></div></div>
+    <div class="row" style="margin-top:10px"><div><div class="sub">${t('a_fee')}</div><input inputmode="numeric" value="${esc(fmtNum(f.fee))}" oninput="maskNum(this);AD.f.fee=this.value"></div><div><div class="sub">${t('a_paid_until')}</div><input inputmode="numeric" maxlength="10" value="${esc(f.until)}" oninput="maskDate(this);AD.f.until=this.value"></div></div>
     <div class="sub" style="margin-top:10px">${t('a_days')}</div><input type="number" min="1" max="365" value="${esc(f.days)}" oninput="AD.f.days=this.value">
     <button class="btn ok full" style="margin-top:12px" onclick="adCreate()">${t('g_make')}</button></div>`;
   h+=(AD.list&&AD.list.length)?AD.list.map(c=>{const n=c.until?leftDays(c.until):null,nt=c.notify??5,
       st=n===null?['',t('a_not_set')]:n<0?['bad',t('a_overdue',{n:-n})]:n===0?['warn',t('a_today')]:n<=nt?['warn',t('a_left',{n})]:['ok',t('a_left',{n})];
-    return`<div class="card col"><div class="line"><b>${esc(c.name)}</b><span class="chip ${c.disabled?'bad':'ok'}">${t(c.disabled?'a_off':'a_active')}</span></div>
+    return`<div class="card col canteen"><div class="line"><b>${esc(c.name)}</b><span class="chip ${c.disabled?'bad':'ok'}">${t(c.disabled?'a_off':'a_active')}</span></div>
     <div class="sub">${t('g_code')}: <b>${esc(c.slug)}</b> · ${t('a_created')} ${dtm(Date.parse(c.created))}</div>
     <div class="sub">${t('a_size')}: ${kb(c.size||0)} · ${t('a_upd')}: ${c.updated?dtm(Date.parse(c.updated)):'—'}${c.inbox?` · ${t('a_inbox')}: ${c.inbox}`:''}</div>
     <div class="billbox"><div class="line" style="align-items:center"><span>${t('a_fee')}: <b>${fm(c.fee)}</b></span><button class="btn sec sm" onclick="adFee('${c.slug}')">${t('a_fee_btn')}</button></div>
@@ -639,14 +678,11 @@ function adminHTML(){const f=AD.f;const act=(AD.list||[]).filter(c=>!c.disabled)
     <div class="row" style="margin-top:8px;flex-wrap:nowrap;align-items:center"><span class="sub" style="flex:1">${t('a_days')}</span><input type="number" min="1" max="365" style="width:90px;flex:0 0 90px" value="${c.days}" onchange="adDays('${c.slug}',this.value)"></div>
     <div class="sub" style="margin-top:8px">${t('a_links')}</div><div class="chips"><button class="chip2" onclick="adCopy('${c.slug}','client')">${t('a_link_client')}</button><button class="chip2" onclick="adCopy('${c.slug}','desk')">${t('a_link_desk')}</button><button class="chip2" onclick="adCopy('${c.slug}','kitchen')">${t('a_link_kitchen')}</button></div>
     <div class="chips" style="margin-top:10px"><button class="btn sec sm" onclick="adRename('${c.slug}')">${t('a_rename')}</button><button class="btn sec sm" onclick="adPass('${c.slug}')">${t('a_setpass')}</button><button class="btn sec sm" onclick="adToggle('${c.slug}')">${t(c.disabled?'a_enable':'a_disable')}</button><button class="btn bad sm" onclick="adDelete('${c.slug}')">${t('del')}</button></div></div>`}).join(''):`<p class="sub">${t('a_none')}</p>`;
-  h+=`<div class="card col"><b>${t('a_origins')}</b><input style="margin-top:8px" value="${esc(AD.orig||'')}" oninput="AD.orig=this.value"><div class="sub" style="margin-top:4px">${t('a_origins_hint')}</div><button class="btn sec full" style="margin-top:8px" onclick="adSaveOrigins()">${t('set_save')}</button></div>
-    <div class="card col"><b>${t('a_pass_admin')}</b><div class="sub" style="margin-top:6px">${t('set_old')}</div><input type="password" autocomplete="current-password" value="${esc(AD.old)}" oninput="AD.old=this.value"><div class="sub" style="margin-top:8px">${t('set_new')}</div><input type="password" autocomplete="new-password" value="${esc(AD.nw)}" oninput="AD.nw=this.value"><button class="btn full" style="margin-top:10px" onclick="adSavePass()">${t('set_save')}</button></div>
-    <div class="row" style="margin-top:16px"><button class="btn sec sm" onclick="adLogout()">${t('exit')}</button></div>`+foot();
-  return h}
+  return h+foot()}
 function askInput(title,value,type,fn,mask){UI.inp={title,value,type,fn,mask};render()}
 function inpYes(){const i=UI.inp,v=(document.getElementById('inpv')||{}).value||'';UI.inp=null;render();if(i&&i.fn)i.fn(v)}
 function inpNo(){UI.inp=null;render()}
-function inputHTML(){return UI.inp?`<div class="modal" onclick="if(event.target===this)inpNo()"><div><p class="cfm">${esc(UI.inp.title)}</p><input id="inpv" type="${UI.inp.type}" value="${esc(UI.inp.value)}" autocapitalize="none" ${UI.inp.mask==='date'?'inputmode="numeric" maxlength="10" oninput="maskDate(this)"':''} onkeydown="if(event.key==='Enter')inpYes()"><div class="row" style="margin-top:14px"><button class="btn sec" onclick="inpNo()">${t('back')}</button><button class="btn" onclick="inpYes()">${t('set_save')}</button></div></div></div>`:''}
+function inputHTML(){return UI.inp?`<div class="modal" onclick="if(event.target===this)inpNo()"><div><p class="cfm">${esc(UI.inp.title)}</p><input id="inpv" type="${UI.inp.type}" value="${esc(UI.inp.value)}" autocapitalize="none" ${UI.inp.mask==='date'?'inputmode="numeric" maxlength="10" oninput="maskDate(this)"':UI.inp.mask==='num'?'inputmode="numeric" oninput="maskNum(this)"':''} onkeydown="if(event.key==='Enter')inpYes()"><div class="row" style="margin-top:14px"><button class="btn sec" onclick="inpNo()">${t('back')}</button><button class="btn" onclick="inpYes()">${t('set_save')}</button></div></div></div>`:''}
 let installEv=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEv=e;render()});
 async function doInstall(){if(installEv){installEv.prompt();await installEv.userChoice;installEv=null;render()}}
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
@@ -661,7 +697,7 @@ function billText(){const b=S&&S.bill;if(!b||!b.until)return null;const n=leftDa
   let m=n<0?t('bill_late',{d,n:-n}):n===0?t('bill_today',{d}):t('bill_soon',{d,n});if(b.fee>0)m+='. '+t('bill_amount',{a:fm(b.fee)});return{m,late:n<0}}
 function billBanner(){if(ROLE!=='desk'&&ROLE!=='kitchen')return'';const b=billText();return b?`<div class="bill${b.late?' late':''}">${esc(b.m)}</div>`:''}
 function billToast(){const b=billText();if(!b)return;const k='tl.bill.'+SLUG+'.'+dayKey();try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}toast(b.m,b.late?'bad':'')}
-function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt=""><span class="bn">Tayyor</span>${((ROLE==='client'?(PUB&&PUB.name):ROLE==='admin'?'':(S&&S.name))||'')?`<span class="bc">${esc(ROLE==='client'?PUB.name:S.name)}</span>`:''}<span class="br">${t(ROLE==='client'?'role_client':'r_'+ROLE)}</span></div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header>${installBox()}${billBanner()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
+function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt=""><span class="bn">Tayyor</span></div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header><div class="hmid">${((ROLE==='client'?(PUB&&PUB.name):ROLE==='admin'?'':(S&&S.name))||'')?`<span class="bc">${esc(ROLE==='client'?PUB.name:S.name)}</span>`:''}<span class="br">${t(ROLE==='client'?'role_client':'r_'+ROLE)}</span></div>${installBox()}${billBanner()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
 function foot(){return`<div class="foot">${t('version')} ${APP_VERSION} · <span style="color:${online?'var(--ok)':'var(--bad)'}">●</span> ${online?t('on_line'):t('off_line')}${SLUG?' · '+esc(SLUG):''} · Tayyor</div>`}
 function installBox(){if(isStandalone)return'';if(installEv)return`<button class="btn full" style="margin:6px 0" onclick="doInstall()">📲 ${t('install')}</button>`;if(isIOS)return`<p class="sub">📲 ${t('ios_hint')}</p>`;return''}
 function gateHTML(){const g=UI.g;
@@ -744,6 +780,7 @@ function invHTML(){const ex=S.products.filter(p=>!p.stock&&p.on!==false),r=UI.rc
   if(UI.menuEdit)h+=S.products.map(menuCard).join('')+`<button class="btn sec full" onclick="addProd()">${t('add_prod')}</button>`;
   return h}
 function menuCard(p){return`<div class="card col"><div class="row">${LANGS.map(([c,n])=>`<input title="${n}" placeholder="${n}" value="${esc(p.names[c])}" onchange="setP('${p.id}','n_${c}',this.value)">`).join('')}</div><div class="row" style="margin-top:6px"><div><div class="sub">${t('price')}</div><input type="number" value="${p.price}" onchange="setP('${p.id}','price',this.value)"></div></div><div class="row" style="margin-top:6px;align-items:center"><label class="sub"><input type="checkbox" style="width:auto" ${p.stock?'checked':''} onchange="setP('${p.id}','stock',this.checked);render()"> ${t('tracked')}</label><button class="btn bad sm" style="flex:0 0 auto" onclick="delProd('${p.id}')">${t('del')}</button></div></div>`}
+const ptile=(on,e,n,c,cls='')=>`<button class="pt ${cls}" onclick="${on}"><span class="pe2">${e}</span><span class="pn">${esc(n)}</span><span class="pc">${c}</span></button>`;
 function sumDay(k){const d=(S.sold&&S.sold[k])||{};let q=0,s=0;for(const pid in d){const p=P(pid);if(p&&p.stock)q+=d[pid].q;s+=d[pid].s}return{q,s}}
 function dashHTML(){
   const st=S.products.filter(p=>p.stock&&p.on!==false);
@@ -758,20 +795,39 @@ function dashHTML(){
     <div class="tr"><span>${t('reserved')}</span><b>${r.r}</b></div><div class="tr"><span>${t('ready')}</span><b>${rd}</b></div><div class="tr"><span>${t('baking')}</span><b class="ovc">${b}</b></div><div class="tr"><span>${t('d_sold')}</span><b>${sold?sold.q:0}</b></div>
     <div class="ts">${bt?(fb>0?t('d_later',{n:fb,m:mins(eta(p.id,fb)||Date.now())}):t('baking')+' ~'+mins(bt.end)+' '+t('min')):t('d_nobake')}</div></div>`}).join('')+'</div>';
   return h}
+function srcStats(period){const out={app:{n:0,s:0},phone:{n:0,s:0},live:{n:0,s:0},hall:{n:0,s:0}},days=period==='today'?1:period==='7'?7:9999,from=dayKey(new Date(Date.now()-(days-1)*864e5));
+  for(const [k,d] of Object.entries(S.src||{}))if(k>=from)for(const s in out)if(d[s]){out[s].n+=d[s].n;out[s].s+=d[s].s}return out}
+function srcHTML(){const per=UI.srcp||'today',st=srcStats(per),tot=Object.values(st).reduce((a,x)=>a+x.n,0),mx=Math.max(...Object.values(st).map(x=>x.n)),ic={app:'📱',phone:'☎',live:'🛒',hall:'🍽'};
+  return`<h2>${t('d_src_title')}</h2><div class="chips" style="margin-bottom:8px">${[['today',t('p_today')],['7',t('p_7')],['all',t('p_all')]].map(([k,l])=>`<button class="chip2${per===k?' on':''}" onclick="UI.srcp='${k}';render()">${l}</button>`).join('')}</div>
+  <div class="tiles">${['app','phone','live','hall'].map(s=>{const x=st[s];return`<div class="tile${x.n>0&&x.n===mx?' top':''}"><div class="th">${ic[s]} ${t('src_'+s)}</div><div class="tv">${x.n}</div><div class="tl">${t('d_orders')}</div><div class="tr"><span>${t('k_rev')}</span><b>${fm(x.s)}</b></div><div class="tr"><span>%</span><b>${tot?Math.round(100*x.n/tot):0}%</b></div></div>`}).join('')}</div>`}
+function deskNewHTML(){const src=UI.nsrc||'phone',items=S.products.filter(p=>p.on!==false),tot=items.reduce((a,p)=>a+(UI.cart[p.id]||0)*p.price,0);
+  let h=`<div class="chips" style="margin:6px 0 8px">${[['phone','☎ '+t('n_phone')],['live','🛒 '+t('n_live')]].map(([k,l])=>`<button class="chip2${src===k?' on':''}" onclick="UI.nsrc='${k}';render()">${l}</button>`).join('')}</div>`;
+  h+=items.map(p=>`<div class="card"><div class="pe">${p.emoji}</div><div class="pi"><b>${esc(pn(p))}</b><div class="sub">${fm(p.price)}</div>${prodStatus(p)}</div><div class="step"><button onclick="cartAdd('${p.id}',-1)">−</button><span>${UI.cart[p.id]||0}</span><button onclick="cartAdd('${p.id}',1)">+</button></div></div>`).join('');
+  if(src==='phone')h+=`<h2>${t('pickup_when')}</h2><div class="chips">${[[0,t('now')],[30,t('in_min',{n:30})],[60,t('in_hour')],[90,t('in_min',{n:90})],[120,t('in_min',{n:120})],[-1,t('pick_custom')]].map(([v,l])=>`<button class="chip2${UI.pick===v?' on':''}" onclick="pickSel(${v})">${l}</button>`).join('')}</div><input id="pt" inputmode="numeric" maxlength="5" placeholder="${t('time_ph')}" value="${esc(UI.pickTime||'')}" oninput="onTime(this)" style="margin-top:8px;display:${UI.pick===-1?'block':'none'}">
+    <div class="row" style="margin-top:8px"><input placeholder="${t('name')}" value="${esc(UI.name)}" oninput="UI.name=this.value"><div style="flex:1;min-width:140px"><input id="ph" type="tel" placeholder="+998 90 123 45 67" autocomplete="tel" value="${esc(phoneView(UI.phone))}" oninput="onPhone(this)" onfocus="if(!this.value)this.value='+998 '" onblur="phBlur(this)">${phoneErr()}</div></div>`;
+  h+=`<div class="line" style="margin-top:12px"><b>${t('total')}</b><b style="font-size:20px">${fm(tot)}</b></div><button class="btn full" style="margin-top:6px" onclick="${src==='phone'?'tryOrder()':'liveSell()'}">${src==='phone'?t('do_phone'):t('do_live')}</button>`;
+  if(UI.modal){const a=UI.modal.filter(x=>x.stock&&x.take<x.want),anyW=a.some(x=>x.wait>0||x.none>0),anyN=a.some(x=>x.none>0),anyT=UI.modal.some(x=>x.take>0&&x.stock);
+    h+=`<div class="modal" onclick="if(event.target===this){UI.modal=null;render()}"><div><h2 style="margin-top:0">${t('short_title')}</h2>${a.map(x=>`<div class="card col">${modalTxt(x)}</div>`).join('')}
+    ${anyW?`<button class="btn full" style="margin:6px 0" onclick="placeOrder('all')">${t(anyN?'wait_ask':'wait_all')}</button>`:''}
+    ${anyT||UI.modal.some(x=>!x.stock)?`<button class="btn sec full" style="margin:6px 0" onclick="placeOrder('ready')">${t('take_ready')}</button>`:''}
+    ${!anyW&&!anyT?`<p>${t('nothing')}</p>`:''}
+    <button class="btn sec full" onclick="UI.modal=null;render()">${t('cancel')}</button></div></div>`}
+  return h}
 function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt);
-  let h=head()+`<div class="tabs">${[['orders',t('t_orders')+(open.length?`<span class="badge">${open.length}</span>`:'')],['hall',t('t_hall')],['stock',t('t_stock')],['set',t('t_set')]].map(([k,l])=>`<button class="${UI.tab===k?'on':''}" onclick="UI.tab='${k}';render()">${l}</button>`).join('')}</div>`;
+  let h=head()+`<div class="tabs">${[['orders',t('t_orders')+(open.length?`<span class="badge">${open.length}</span>`:'')],['new',t('t_new_short')],['hall',t('t_hall')],['stock',t('t_stock')],['set',t('t_set')]].map(([k,l])=>`<button class="${UI.tab===k?'on':''}" onclick="UI.tab='${k}';render()">${l}</button>`).join('')}</div>`;
   if(UI.tab==='orders'){
-    h+=dashHTML()+`<h2>${t('d_orders')}</h2>`;
-    h+=open.length?open.map(o=>`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})} ${esc(o.name)}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div>${o.phone?`<div class="sub">☎ ${esc(o.phone)}</div>`:''}
+    h+=dashHTML()+srcHTML()+`<h2>${t('d_orders')}</h2>`;
+    h+=open.length?open.map(o=>`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})} ${esc(o.name)}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div><div class="sub"><span class="chip">${o.src==='phone'?'☎ '+t('src_phone'):'📱 '+t('src_app')}</span> ${o.phone?esc(o.phone):''}</div>
       ${o.lines.map(l=>`<div class="line"><span>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</span><span>${l.rr>=l.qty?`<span class="chip ok">${t('ready')}</span>`:`${l.rr>0?`<span class="chip ok">${t('ready')} ${l.rr}</span>`:''}${l.rb>0?`<span class="chip warn">${t('waiting',{n:l.rb})} · ~${mins(etaLine(o,l)||Date.now())} ${t('min')}</span>`:''}${l.ask>0?`<span class="chip bad">${t('st_ask')}: ${l.ask}</span>`:''}${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}`}${l.want>l.qty?`<span class="chip bad">${t('asked',{w:l.want,q:l.qty})}</span>`:''}</span></div>`).join('')}
       <div class="row" style="margin-top:8px">${isReady(o)?`<button class="btn ok sm" onclick="giveOrder('${o.id}')">${t('give')}</button>`:`<button class="btn sm" onclick="giveOrder('${o.id}',true)" ${o.lines.some(l=>l.rr>0)?'':'disabled style="opacity:.4"'}>${t('give_part')}</button>`}<button class="btn bad sm" onclick="cancelOrder('${o.id}')">${t('cancel')}</button></div></div>`).join(''):`<p class="sub">${t('no_orders')}</p>`;
     h+=`<h2>🔔</h2>`+S.feed.slice(-8).reverse().map(f=>`<div class="line sub${f.k.startsWith('l_cancel')?' cancelred':''}"><span>${fmtFeed(f,'desk')}</span><span>${hm(f.t)}</span></div>`).join('')}
+  if(UI.tab==='new')h+=deskNewHTML();
   if(UI.tab==='stock')h+=invHTML();
   if(UI.tab==='hall'){
     h+=`<div class="grid tb">${tbls().map(i=>`<button class="${hallOrder(i)?'occ':''} ${UI.tbl===i?'sel':''}" onclick="UI.tbl=${i};render()">${i}</button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn sec sm" onclick="addTable()">${t('add_table')}</button>${UI.tbl&&!hallOrder(UI.tbl)?`<button class="btn bad sm" onclick="delTable(${UI.tbl})">${t('del_table')} ${UI.tbl}</button>`:''}</div>`;
     if(UI.tbl){const o=hallOrder(UI.tbl),sum=o?o.lines.reduce((a,l)=>a+l.qty*P(l.pid).price,0):0;
       h+=`<h2>${t('table',{n:UI.tbl})}</h2>${o?o.lines.map(l=>`<div class="card"><div class="pi">${P(l.pid).emoji} ${esc(pn(P(l.pid)))}</div><div class="step"><button onclick="hallAdd(${UI.tbl},'${l.pid}',-1)">−</button><span>${l.qty}</span><button onclick="hallAdd(${UI.tbl},'${l.pid}',1)">+</button></div></div>`).join('')+`<div class="line"><b>${t('total')}</b><b>${fm(sum)}</b></div><button class="btn ok full" onclick="closeTable(${UI.tbl})">${t('close_table')}</button>`:`<p class="sub">${t('table_empty')}</p>`}
-      <h2>+</h2><div class="grid">${S.products.filter(p=>p.on!==false).map(p=>`<button onclick="hallAdd(${UI.tbl},'${p.id}',1)">${p.emoji}<br><small>${esc(pn(p))}</small>${p.stock?`<br><small>${freeR(p.id)}</small>`:''}</button>`).join('')}</div>`}}
+      <h2>+</h2><div class="grid pg">${S.products.filter(p=>p.on!==false).map(p=>ptile(`hallAdd(${UI.tbl},'${p.id}',1)`,p.emoji,pn(p),p.stock?freeR(p.id):(invTracked(p.id)?invFree(p.id):'—'))).join('')}</div>`}}
   if(UI.tab==='set'){
     h+=`<div class="card col"><div class="sub">${t('set_retain',{n:S.retain||10})}</div></div>
     <div class="card col"><b>${t('link')}</b><div class="sub" style="word-break:break-all;margin-top:4px">${esc(clientLink())}</div><div id="qr" style="margin-top:8px;max-width:180px"></div><div class="sub" style="margin-top:6px">${t('g_code')}: <b>${esc(SLUG)}</b></div></div>
@@ -784,7 +840,7 @@ function reqHTML(){const rs=[];for(const o of openP().sort((a,b)=>a.created-b.cr
   return`<h2 style="color:var(--bad)">🔔 ${t('k_req_title')} (${rs.length})</h2>`+rs.map(([o,l])=>`<div class="card col" style="border-color:var(--bad)"><b>${t('k_req_line',{no:o.no,p:esc(pn(P(l.pid))),n:l.ask})}</b><div class="sub">${t('at_time',{t:hm(o.pickupAt)})}</div><div class="row" style="margin-top:6px;flex-wrap:nowrap"><input id="am-${o.id}-${l.pid}" type="number" min="1" value="${(S.lastMin&&S.lastMin[l.pid])||25}"><span class="sub" style="flex:0 0 auto">${t('min')}</span></div><div class="row" style="margin-top:8px"><button class="btn ok" onclick="askAnswer('${o.id}','${l.pid}',true)">🔥 ${t('k_will')}</button><button class="btn bad" onclick="askAnswer('${o.id}','${l.pid}',false)">${t('k_wont')}</button></div></div>`).join('')}
 function vKitchen(){const k=UI.k,stockP=S.products.filter(p=>p.stock&&p.on!==false);if(!P(k.pid))k.pid=stockP[0]&&stockP[0].id;
   const p=P(k.pid);const bs=[...S.batches].sort((a,b)=>a.end-b.end);
-  let h=head()+reqHTML()+`<h2>${t('k_put')}</h2><div class="grid">${stockP.map(x=>`<button class="${k.pid===x.id?'sel':''}" onclick="UI.k.pid='${x.id}';UI.k.min=null;render()">${x.emoji}<br><small>${esc(pn(x))}</small>${askN(x.id)>0?`<br><small style="color:var(--bad)">!${askN(x.id)}</small>`:''}</button>`).join('')}</div>`;
+  let h=head()+reqHTML()+`<h2>${t('k_put')}</h2><div class="grid pg">${stockP.map(x=>ptile(`UI.k.pid='${x.id}';UI.k.min=null;render()`,x.emoji,pn(x),askN(x.id)>0?'! '+askN(x.id):rdy(x.id),k.pid===x.id?'sel':'')).join('')}</div>`;
   if(p){
     h+=`<div class="card col"><div class="sub">${t('k_qty')}</div><div class="step" style="justify-content:space-between"><button onclick="UI.k.qty=Math.max(1,UI.k.qty-5);render()">−</button><span class="big">${k.qty}</span><button onclick="UI.k.qty+=5;render()">+</button></div>
     <div class="row" style="margin:8px 0">${[10,20,30,50].map(n=>`<button class="btn sec sm" onclick="UI.k.qty=${n};render()">${n}</button>`).join('')}</div>

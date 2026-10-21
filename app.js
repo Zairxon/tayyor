@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.1.0';
+const APP_VERSION='2.2.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -169,7 +169,7 @@ set_save:["Сақлаш","Saqlash","Сохранить","Save"],
 set_pass_ok:["Парол ўзгартирилди. Бошқа қурилмалар қайта киради","Parol o'zgartirildi. Boshqa qurilmalar qayta kiradi","Пароль изменён. Остальные устройства войдут заново","Password changed. Other devices will sign in again"],
 set_pass_bad:["Парол ўзгармади: жорий паролни текширинг","Parol o'zgarmadi: joriy parolni tekshiring","Пароль не изменён: проверьте текущий пароль","Password not changed: check the current password"],
 set_name_ok:["Номи сақланди","Nomi saqlandi","Название сохранено","Name saved"],
-r_admin:["Бошқарув","Boshqaruv","Регулятор","Admin"],
+r_admin:["Админ","Admin","Админ","Admin"],
 g_origin:["Бу нусха базага уланмаган: сайт манзили рухсат этилмаган","Bu nusxa bazaga ulanmagan: sayt manzili ruxsat etilmagan","Эта копия программы не подключена к базе: адрес сайта не разрешён","This copy isn't connected to the database: the site address isn't allowed"],
 g_disabled:["Кириш администратор томонидан ўчирилган","Kirish administrator tomonidan o'chirilgan","Доступ отключён администратором","Access was disabled by the administrator"],
 set_retain:["Маълумотлар {n} кун сақланади (администратор белгилайди)","Ma'lumotlar {n} kun saqlanadi (administrator belgilaydi)","Данные хранятся {n} дн. (устанавливает администратор)","Data is kept for {n} days (set by the administrator)"],
@@ -215,6 +215,34 @@ a_origins:["Рухсат этилган сайт манзиллари (верг�
 a_origins_hint:["Дастур фақат шу манзилларда базага уланади. Бошқа сайтдаги нусха ишламайди.","Dastur faqat shu manzillarda bazaga ulanadi. Boshqa saytdagi nusxa ishlamaydi.","Программа подключается к базе только на этих адресах. Копия на другом сайте работать не будет.","The program connects to the database only on these addresses. A copy on another site won't work."],
 a_origins_ok:["Манзиллар сақланди","Manzillar saqlandi","Адреса сохранены","Addresses saved"],
 a_pass_changed:["Администратор пароли ўзгартирилди","Administrator paroli o'zgartirildi","Пароль администратора изменён","Administrator password changed"],
+role_client:["Буюртма","Buyurtma","Заказ","Order"],
+bill_soon:["Tayyor тўлов муддати: {d} ({n} кундан кейин)","Tayyor to'lov muddati: {d} ({n} kundan keyin)","Срок оплаты Tayyor: {d} (через {n} дн.)","Tayyor payment due: {d} (in {n} days)"],
+bill_today:["Tayyor тўлов муддати — бугун ({d})","Tayyor to'lov muddati — bugun ({d})","Срок оплаты Tayyor — сегодня ({d})","Tayyor payment is due today ({d})"],
+bill_late:["Tayyor тўлов муддати {n} кун олдин ўтди ({d})","Tayyor to'lov muddati {n} kun oldin o'tdi ({d})","Срок оплаты Tayyor прошёл {n} дн. назад ({d})","Tayyor payment is {n} days overdue ({d})"],
+bill_amount:["Тўлаш: {a}","To'lash: {a}","К оплате: {a}","Amount due: {a}"],
+a_fee:["Ойлик тўлов","Oylik to'lov","Оплата в месяц","Monthly fee"],
+a_paid_until:["Тўланган муддат","To'langan muddat","Оплачено до","Paid until"],
+a_not_set:["Белгиланмаган","Belgilanmagan","Не задано","Not set"],
+a_left:["{n} кун қолди","{n} kun qoldi","осталось {n} дн.","{n} days left"],
+a_overdue:["{n} кун кечикди","{n} kun kechikdi","просрочено на {n} дн.","{n} days overdue"],
+a_today:["бугун","bugun","сегодня","today"],
+a_pay:["Тўланди","To'landi","Оплачено","Paid"],
+a_pay_c:["«{n}» тўловини қабул қиласизми: {a}? Муддат {d} гача узаяди","«{n}» to'lovini qabul qilasizmi: {a}? Muddat {d} gacha uzayadi","Принять оплату «{n}»: {a}? Срок продлится до {d}","Accept the payment from “{n}”: {a}? Paid until {d}"],
+a_pay_ok:["«{n}» тўлови қабул қилинди: {a}, муддат {d} гача","«{n}» to'lovi qabul qilindi: {a}, muddat {d} gacha","Оплата «{n}» принята: {a}, оплачено до {d}","Payment from “{n}” received: {a}, paid until {d}"],
+a_date_btn:["Муддат","Muddat","Срок","Due date"],
+a_fee_btn:["Сумма","Summa","Сумма","Amount"],
+a_date_t:["«{n}» учун тўлов муддати (КК.ОО.ЙЙЙЙ)","«{n}» uchun to'lov muddati (KK.OO.YYYY)","Оплачено до для «{n}» (ДД.ММ.ГГГГ)","Paid-until date for “{n}” (DD.MM.YYYY)"],
+a_date_bad:["Санани КК.ОО.ЙЙЙЙ кўринишида киритинг","Sanani KK.OO.YYYY ko'rinishida kiriting","Введите дату как ДД.ММ.ГГГГ","Enter the date as DD.MM.YYYY"],
+a_fee_t:["«{n}» учун ойлик тўлов (сўм)","«{n}» uchun oylik to'lov (so'm)","Оплата в месяц для «{n}» (сум)","Monthly fee for “{n}” (UZS)"],
+a_fee_bad:["Суммани рақам билан киритинг","Summani raqam bilan kiriting","Введите сумму числом","Enter the amount as a number"],
+a_notify:["Огоҳлантириш (кун олдин)","Ogohlantirish (kun oldin)","Предупреждать за (дн.)","Remind before (days)"],
+a_pays:["Сўнгги тўловлар","So'nggi to'lovlar","Последние оплаты","Recent payments"],
+k_due_total:["Ойига тушум","Oyiga tushum","Оплат в месяц","Monthly income"],
+k_soon:["Муддат яқин","Muddat yaqin","Скоро срок","Due soon"],
+k_late:["Кечиккан","Kechikkan","Просрочено","Overdue"],
+a_al_soon:["«{n}»: тўлов муддати {d} кундан кейин ({date})","«{n}»: to'lov muddati {d} kundan keyin ({date})","«{n}»: срок оплаты через {d} дн. ({date})","“{n}”: payment due in {d} days ({date})"],
+a_al_today:["«{n}»: тўлов муддати бугун","«{n}»: to'lov muddati bugun","«{n}»: срок оплаты сегодня","“{n}”: payment is due today"],
+a_al_late:["«{n}»: тўлов муддати {d} кун олдин ўтди","«{n}»: to'lov muddati {d} kun oldin o'tdi","«{n}»: срок оплаты прошёл {d} дн. назад","“{n}”: payment is {d} days overdue"],
 phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
@@ -290,14 +318,20 @@ const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const SLUG=((new URLSearchParams(location.search).get('s')||(()=>{try{return localStorage.getItem('tl.slug')}catch(e){return ''}})()||'')+'').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,40);
 const KEY='tayyor.'+SLUG,MK='tl.mine.'+SLUG,HK='tl.hist.'+SLUG,TK='tl.tok.'+SLUG;
 const TOK=()=>{try{return localStorage.getItem(TK)}catch(e){return null}};
-(async()=>{if(!SLUG)return;try{const l=document.querySelector('link[rel=manifest]'),u=l.href,m=await(await fetch(u)).json(),b=new URL('.',u).href;
-  m.start_url=b+'?s='+SLUG;m.id=b+'?s='+SLUG;m.scope=b;m.icons=m.icons.map(i=>({...i,src:new URL(i.src,b).href}));
-  l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}))}catch(e){}})();
+let MBASE=null,mName='';
+async function setManifest(name){if(!SLUG)return;
+  try{const l=document.querySelector('link[rel=manifest]');if(!MBASE){const u=l.href;MBASE={m:await(await fetch(u)).json(),b:new URL('.',u).href}}
+    const m=JSON.parse(JSON.stringify(MBASE.m)),b=MBASE.b;m.start_url=b+'?s='+SLUG;m.id=b+'?s='+SLUG;m.scope=b;m.icons=m.icons.map(i=>({...i,src:new URL(i.src,b).href}));
+    if(name){m.name=name;m.short_name=name}
+    l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}))}catch(e){}}
+function nameApp(name){if(!name||name===mName)return;mName=name;try{localStorage.setItem('tl.cname.'+SLUG,name)}catch(e){}
+  setManifest(name);document.title=name;const m=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(m)m.content=name}
+setManifest((()=>{try{return window.ROLE==='client'||!window.ROLE?localStorage.getItem('tl.cname.'+SLUG):null}catch(e){return null}})());
 let sb=null,online=false,queue=[],syncing=false,PUB=null,pubIds='',ackQ=[],ingested=new Set(),inboxBusy=false;
 try{sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false}})}catch(e){}
 function load(){try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.products)S=null}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-const strip=()=>{const d=JSON.parse(JSON.stringify(S));delete d._rev;delete d.retain;const keep=(S.retain||10)*864e5,now=Date.now();
+const strip=()=>{const d=JSON.parse(JSON.stringify(S));delete d._rev;delete d.retain;delete d.bill;const keep=(S.retain||10)*864e5,now=Date.now();
   d.orders=d.orders.filter(o=>o.status==='open'||now-o.created<keep).map(o=>(o.status==='open'||now-o.created<216e5)?o:{id:o.id,no:o.no,type:o.type,table:o.table,status:o.status,created:o.created,lines:[]}).slice(-3000);return d};
 function setOnline(v){if(online!==v){online=v;render()}}
 const mineIds=()=>{try{return JSON.parse(localStorage.getItem(MK)||'[]')}catch(e){return[]}};
@@ -306,7 +340,7 @@ async function pull(force){if(!sb||!TOK())return false;
   try{const{data,error}=await sb.rpc('tayyor_state_get',{p_slug:SLUG,p_token:TOK()});if(error)throw error;
     if(!data){authLost();return false}
     if(!force&&(queue.length||syncing))return true;
-    S=data.data;S._rev=data.rev;S.retain=data.retain;if(data.name)S.name=data.name;save();setOnline(true);return true}
+    S=data.data;S._rev=data.rev;S.retain=data.retain;S.bill=data.bill;if(data.name)S.name=data.name;save();setOnline(true);return true}
   catch(e){setOnline(false);return false}}
 function mutate(fn){const r=fn();queue.push(fn);save();afterChange();flush();return r}
 async function flush(){if(syncing||!queue.length||!sb||!S||!TOK())return;syncing=true;
@@ -332,7 +366,7 @@ async function pullPub(){if(!sb||!SLUG)return false;const mine=mineIds(),key=min
     setOnline(true);
     if(data.none){PUB=null;UI.noTenant=true;render();return false}
     UI.noTenant=false;if(data.same)return true;
-    const prev=PUB;PUB={...data.data,orders:data.orders||{},name:data.name,_rev:data.rev};pubIds=key;
+    const prev=PUB;PUB={...data.data,orders:data.orders||{},name:data.name,_rev:data.rev};pubIds=key;nameApp(PUB.name);
     if(prev)clientNotify(prev.orders,PUB.orders);render();return true}
   catch(e){setOnline(false);return false}}
 function clientNotify(po,no){const rd=o=>o.lines.length&&o.lines.every(l=>l.rr>=l.qty),say=(m,bad,loud)=>{toast(m,bad?'bad':'');if(loud){beep(3);try{navigator.vibrate&&navigator.vibrate(300);window.Notification&&Notification.permission==='granted'&&new Notification(PUB.name||'Tayyor',{body:m})}catch(e){}}};
@@ -368,7 +402,7 @@ async function syncTick(){
   if(queue.length||syncing){flush();return}
   try{const r=await sb.rpc('tayyor_rev',{p_slug:SLUG,p_token:TOK()});if(r.error)throw r.error;
     if(r.data===-3){authLost();return}
-    setOnline(true);if(r.data!==S._rev&&await pull())afterChange();
+    setOnline(true);if(r.data!==S._rev&&await pull())afterChange();billToast();
     await processInbox();flush()}
   catch(e){setOnline(false)}}
 function schedule(){setTimeout(async()=>{try{await syncTick()}catch(e){}schedule()},ROLE==='client'?(document.hidden?20000:5000):ROLE==='admin'?30000:(document.hidden?15000:3000))}
@@ -527,7 +561,7 @@ async function savePwd(){const n=UI.pwNew||'';if(n.length<4)return toast(t('g_pa
 
 const ATK='tl.atok';
 const ATOK=()=>{try{return localStorage.getItem(ATK)}catch(e){return null}};
-let AD={list:null,origins:[],form:false,f:{name:'',code:'',pass:'',days:10,edited:false},pass:'',old:'',nw:'',orig:null};
+let AD={list:null,origins:[],form:false,f:null,pass:'',old:'',nw:'',orig:null,alerted:false};
 function adOut(){try{localStorage.removeItem(ATK)}catch(e){}AD.list=null;render()}
 async function adLogin(){let r;try{const x=await sb.rpc('tayyor_admin_login',{p_pass:AD.pass||''});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
   if(!r||!r.ok)return toast(t(r&&r.err==='locked'?'a_locked':r&&r.err==='origin'?'g_origin':'a_bad'),'bad');
@@ -535,20 +569,32 @@ async function adLogin(){let r;try{const x=await sb.rpc('tayyor_admin_login',{p_
 async function adLogout(){try{await sb.rpc('tayyor_admin_logout',{p_token:ATOK()})}catch(e){}adOut()}
 async function adRefresh(){const tk=ATOK();if(!tk)return;
   try{const x=await sb.rpc('tayyor_admin_list',{p_token:tk});if(x.error)throw x.error;if(!x.data||!x.data.ok){adOut();return}
-    AD.list=x.data.list;AD.origins=x.data.origins||[];if(AD.orig===null)AD.orig=AD.origins.join(', ');setOnline(true);render()}
+    AD.list=x.data.list;AD.origins=x.data.origins||[];if(AD.orig===null)AD.orig=AD.origins.join(', ');if(!AD.f)AD.f=newForm();setOnline(true);render();adAlertsToast()}
   catch(e){setOnline(false)}}
 function adGen(){const a='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=new Uint8Array(10);crypto.getRandomValues(r);AD.f.pass=Array.from(r,b=>a[b%a.length]).join('');render()}
 function adName(el){AD.f.name=el.value;if(!AD.f.edited){AD.f.code=slugify(el.value);const c=document.getElementById('acode');if(c)c.value=AD.f.code}}
-async function adCreate(){const f=AD.f,name=(f.name||'').trim(),code=slugify(f.code||name),days=Math.floor(+f.days||10);
+const parseDMY=s=>{const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec((s||'').trim());if(!m)return null;const d=new Date(+m[3],+m[2]-1,+m[1]);return d.getFullYear()==+m[3]&&d.getMonth()==+m[2]-1&&d.getDate()==+m[1]?m[3]+'-'+m[2]+'-'+m[1]:null};
+function addMonthYmd(ymd){const y=+ymd.slice(0,4),m=+ymd.slice(5,7),d=+ymd.slice(8,10),ny=m===12?y+1:y,nm=m===12?1:m+1,dim=new Date(ny,nm,0).getDate();return ny+'-'+String(nm).padStart(2,'0')+'-'+String(Math.min(d,dim)).padStart(2,'0')}
+function maskDate(el){const d=el.value.replace(/\D/g,'').slice(0,8);el.value=d.length>4?d.slice(0,2)+'.'+d.slice(2,4)+'.'+d.slice(4):d.length>2?d.slice(0,2)+'.'+d.slice(2):d}
+async function adCreate(){const f=AD.f,name=(f.name||'').trim(),code=slugify(f.code||name),days=Math.floor(+f.days||10),fee=Math.floor(+String(f.fee||0).replace(/\s/g,'')),until=parseDMY(f.until);
   if(!name)return toast(t('g_name_need'),'bad');if(code.length<3)return toast(t('g_code_bad'),'bad');if((f.pass||'').length<4)return toast(t('g_pass_short'),'bad');if(days<1||days>365)return toast(t('a_days_bad'),'bad');
+  if(!(fee>=0))return toast(t('a_fee_bad'),'bad');if(!until)return toast(t('a_date_bad'),'bad');
   const s0=seedFresh(name),keep=S;S=s0;const pub=buildPub();S=keep;let r;
-  try{const x=await sb.rpc('tayyor_admin_create',{p_token:ATOK(),p_slug:code,p_name:name,p_pass:f.pass,p_days:days,p_state:s0,p_pub:pub});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
-  if(!r||!r.ok){if(r&&r.err==='auth'){adOut();return}return toast(t(r&&r.err==='taken'?'g_taken':r&&r.err==='pass'?'g_pass_short':'g_code_bad'),'bad')}
-  toast(t('a_created_ok',{n:name,l:code}));AD.f={name:'',code:'',pass:'',days:10,edited:false};AD.form=false;adRefresh()}
+  try{const x=await sb.rpc('tayyor_admin_create',{p_token:ATOK(),p_slug:code,p_name:name,p_pass:f.pass,p_days:days,p_state:s0,p_pub:pub,p_fee:fee,p_paid_until:until});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
+  if(!r||!r.ok){if(r&&r.err==='auth'){adOut();return}return toast(t(r&&r.err==='taken'?'g_taken':r&&r.err==='pass'?'g_pass_short':r&&r.err==='fee'?'a_fee_bad':'g_code_bad'),'bad')}
+  toast(t('a_created_ok',{n:name,l:code}));AD.f=newForm();AD.form=false;adRefresh()}
 async function adUpdate(slug,o,okKey,okArgs){let r;
-  try{const x=await sb.rpc('tayyor_admin_update',{p_token:ATOK(),p_slug:slug,p_name:o.name??null,p_pass:o.pass??null,p_days:o.days??null,p_disabled:o.disabled??null});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
-  if(!r||!r.ok){if(r&&r.err==='auth'){adOut();return}return toast(t(r&&r.err==='days'?'a_days_bad':r&&r.err==='pass'?'g_pass_short':'g_fail'),'bad')}
+  try{const x=await sb.rpc('tayyor_admin_update',{p_token:ATOK(),p_slug:slug,p_name:o.name??null,p_pass:o.pass??null,p_days:o.days??null,p_disabled:o.disabled??null,p_fee:o.fee??null,p_paid_until:o.until??null,p_notify:o.notify??null});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
+  if(!r||!r.ok){if(r&&r.err==='auth'){adOut();return}return toast(t(r&&r.err==='days'?'a_days_bad':r&&r.err==='pass'?'g_pass_short':r&&r.err==='fee'?'a_fee_bad':'g_fail'),'bad')}
   toast(t(okKey,okArgs));adRefresh()}
+function adFee(slug){const c=adItem(slug);askInput(t('a_fee_t',{n:c.name}),String(c.fee||0),'text',v=>{const n=Math.floor(+v.replace(/\s/g,''));if(!(n>=0))return toast(t('a_fee_bad'),'bad');adUpdate(slug,{fee:n},'a_saved')})}
+function adUntil(slug){const c=adItem(slug);askInput(t('a_date_t',{n:c.name}),dMY(c.until)||'','text',v=>{const d=parseDMY(v);if(!d)return toast(t('a_date_bad'),'bad');adUpdate(slug,{until:d},'a_saved')},'date')}
+function adNotify(slug,v){const n=Math.floor(+v);if(!(n>=0&&n<=60)){toast(t('a_days_bad'),'bad');render();return}adUpdate(slug,{notify:n},'a_saved')}
+function adPay(slug){const c=adItem(slug),today=dayKey(),base=c.until&&c.until>=today?c.until:today,nu=addMonthYmd(base);
+  askConfirm(t('a_pay_c',{n:c.name,a:fm(c.fee),d:dMY(nu)}),async()=>{let r;
+    try{const x=await sb.rpc('tayyor_admin_pay',{p_token:ATOK(),p_slug:slug,p_amount:null});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
+    if(r&&r.ok){toast(t('a_pay_ok',{n:c.name,a:fm(r.amount),d:dMY(r.until)}));adRefresh()}else toast(t('g_fail'),'bad')})}
+const newForm=()=>({name:'',code:'',pass:'',days:10,fee:0,until:(()=>{const d=addMonthYmd(dayKey());return dMY(d)})(),edited:false});
 const adItem=slug=>(AD.list||[]).find(x=>x.slug===slug);
 function adDays(slug,v){const d=Math.floor(+v);if(!(d>=1&&d<=365)){toast(t('a_days_bad'),'bad');render();return}adUpdate(slug,{days:d},'a_days_ok',{n:adItem(slug).name,d})}
 function adRename(slug){const c=adItem(slug);askInput(t('a_rename_t',{n:c.name}),c.name,'text',v=>{v=v.trim();if(!v||v===c.name)return;adUpdate(slug,{name:v},'a_name_ok',{n:v})})}
@@ -565,28 +611,42 @@ async function adSavePass(){let ok=false;if((AD.nw||'').length<8)return toast(t(
 async function adSaveOrigins(){const arr=(AD.orig||'').split(',').map(s=>s.trim().replace(/\/+$/,'')).filter(Boolean);let ok=false;
   if(arr.length)try{const x=await sb.rpc('tayyor_admin_set_origins',{p_token:ATOK(),p_origins:arr});ok=x.data===true}catch(e){}
   if(ok){toast(t('a_origins_ok'));adRefresh()}else toast(t('g_fail'),'bad')}
+function adAlerts(){const out=[];for(const c of (AD.list||[])){if(c.disabled||!c.until)continue;const n=leftDays(c.until);if(n>(c.notify??5))continue;
+  out.push({late:n<0,m:n<0?t('a_al_late',{n:c.name,d:-n}):n===0?t('a_al_today',{n:c.name}):t('a_al_soon',{n:c.name,d:n,date:dMY(c.until)})})}return out}
+function adAlertsToast(){if(AD.alerted)return;AD.alerted=true;const a=adAlerts();a.slice(0,3).forEach((x,i)=>setTimeout(()=>toast(x.m,x.late?'bad':''),i*700))}
 function adLoginHTML(){return head()+`<h2>${t('a_pass_admin')}</h2><div class="card col"><input type="password" autocomplete="current-password" value="${esc(AD.pass)}" oninput="AD.pass=this.value" onkeydown="if(event.key==='Enter')adLogin()"><button class="btn full" style="margin-top:12px" onclick="adLogin()">${t('g_login')}</button></div>${foot()}`}
 const kb=n=>n>=1048576?(n/1048576).toFixed(1)+' МБ':Math.max(1,Math.round(n/1024))+' КБ';
-function adminHTML(){const f=AD.f;let h=head()+`<div class="row" style="margin:8px 0"><button class="btn" onclick="AD.form=!AD.form;render()">${t('a_add')}</button><button class="btn sec" style="flex:0 0 auto" onclick="adRefresh()">${t('a_refresh')}</button></div>`;
+function adminHTML(){const f=AD.f;const act=(AD.list||[]).filter(c=>!c.disabled),income=act.reduce((a,c)=>a+(c.fee||0),0),al=adAlerts(),soon=al.filter(x=>!x.late).length,late=al.filter(x=>x.late).length;
+  const kpi=(l,v)=>`<div class="kpi"><div class="kl">${l}</div><div class="kv" style="font-size:22px">${v}</div></div>`;
+  let h=head()+`<div class="kpis">${kpi(t('k_due_total'),fm(income))}${kpi(t('k_soon'),soon)}${kpi(t('k_late'),late)}</div>`+al.map(x=>`<div class="bill${x.late?' late':''}">${esc(x.m)}</div>`).join('');
+  h+=`<div class="row" style="margin:8px 0"><button class="btn" onclick="AD.form=!AD.form;render()">${t('a_add')}</button><button class="btn sec" style="flex:0 0 auto" onclick="adRefresh()">${t('a_refresh')}</button></div>`;
   if(AD.form)h+=`<div class="card col"><div class="sub">${t('g_name')}</div><input value="${esc(f.name)}" oninput="adName(this)">
     <div class="sub" style="margin-top:10px">${t('g_code')}</div><input id="acode" autocapitalize="none" value="${esc(f.code)}" oninput="AD.f.code=this.value;AD.f.edited=true"><div class="sub">${t('g_code_hint')}</div>
     <div class="sub" style="margin-top:10px">${t('g_pass')}</div><div class="row" style="flex-wrap:nowrap"><input value="${esc(f.pass)}" autocomplete="off" oninput="AD.f.pass=this.value"><button class="btn sec sm" style="flex:0 0 auto" onclick="adGen()">${t('a_gen')}</button></div>
+    <div class="row" style="margin-top:10px"><div><div class="sub">${t('a_fee')}</div><input inputmode="numeric" value="${esc(f.fee)}" oninput="AD.f.fee=this.value"></div><div><div class="sub">${t('a_paid_until')}</div><input inputmode="numeric" maxlength="10" value="${esc(f.until)}" oninput="maskDate(this);AD.f.until=this.value"></div></div>
     <div class="sub" style="margin-top:10px">${t('a_days')}</div><input type="number" min="1" max="365" value="${esc(f.days)}" oninput="AD.f.days=this.value">
     <button class="btn ok full" style="margin-top:12px" onclick="adCreate()">${t('g_make')}</button></div>`;
-  h+=(AD.list&&AD.list.length)?AD.list.map(c=>`<div class="card col"><div class="line"><b>${esc(c.name)}</b><span class="chip ${c.disabled?'bad':'ok'}">${t(c.disabled?'a_off':'a_active')}</span></div>
+  h+=(AD.list&&AD.list.length)?AD.list.map(c=>{const n=c.until?leftDays(c.until):null,nt=c.notify??5,
+      st=n===null?['',t('a_not_set')]:n<0?['bad',t('a_overdue',{n:-n})]:n===0?['warn',t('a_today')]:n<=nt?['warn',t('a_left',{n})]:['ok',t('a_left',{n})];
+    return`<div class="card col"><div class="line"><b>${esc(c.name)}</b><span class="chip ${c.disabled?'bad':'ok'}">${t(c.disabled?'a_off':'a_active')}</span></div>
     <div class="sub">${t('g_code')}: <b>${esc(c.slug)}</b> · ${t('a_created')} ${dtm(Date.parse(c.created))}</div>
     <div class="sub">${t('a_size')}: ${kb(c.size||0)} · ${t('a_upd')}: ${c.updated?dtm(Date.parse(c.updated)):'—'}${c.inbox?` · ${t('a_inbox')}: ${c.inbox}`:''}</div>
+    <div class="billbox"><div class="line" style="align-items:center"><span>${t('a_fee')}: <b>${fm(c.fee)}</b></span><button class="btn sec sm" onclick="adFee('${c.slug}')">${t('a_fee_btn')}</button></div>
+      <div class="line" style="align-items:center"><span>${t('a_paid_until')}: <b>${c.until?dMY(c.until):'—'}</b> <span class="chip ${st[0]}">${st[1]}</span></span><button class="btn sec sm" onclick="adUntil('${c.slug}')">${t('a_date_btn')}</button></div>
+      <div class="row" style="flex-wrap:nowrap;align-items:center"><span class="sub" style="flex:1">${t('a_notify')}</span><input type="number" min="0" max="60" style="width:80px;flex:0 0 80px" value="${nt}" onchange="adNotify('${c.slug}',this.value)"></div>
+      <button class="btn ok full" style="margin-top:6px" onclick="adPay('${c.slug}')">${t('a_pay')}</button>
+      ${(c.pays&&c.pays.length)?`<div class="sub" style="margin-top:6px">${t('a_pays')}:</div>`+c.pays.map(p=>`<div class="line sub"><span>${dtm(Date.parse(p.t))} · ${fm(p.a)}</span><span>→ ${dMY(p.u)}</span></div>`).join(''):''}</div>
     <div class="row" style="margin-top:8px;flex-wrap:nowrap;align-items:center"><span class="sub" style="flex:1">${t('a_days')}</span><input type="number" min="1" max="365" style="width:90px;flex:0 0 90px" value="${c.days}" onchange="adDays('${c.slug}',this.value)"></div>
     <div class="sub" style="margin-top:8px">${t('a_links')}</div><div class="chips"><button class="chip2" onclick="adCopy('${c.slug}','client')">${t('a_link_client')}</button><button class="chip2" onclick="adCopy('${c.slug}','desk')">${t('a_link_desk')}</button><button class="chip2" onclick="adCopy('${c.slug}','kitchen')">${t('a_link_kitchen')}</button></div>
-    <div class="chips" style="margin-top:10px"><button class="btn sec sm" onclick="adRename('${c.slug}')">${t('a_rename')}</button><button class="btn sec sm" onclick="adPass('${c.slug}')">${t('a_setpass')}</button><button class="btn sec sm" onclick="adToggle('${c.slug}')">${t(c.disabled?'a_enable':'a_disable')}</button><button class="btn bad sm" onclick="adDelete('${c.slug}')">${t('del')}</button></div></div>`).join(''):`<p class="sub">${t('a_none')}</p>`;
+    <div class="chips" style="margin-top:10px"><button class="btn sec sm" onclick="adRename('${c.slug}')">${t('a_rename')}</button><button class="btn sec sm" onclick="adPass('${c.slug}')">${t('a_setpass')}</button><button class="btn sec sm" onclick="adToggle('${c.slug}')">${t(c.disabled?'a_enable':'a_disable')}</button><button class="btn bad sm" onclick="adDelete('${c.slug}')">${t('del')}</button></div></div>`}).join(''):`<p class="sub">${t('a_none')}</p>`;
   h+=`<div class="card col"><b>${t('a_origins')}</b><input style="margin-top:8px" value="${esc(AD.orig||'')}" oninput="AD.orig=this.value"><div class="sub" style="margin-top:4px">${t('a_origins_hint')}</div><button class="btn sec full" style="margin-top:8px" onclick="adSaveOrigins()">${t('set_save')}</button></div>
     <div class="card col"><b>${t('a_pass_admin')}</b><div class="sub" style="margin-top:6px">${t('set_old')}</div><input type="password" autocomplete="current-password" value="${esc(AD.old)}" oninput="AD.old=this.value"><div class="sub" style="margin-top:8px">${t('set_new')}</div><input type="password" autocomplete="new-password" value="${esc(AD.nw)}" oninput="AD.nw=this.value"><button class="btn full" style="margin-top:10px" onclick="adSavePass()">${t('set_save')}</button></div>
     <div class="row" style="margin-top:16px"><button class="btn sec sm" onclick="adLogout()">${t('exit')}</button></div>`+foot();
   return h}
-function askInput(title,value,type,fn){UI.inp={title,value,type,fn};render()}
+function askInput(title,value,type,fn,mask){UI.inp={title,value,type,fn,mask};render()}
 function inpYes(){const i=UI.inp,v=(document.getElementById('inpv')||{}).value||'';UI.inp=null;render();if(i&&i.fn)i.fn(v)}
 function inpNo(){UI.inp=null;render()}
-function inputHTML(){return UI.inp?`<div class="modal" onclick="if(event.target===this)inpNo()"><div><p class="cfm">${esc(UI.inp.title)}</p><input id="inpv" type="${UI.inp.type}" value="${esc(UI.inp.value)}" autocapitalize="none" onkeydown="if(event.key==='Enter')inpYes()"><div class="row" style="margin-top:14px"><button class="btn sec" onclick="inpNo()">${t('back')}</button><button class="btn" onclick="inpYes()">${t('set_save')}</button></div></div></div>`:''}
+function inputHTML(){return UI.inp?`<div class="modal" onclick="if(event.target===this)inpNo()"><div><p class="cfm">${esc(UI.inp.title)}</p><input id="inpv" type="${UI.inp.type}" value="${esc(UI.inp.value)}" autocapitalize="none" ${UI.inp.mask==='date'?'inputmode="numeric" maxlength="10" oninput="maskDate(this)"':''} onkeydown="if(event.key==='Enter')inpYes()"><div class="row" style="margin-top:14px"><button class="btn sec" onclick="inpNo()">${t('back')}</button><button class="btn" onclick="inpYes()">${t('set_save')}</button></div></div></div>`:''}
 let installEv=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEv=e;render()});
 async function doInstall(){if(installEv){installEv.prompt();await installEv.userChoice;installEv=null;render()}}
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
@@ -595,7 +655,13 @@ function hm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,'0')
 function mmss(ms){ms=Math.max(0,ms);const s=Math.ceil(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 
 /* ---------- views ---------- */
-function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt="">${esc((ROLE==='client'?(PUB&&PUB.name):(S&&S.name))||'Tayyor')}${ROLE!=='client'?` <small style="font-weight:600;color:var(--mut)">${t('r_'+ROLE)}</small>`:''}</div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header>${installBox()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
+const dMY=ymd=>ymd?ymd.slice(8,10)+'.'+ymd.slice(5,7)+'.'+ymd.slice(0,4):'';
+const leftDays=ymd=>Math.round((Date.parse(ymd+'T00:00:00')-Date.parse(dayKey()+'T00:00:00'))/864e5);
+function billText(){const b=S&&S.bill;if(!b||!b.until)return null;const n=leftDays(b.until);if(n>(b.notify??5))return null;const d=dMY(b.until);
+  let m=n<0?t('bill_late',{d,n:-n}):n===0?t('bill_today',{d}):t('bill_soon',{d,n});if(b.fee>0)m+='. '+t('bill_amount',{a:fm(b.fee)});return{m,late:n<0}}
+function billBanner(){if(ROLE!=='desk'&&ROLE!=='kitchen')return'';const b=billText();return b?`<div class="bill${b.late?' late':''}">${esc(b.m)}</div>`:''}
+function billToast(){const b=billText();if(!b)return;const k='tl.bill.'+SLUG+'.'+dayKey();try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}toast(b.m,b.late?'bad':'')}
+function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt=""><span class="bn">Tayyor</span>${((ROLE==='client'?(PUB&&PUB.name):ROLE==='admin'?'':(S&&S.name))||'')?`<span class="bc">${esc(ROLE==='client'?PUB.name:S.name)}</span>`:''}<span class="br">${t(ROLE==='client'?'role_client':'r_'+ROLE)}</span></div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header>${installBox()}${billBanner()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
 function foot(){return`<div class="foot">${t('version')} ${APP_VERSION} · <span style="color:${online?'var(--ok)':'var(--bad)'}">●</span> ${online?t('on_line'):t('off_line')}${SLUG?' · '+esc(SLUG):''} · Tayyor</div>`}
 function installBox(){if(isStandalone)return'';if(installEv)return`<button class="btn full" style="margin:6px 0" onclick="doInstall()">📲 ${t('install')}</button>`;if(isIOS)return`<p class="sub">📲 ${t('ios_hint')}</p>`;return''}
 function gateHTML(){const g=UI.g;
@@ -754,5 +820,5 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.
 applyZoom();
 if(ROLE==='client'){render();pullPub().then(()=>render())}
 else if(ROLE==='admin'){render();adRefresh()}
-else{load();render();if(TOK())pull().then(()=>{if(S){lastFid=S.fid;render()}})}
+else{load();render();if(TOK())pull().then(()=>{if(S){lastFid=S.fid;render();billToast()}})}
 schedule();

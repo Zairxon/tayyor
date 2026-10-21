@@ -1,5 +1,5 @@
 
-const APP_VERSION='1.9.0';
+const APP_VERSION='2.0.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -132,6 +132,43 @@ inv_need_price:["Сотув нархини киритинг","Sotuv narxini kiri
 inv_added:["«{p}» қўшилди ва омборга қабул қилинди","«{p}» qo'shildi va omborga qabul qilindi","Товар «{p}» добавлен и принят на склад","Item “{p}” added and received"],
 rcv_ok2:["Қабул қилинди: {p} × {n}, нархи {c}","Qabul qilindi: {p} × {n}, narxi {c}","Принято: {p} × {n} по {c}","Received: {p} × {n} at {c}"],
 menu_edit:["Таом номлари ва нархлари","Taom nomlari va narxlari","Названия и цены блюд","Dish names and prices"],
+g_code:["Столовая коди","Stolovaya kodi","Код столовой","Canteen code"],
+g_pass:["Парол","Parol","Пароль","Password"],
+g_pass2:["Паролни такрорланг","Parolni takrorlang","Повторите пароль","Repeat the password"],
+g_login:["Кириш","Kirish","Войти","Sign in"],
+g_create:["Столовая яратиш","Stolovaya yaratish","Создать столовую","Create a canteen"],
+g_make:["Яратиш","Yaratish","Создать","Create"],
+g_name:["Столовая номи","Stolovaya nomi","Название столовой","Canteen name"],
+g_have:["Столовам бор — кириш","Stolovam bor — kirish","У меня уже есть столовая — войти","I already have a canteen — sign in"],
+g_bad:["Код ёки парол нотўғри","Kod yoki parol noto'g'ri","Неверный код или пароль","Wrong code or password"],
+g_locked:["Жуда кўп уриниш. 10 дақиқа кутинг","Juda ko'p urinish. 10 daqiqa kuting","Слишком много попыток. Подождите 10 минут","Too many attempts. Wait 10 minutes"],
+g_taken:["Бу код банд — бошқасини танланг","Bu kod band — boshqasini tanlang","Этот код уже занят — выберите другой","This code is taken — choose another"],
+g_pass_short:["Парол камида 4 белгидан иборат бўлсин","Parol kamida 4 belgidan iborat bo'lsin","Пароль — не короче 4 символов","The password must be at least 4 characters"],
+g_pass_diff:["Паролла бир хил эмас","Parollar bir xil emas","Пароли не совпадают","Passwords don't match"],
+g_code_bad:["Код: лотин ҳарфлари, рақам ва дефис, 3–40 белги","Kod: lotin harflari, raqam va defis, 3–40 belgi","Код: латиница, цифры и дефис, от 3 до 40 символов","Code: Latin letters, digits and hyphen, 3–40 characters"],
+g_name_need:["Столовая номини киритинг","Stolovaya nomini kiriting","Введите название столовой","Enter the canteen name"],
+g_code_hint:["Код — мижозлар ҳаволасининг қисми, масалан samsa-aka","Kod — mijozlar havolasining qismi, masalan samsa-aka","Код войдёт в ссылку для клиентов, например samsa-aka","The code becomes part of the customer link, e.g. samsa-aka"],
+g_fail:["Уланиб бўлмади — алоқани текширинг","Ulanib bo'lmadi — aloqani tekshiring","Не удалось подключиться — проверьте связь","Couldn't connect — check your connection"],
+c_code_title:["Столовая кодини киритинг","Stolovaya kodini kiriting","Введите код столовой","Enter the canteen code"],
+c_code_hint:["Код столовадан олинган ҳаволада бор","Kod stolovadan olingan havolada bor","Код указан в ссылке, которую дала столовая","The code is in the link you got from the canteen"],
+c_code_btn:["Очиш","Ochish","Открыть","Open"],
+c_none:["Бундай кодли столовая топилмади","Bunday kodli stolovaya topilmadi","Столовая с таким кодом не найдена","No canteen found with this code"],
+sent:["Буюртма юборилди — тасдиқланишини кутамиз","Buyurtma yuborildi — tasdiqlanishini kutamiz","Заказ отправлен — ждём подтверждения","Order sent — waiting for confirmation"],
+send_fail:["Буюртмани юбориб бўлмади — алоқани текширинг","Buyurtmani yuborib bo'lmadi — aloqani tekshiring","Не удалось отправить заказ — проверьте связь","Couldn't send the order — check your connection"],
+order_sent:["Юборилган буюртма","Yuborilgan buyurtma","Отправленный заказ","Sent order"],
+st_pending:["Юборилди, тасдиқланишини кутяпмиз","Yuborildi, tasdiqlanishini kutyapmiz","Отправлен, ждём подтверждения","Sent, waiting for confirmation"],
+order_accepted:["Буюртма №{no} қабул қилинди","Buyurtma №{no} qabul qilindi","Заказ №{no} принят","Order #{no} accepted"],
+cancel_sent:["№{no} буюртмани бекор қилиш сўрови юборилди","№{no} buyurtmani bekor qilish so'rovi yuborildi","Запрос на отмену заказа №{no} отправлен","Cancellation request for order #{no} sent"],
+confirm_cancel2:["Юборилган буюртмани бекор қилайсизми?","Yuborilgan buyurtmani bekor qilasizmi?","Отменить отправленный заказ?","Cancel the order you sent?"],
+cancelling:["Бекор қилинмоқда…","Bekor qilinmoqda…","Отмена…","Cancelling…"],
+set_name:["Столовая номи","Stolovaya nomi","Название столовой","Canteen name"],
+set_pass:["Паролни ўзгартириш","Parolni o'zgartirish","Сменить пароль","Change password"],
+set_old:["Жорий парол","Joriy parol","Текущий пароль","Current password"],
+set_new:["Янги парол","Yangi parol","Новый пароль","New password"],
+set_save:["Сақлаш","Saqlash","Сохранить","Save"],
+set_pass_ok:["Парол ўзгартирилди. Бошқа қурилмалар қайта киради","Parol o'zgartirildi. Boshqa qurilmalar qayta kiradi","Пароль изменён. Остальные устройства войдут заново","Password changed. Other devices will sign in again"],
+set_pass_bad:["Парол ўзгармади: жорий паролни текширинг","Parol o'zgarmadi: joriy parolni tekshiring","Пароль не изменён: проверьте текущий пароль","Password not changed: check the current password"],
+set_name_ok:["Номи сақланди","Nomi saqlandi","Название сохранено","Name saved"],
 phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
@@ -204,55 +241,109 @@ function seed(){
 const SB_URL='https://tzxflegbfqqdbzdnhbnz.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6eGZsZWdiZnFxZGJ6ZG5oYm56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUwNTI3MDgsImV4cCI6MjEwMDYyODcwOH0.Ln_Sh3JsdVrOapGxJ-BdzmagMJg7I53riyHrAxCDhcw';
 (function(){const q=new URLSearchParams(location.search).get('s');if(q)try{localStorage.setItem('tl.slug',q)}catch(e){}})();
-const SLUG=((new URLSearchParams(location.search).get('s')||localStorage.getItem('tl.slug')||'demo')+'').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,40)||'demo';
-const KEY='tayyor.'+SLUG;
-(async()=>{if(SLUG==='demo')return;try{const l=document.querySelector('link[rel=manifest]'),u=l.href,m=await(await fetch(u)).json(),b=new URL('.',u).href;
+const SLUG=((new URLSearchParams(location.search).get('s')||(()=>{try{return localStorage.getItem('tl.slug')}catch(e){return ''}})()||'')+'').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,40);
+const KEY='tayyor.'+SLUG,MK='tl.mine.'+SLUG,HK='tl.hist.'+SLUG,TK='tl.tok.'+SLUG;
+const TOK=()=>{try{return localStorage.getItem(TK)}catch(e){return null}};
+(async()=>{if(!SLUG)return;try{const l=document.querySelector('link[rel=manifest]'),u=l.href,m=await(await fetch(u)).json(),b=new URL('.',u).href;
   m.start_url=b+'?s='+SLUG;m.id=b+'?s='+SLUG;m.scope=b;m.icons=m.icons.map(i=>({...i,src:new URL(i.src,b).href}));
   l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}))}catch(e){}})();
-let sb=null,online=false,queue=[],syncing=false,staleRemote=false,booted=false;
+let sb=null,online=false,queue=[],syncing=false,PUB=null,pubIds='',ackQ=[],ingested=new Set(),inboxBusy=false;
 try{sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false}})}catch(e){}
 function load(){try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.products)S=null}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 const strip=()=>{const d=JSON.parse(JSON.stringify(S));delete d._rev;d.orders=d.orders.filter(o=>o.status==='open'||Date.now()-o.created<2*864e5).slice(-300);return d};
 function setOnline(v){if(online!==v){online=v;render()}}
-async function pull(force){if(!sb)return false;
-  try{let{data,error}=await sb.rpc('tayyor_get',{p_slug:SLUG});if(error)throw error;
-    if(!data){await sb.rpc('tayyor_init',{p_slug:SLUG,p_pin:'0000',p_data:(()=>{const s=seed();return s})()});({data,error}=await sb.rpc('tayyor_get',{p_slug:SLUG}));if(error||!data)throw error||new Error('init')}
+const mineIds=()=>{try{return JSON.parse(localStorage.getItem(MK)||'[]')}catch(e){return[]}};
+function authLost(){try{localStorage.removeItem(TK);localStorage.removeItem(KEY)}catch(e){}S=null;queue=[];UI.gate='login';render()}
+async function pull(force){if(!sb||!TOK())return false;
+  try{const{data,error}=await sb.rpc('tayyor_state_get',{p_slug:SLUG,p_token:TOK()});if(error)throw error;
+    if(!data){authLost();return false}
     if(!force&&(queue.length||syncing))return true;
     S=data.data;S._rev=data.rev;save();setOnline(true);return true}
   catch(e){setOnline(false);return false}}
 function mutate(fn){const r=fn();queue.push(fn);save();afterChange();flush();return r}
-async function flush(){if(syncing||!queue.length||!sb||!S)return;syncing=true;
+async function flush(){if(syncing||!queue.length||!sb||!S||!TOK())return;syncing=true;
   try{while(queue.length){const n=queue.length,base=S._rev??0;
-    const{data,error}=await sb.rpc('tayyor_put',{p_slug:SLUG,p_data:strip(),p_rev:base});if(error)throw error;
+    const{data,error}=await sb.rpc('tayyor_state_put',{p_slug:SLUG,p_token:TOK(),p_data:strip(),p_pub:buildPub(),p_rev:base});if(error)throw error;
     if(data>=0){S._rev=data;queue.splice(0,n);save();setOnline(true)}
+    else if(data===-3){authLost();return}
     else if(data===-1){const pend=queue.slice();queue=[];if(!await pull(true))throw new Error('pull');for(const f of pend){f();queue.push(f)}afterChange()}
-    else{queue=[];throw new Error('too big')}}}
+    else{queue=[];throw new Error('too big')}}
+    if(ackQ.length){const ids=ackQ.slice();await sb.rpc('tayyor_inbox_ack',{p_slug:SLUG,p_token:TOK(),p_ids:ids});ackQ=ackQ.filter(x=>!ids.includes(x))}}
   catch(e){setOnline(false)}
-  finally{syncing=false;if(staleRemote&&!queue.length){staleRemote=false;if(await pull())afterChange()}}}
-function startSync(){if(!sb)return;
-  sb.channel('tayyor-'+SLUG).on('postgres_changes',{event:'*',schema:'public',table:'tayyor_state',filter:'slug=eq.'+SLUG},p=>{
-    const n=p.new;if(!n||!n.data||n.rev<=(S?._rev??-1))return;
-    if(queue.length||syncing){staleRemote=true;return}
-    S=n.data;S._rev=n.rev;save();afterChange()}).subscribe(s=>{if(s==='SUBSCRIBED')setOnline(true)});
-  setInterval(async()=>{if(!queue.length&&!syncing){const old=S?._rev;if(await pull()&&S._rev!==old)afterChange();else if(queue.length===0&&!online)flush()}else flush()},6000)}
+  finally{syncing=false}}
+/* what customers may see: menu, availability, and the status of their own orders (no names, phones or costs) */
+function supply(pid){const out=[];let skip=resv(pid).b;for(const b of S.batches.filter(x=>x.pid===pid).sort((a,c)=>a.end-c.end)){let cap=b.qty;const u=Math.min(skip,cap);skip-=u;cap-=u;if(cap>0)out.push([cap,b.end])}return out}
+function buildPub(){const fr={},fb={},sup={},iv={};
+  for(const p of S.products){if(p.on===false)continue;if(p.stock){fr[p.id]=freeR(p.id);fb[p.id]=freeB(p.id);sup[p.id]=supply(p.id)}else if(invTracked(p.id))iv[p.id]=invFree(p.id)}
+  const orders={};for(const o of S.orders)if(o.type==='pickup'&&o.cid&&(o.status==='open'||Date.now()-o.created<2*864e5))
+    orders[o.id]={no:o.no,st:o.status,at:o.pickupAt,lines:o.lines.map(l=>({pid:l.pid,qty:l.qty,rr:l.rr,rb:l.rb,ask:l.ask||0,dec:l.declined||0,e:l.rb>0?(etaLine(o,l)||0):0}))};
+  return{products:S.products.filter(p=>p.on!==false).map(p=>({id:p.id,emoji:p.emoji,names:p.names,price:p.price,stock:!!p.stock})),fr,fb,sup,iv,orders}}
+/* customer side */
+async function pullPub(){if(!sb||!SLUG)return false;const mine=mineIds(),key=mine.join(',');
+  try{const{data,error}=await sb.rpc('tayyor_pub_get',{p_slug:SLUG,p_since:(PUB&&key===pubIds)?PUB._rev:-1,p_ids:mine});if(error)throw error;
+    setOnline(true);
+    if(data.none){PUB=null;UI.noTenant=true;render();return false}
+    UI.noTenant=false;if(data.same)return true;
+    const prev=PUB;PUB={...data.data,orders:data.orders||{},name:data.name,_rev:data.rev};pubIds=key;
+    if(prev)clientNotify(prev.orders,PUB.orders);render();return true}
+  catch(e){setOnline(false);return false}}
+function clientNotify(po,no){const rd=o=>o.lines.length&&o.lines.every(l=>l.rr>=l.qty),say=(m,bad,loud)=>{toast(m,bad?'bad':'');if(loud){beep(3);try{navigator.vibrate&&navigator.vibrate(300);window.Notification&&Notification.permission==='granted'&&new Notification(PUB.name||'Tayyor',{body:m})}catch(e){}}};
+  for(const id of mineIds()){const n=no[id],p=po[id];if(!n)continue;
+    if(!p){say(t('order_accepted',{no:n.no}));continue}
+    if(p.st==='open'&&n.st==='cancelled'){say(t('l_cancel',{no:n.no}),true);continue}
+    if(n.st==='open'&&!rd(p)&&rd(n)){say(t('l_ordready',{no:n.no}),false,true);continue}
+    for(const l of n.lines){const q=p.lines.find(x=>x.pid===l.pid);if(!q||!(q.ask>0)||l.ask>0)continue;
+      const nm=pn(P(l.pid));if(l.dec>q.dec)say(t('l_ans_no',{no:n.no,p:nm,n:l.dec-q.dec}),true,true);else if(l.rb>q.rb)say(t('l_ans_bake',{no:n.no,p:nm,m:mins(l.e||Date.now())}),false,true)}}}
+/* staff side: customers' orders arrive through the inbox */
+function makeOrder(p){if(S.orders.some(o=>o.id===p.id))return null;
+  const cart={};for(const it of (p.items||[])){const pid=it[0],q=it[1],pr=P(pid);if(pr&&pr.on!==false){const n=Math.min(200,Math.max(0,Math.floor(+q||0)));if(n>0)cart[pid]=(cart[pid]||0)+n}}
+  const mode=p.mode==='ready'?'ready':'all',lines=[];
+  for(const a of analyze(cart)){
+    if(!a.stock){const q=Math.min(a.want,invFree(a.pid));if(q>0)lines.push({pid:a.pid,qty:q,rr:q,rb:0,want:a.want});continue}
+    const rb=mode==='all'?a.wait:0,ask=mode==='all'?a.none:0,qty=a.take+rb+ask;
+    if(qty>0)lines.push({pid:a.pid,qty,rr:a.take,rb,ask,want:a.want})}
+  const no=S.next++;
+  S.orders.push({id:p.id,no,type:'pickup',cid:1,name:String(p.name||'').slice(0,60),phone:String(p.phone||'').slice(0,20),pickupAt:+p.at||Date.now(),created:Date.now(),status:lines.length?'open':'cancelled',lines});
+  if(lines.length){feed('l_new',{no,oid:p.id});for(const l of lines)if(l.ask>0)feed('l_ask',{no,oid:p.id,pid:l.pid,n:l.ask})}
+  return no}
+async function processInbox(){if(!sb||!TOK()||inboxBusy)return;inboxBusy=true;
+  try{const{data}=await sb.rpc('tayyor_inbox_get',{p_slug:SLUG,p_token:TOK()});
+    for(const it of (data||[])){if(ingested.has(it.id))continue;ingested.add(it.id);const p=it.payload;
+      if(it.kind==='order')mutate(()=>{FEEDC='ext';try{makeOrder(p)}finally{FEEDC=CID}});
+      else mutate(()=>{FEEDC='ext';try{const o=S.orders.find(x=>x.id===p.id);if(o&&o.status==='open'){o.status='cancelled';feed('l_cancel_c',{no:o.no,oid:o.id})}}finally{FEEDC=CID}});
+      ackQ.push(it.id)}}
+  catch(e){}finally{inboxBusy=false}}
+async function syncTick(){
+  if(ROLE==='client'){if(SLUG)await pullPub();return}
+  if(!TOK()||!S)return;
+  if(queue.length||syncing){flush();return}
+  try{const r=await sb.rpc('tayyor_rev',{p_slug:SLUG,p_token:TOK()});if(r.error)throw r.error;
+    if(r.data===-3){authLost();return}
+    setOnline(true);if(r.data!==S._rev&&await pull())afterChange();
+    await processInbox();flush()}
+  catch(e){setOnline(false)}}
+function schedule(){setTimeout(async()=>{try{await syncTick()}catch(e){}schedule()},ROLE==='client'?(document.hidden?20000:5000):(document.hidden?15000:3000))}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncTick()});
 const CID=(()=>{try{let c=sessionStorage.getItem('tl.cid');if(!c){c=uid();sessionStorage.setItem('tl.cid',c)}return c}catch(e){return uid()}})();
-function feed(k,a){S.fid++;S.feed.push({id:S.fid,k,a,c:CID,t:Date.now()});S.feed=S.feed.slice(-40)}
+let FEEDC=CID;
+function feed(k,a){S.fid++;S.feed.push({id:S.fid,k,a,c:FEEDC,t:Date.now()});S.feed=S.feed.slice(-40)}
 
 /* ---------- stock model ---------- */
-const P=id=>S.products.find(p=>p.id===id);
+const PRODS=()=>ROLE==='client'?((PUB&&PUB.products)||[]):S.products;
+const P=id=>PRODS().find(p=>p.id===id);
 const pn=p=>p?(p.names[lang]||p.names.ru):'?';
 const openP=()=>S.orders.filter(o=>o.type==='pickup'&&o.status==='open');
 function resv(pid){let r=0,b=0;for(const o of openP())for(const l of o.lines)if(l.pid===pid){r+=l.rr;b+=l.rb}return{r,b}}
 const rdy=pid=>S.ready[pid]||0;
-const freeR=pid=>Math.max(0,rdy(pid)-resv(pid).r);
+const freeR=pid=>ROLE==='client'?Math.max(0,((PUB&&PUB.fr)||{})[pid]||0):Math.max(0,rdy(pid)-resv(pid).r);
 const bakeTot=pid=>S.batches.filter(b=>b.pid===pid).reduce((a,b)=>a+b.qty,0);
-const freeB=pid=>Math.max(0,bakeTot(pid)-resv(pid).b);
+const freeB=pid=>ROLE==='client'?Math.max(0,((PUB&&PUB.fb)||{})[pid]||0):Math.max(0,bakeTot(pid)-resv(pid).b);
 function etaAt(pid,need){let acc=0;for(const b of S.batches.filter(b=>b.pid===pid).sort((a,b)=>a.end-b.end)){acc+=b.qty;if(acc>=need)return b.end}return null}
-const eta=(pid,n)=>etaAt(pid,resv(pid).b+n);
+const eta=(pid,n)=>{if(ROLE==='client'){let acc=0;for(const [c,e] of ((PUB&&PUB.sup)||{})[pid]||[]){acc+=c;if(acc>=n)return e}return null}return etaAt(pid,resv(pid).b+n)};
 const mins=ts=>Math.max(1,Math.ceil((ts-Date.now())/60000));
 const isReady=o=>o.lines.every(l=>l.rr>=l.qty);
-function etaLine(o,l){let older=0;for(const x of openP())if(x.created<o.created)for(const y of x.lines)if(y.pid===l.pid)older+=y.rb;return etaAt(l.pid,older+l.rb)}
+function etaLine(o,l){if(ROLE==='client')return l.e||null;let older=0;for(const x of openP())if(x.created<o.created)for(const y of x.lines)if(y.pid===l.pid)older+=y.rb;return etaAt(l.pid,older+l.rb)}
 function analyze(cart){return Object.entries(cart).filter(([,q])=>q>0).map(([pid,q])=>{const p=P(pid);
   if(!p.stock)return{pid,want:q,take:q,wait:0,none:0,stock:false};
   const take=Math.min(q,freeR(pid)),rem=q-take,w=Math.min(rem,freeB(pid));
@@ -281,22 +372,21 @@ function tryOrder(){if(UI.pick===-1){const at=pickAt();if(at===null||at<Date.now
   if(!phoneOk(UI.phone)){UI.phTouched=true;phUpd();toast(t('phone_bad'));const i=document.getElementById('ph');if(i)i.focus();return}
   const a=analyze(UI.cart);if(!a.length)return toast(t('cart_empty'));
   if(a.some(x=>x.stock&&x.take<x.want))UI.modal=a;else placeOrder('all');render()}
-function placeOrder(mode){UI.modal=null;let oid=null;
-  const cart={...UI.cart},cname=UI.name.trim(),cphone=UI.phone?'+998 '+fmtPh(UI.phone):'',cat=pickAt()||Date.now(),coid='o'+uid();
-  mutate(()=>{const lines=[];oid=null;
-    for(const a of analyze(cart)){
-      if(!a.stock){const q=Math.min(a.want,invFree(a.pid));if(q>0)lines.push({pid:a.pid,qty:q,rr:q,rb:0,want:a.want});continue}
-      const rb=mode==='all'?a.wait:0,ask=mode==='all'?a.none:0,qty=a.take+rb+ask;
-      if(qty>0)lines.push({pid:a.pid,qty,rr:a.take,rb,ask,want:a.want})}
-    if(!lines.length){return}
-    const no=S.next++;oid=coid;
-    S.orders.push({id:oid,no,type:'pickup',name:cname,phone:cphone,pickupAt:cat,created:Date.now(),status:'open',lines});
-    feed('l_new',{no,oid});for(const l of lines)if(l.ask>0)feed('l_ask',{no,oid,pid:l.pid,n:l.ask})});
-  if(oid){const mine=JSON.parse(localStorage.getItem('tl.mine')||'[]');mine.unshift(oid);localStorage.setItem('tl.mine',JSON.stringify(mine.slice(0,60)));
-    {const od=S.orders.find(x=>x.id===oid),hh=histLoad();hh.unshift({id:oid,no:od?od.no:0,t:Date.now(),items:Object.entries(cart).filter(([,q])=>q>0),sum:Object.entries(cart).reduce((a,[pid,q])=>a+(P(pid)?P(pid).price*q:0),0)});try{localStorage.setItem('tl.hist',JSON.stringify(hh.slice(0,60)))}catch(e){}}
-    UI.cart={};UI.ctab='mine';toast(t('ord_placed'));try{window.Notification&&Notification.permission==='default'&&Notification.requestPermission()}catch(e){}}
-  else toast(t('nothing'));
-  render()}
+function newId(){const a=new Uint8Array(10);crypto.getRandomValues(a);return Array.from(a,b=>(b%36).toString(36)).join('')}
+function placeOrder(mode){return submitOrder(mode)}
+async function submitOrder(mode){UI.modal=null;const cart=Object.entries(UI.cart).filter(([,q])=>q>0);
+  if(!cart.length){render();return}
+  const id=newId(),payload={id,items:cart,mode,name:UI.name.trim().slice(0,60),phone:UI.phone?'+998 '+fmtPh(UI.phone):'',at:pickAt()||Date.now()};
+  let ok=false;try{const{data}=await sb.rpc('tayyor_client_order',{p_slug:SLUG,p_payload:payload});ok=!!(data&&data.ok)}catch(e){}
+  if(!ok){toast(t('send_fail'),'bad');render();return}
+  const mine=mineIds();mine.unshift(id);try{localStorage.setItem(MK,JSON.stringify(mine.slice(0,60)))}catch(e){}
+  const hh=histLoad();hh.unshift({id,no:0,t:Date.now(),items:cart,sum:cart.reduce((a,[pid,q])=>a+(P(pid)?P(pid).price*q:0),0)});try{localStorage.setItem(HK,JSON.stringify(hh.slice(0,60)))}catch(e){}
+  UI.cart={};UI.ctab='mine';toast(t('sent'));try{window.Notification&&Notification.permission==='default'&&Notification.requestPermission()}catch(e){}
+  render();pullPub()}
+function clientCancel(id){const o=pubOrder(id);
+  askConfirm(o?t('confirm_cancel',{no:o.no}):t('confirm_cancel2'),async()=>{
+    try{const{data}=await sb.rpc('tayyor_client_cancel',{p_slug:SLUG,p_id:id});if(!data||!data.ok)throw 0}catch(e){toast(t('send_fail'),'bad');return}
+    UI.canc=UI.canc||{};UI.canc[id]=1;toast(o?t('cancel_sent',{no:o.no}):t('cancelling'));render()})}
 function startBatch(){const k=UI.k,p=P(k.pid);if(!p||k.qty<1)return;const m=Math.max(1,+k.min||(S.lastMin&&S.lastMin[k.pid])||25),kp=k.pid,kq=k.qty,bid=uid();
   mutate(()=>{S.batches.push({id:bid,pid:kp,qty:kq,start:Date.now(),end:Date.now()+m*60000});
     S.demand[kp]=Math.max(0,(S.demand[kp]||0)-kq);S.lastMin=S.lastMin||{};S.lastMin[kp]=m;feed('l_batch',{pid:kp,n:kq,m})});UI.k.min=null;render()}
@@ -341,7 +431,7 @@ function closeTable(n){mutate(()=>{const o=hallOrder(n);if(o){recSale(o.lines);o
 function setP(id,f,v){mutate(()=>{const p=P(id);if(!p)return;if(f==='price')p[f]=Math.max(0,+v||0);else if(f==='stock')p.stock=!!v;else if(f.startsWith('n_'))p.names[f.slice(2)]=v})}
 function addProd(){mutate(()=>{const id='p'+uid();S.products.push({id,emoji:'🥟',names:{uzc:'Янги',uzl:'Yangi',ru:'Новое',en:'New'},price:5000,stock:true,on:true})})}
 function delProd(id){askConfirm(t('confirm_del_prod',{p:pn(P(id))}),()=>{mutate(()=>{S.products=S.products.filter(p=>p.id!==id)});render()})}
-function resetDemo(){askConfirm(t('confirm_reset'),()=>{localStorage.removeItem('tl.mine');mutate(()=>{const n=seed();for(const k of Object.keys(S))if(k!=='_rev')delete S[k];Object.assign(S,n)})})}
+function resetDemo(){askConfirm(t('confirm_reset'),()=>{localStorage.removeItem(MK);mutate(()=>{const n=seed();for(const k of Object.keys(S))if(k!=='_rev')delete S[k];Object.assign(S,n)})})}
 
 /* ---------- ui helpers ---------- */
 function toast(m,k){const d=document.createElement('div');d.className='toast'+(k?' '+k:'');d.textContent=m;document.getElementById('toasts').appendChild(d);setTimeout(()=>d.remove(),4500)}
@@ -356,29 +446,48 @@ function relevant(f,r,mine){const o=f.a&&f.a.oid&&S.orders.find(x=>x.id===f.a.oi
   if(r==='order')return['l_ordready','l_ans_bake','l_ans_no'].includes(f.k)&&mine.includes(f.a.oid);
   return false}
 function feedToasts(){if(lastFid===null){lastFid=S.fid;return}
-  const mine=JSON.parse(localStorage.getItem('tl.mine')||'[]');const r=route(),role=r==='order'?'client':r;
+  const mine=JSON.parse(localStorage.getItem(MK)||'[]');const r=route(),role=r==='order'?'client':r;
   for(const f of S.feed.filter(x=>x.id>lastFid)){
     if(f.c===CID||!relevant(f,r,mine))continue;
     const txt=fmtFeed(f,role);toast(txt,f.k.startsWith('l_cancel')?'bad':'');beep(f.k==='l_ask'?4:f.k==='l_new'||f.k==='l_ordready'?3:1);
     if(r==='order'){try{navigator.vibrate&&navigator.vibrate(300);window.Notification&&Notification.permission==='granted'&&new Notification('Tayyor',{body:txt})}catch(e){}}}
   lastFid=S.fid}
 let pendingRender=false;
-function afterChange(){feedToasts();render()}
+function afterChange(){if(ROLE!=='client')feedToasts();render()}
 const ROLE=window.ROLE||'client',ROOT=new URL('../',location.href).href,route=()=>ROLE==='client'?'order':ROLE;
-const clientLink=()=>ROOT+'client/'+(SLUG!=='demo'?'?s='+SLUG:'');
+const clientLink=()=>ROOT+'client/?s='+SLUG;
 let zoomV=1;try{zoomV=Math.min(1.4,Math.max(0.6,+localStorage.getItem('tl.zoom')||1))}catch(e){}
 function applyZoom(){document.body.style.zoom=zoomV===1?'':zoomV}
 function zoomBy(d){zoomV=Math.round(Math.min(1.4,Math.max(0.6,zoomV+d))*10)/10;try{localStorage.setItem('tl.zoom',zoomV)}catch(e){}applyZoom();render()}
 const LCODE={uzc:'ЎЗ',uzl:'UZ',ru:'RU',en:'EN'};
 document.addEventListener('click',e=>{if(UI.langOpen&&!e.target.closest('.langs')){UI.langOpen=false;render()}});
 function setLang(l){lang=l;localStorage.setItem('tl.lang',l);document.documentElement.lang=l==='en'?'en':l==='ru'?'ru':'uz';render()}
-const authed=()=>sessionStorage.getItem('tl.auth')==='1';
-async function login(){const v=document.getElementById('pin').value;let ok=false;
-  try{const{data}=await sb.rpc('tayyor_check_pin',{p_slug:SLUG,p_pin:v});ok=data===true}catch(e){}
-  if(ok){sessionStorage.setItem('tl.auth','1');sessionStorage.setItem('tl.pin',v);render()}else toast(t('pin_bad'))}
-async function setPin(v){v=v.trim();let ok=false;
-  try{const{data}=await sb.rpc('tayyor_set_pin',{p_slug:SLUG,p_old:sessionStorage.getItem('tl.pin')||'',p_new:v});ok=data===true}catch(e){}
-  if(ok){sessionStorage.setItem('tl.pin',v);toast('✓')}else toast(t('pin_bad'))}
+const TR={а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'e',ж:'j',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'h',ц:'ts',ч:'ch',ш:'sh',щ:'sh',ъ:'',ы:'i',ь:'',э:'e',ю:'yu',я:'ya',ў:'u',қ:'q',ғ:'g',ҳ:'h'};
+const slugify=s=>String(s||'').toLowerCase().split('').map(c=>TR[c]!==undefined?TR[c]:c).join('').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40);
+UI.g=UI.g||{name:'',code:'',pass:'',pass2:'',codeEdited:false};
+function reloadAs(code){location.replace(location.pathname+'?s='+code)}
+async function doLogin(){const g=UI.g,code=slugify(g.code||SLUG);
+  if(code.length<3)return toast(t('g_code_bad'),'bad');
+  let r;try{const x=await sb.rpc('tayyor_login',{p_slug:code,p_pass:g.pass||''});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
+  if(!r||!r.ok)return toast(t(r&&r.err==='locked'?'g_locked':'g_bad'),'bad');
+  try{localStorage.setItem('tl.tok.'+code,r.token);localStorage.setItem('tl.slug',code)}catch(e){}
+  g.pass='';reloadAs(code)}
+async function doRegister(){const g=UI.g,name=(g.name||'').trim(),code=slugify(g.code||name);
+  if(!name)return toast(t('g_name_need'),'bad');if(code.length<3)return toast(t('g_code_bad'),'bad');
+  if((g.pass||'').length<4)return toast(t('g_pass_short'),'bad');if(g.pass!==g.pass2)return toast(t('g_pass_diff'),'bad');
+  const s0=seedFresh(name),keep=S;S=s0;const pub=buildPub();S=keep;
+  let r;try{const x=await sb.rpc('tayyor_register',{p_slug:code,p_name:name,p_pass:g.pass,p_state:s0,p_pub:pub});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
+  if(!r||!r.ok)return toast(t(r&&r.err==='taken'?'g_taken':r&&r.err==='pass'?'g_pass_short':'g_code_bad'),'bad');
+  try{localStorage.setItem('tl.tok.'+code,r.token);localStorage.setItem('tl.slug',code)}catch(e){}
+  g.pass=g.pass2='';reloadAs(code)}
+function onGName(el){UI.g.name=el.value;if(!UI.g.codeEdited){UI.g.code=slugify(el.value);const c=document.getElementById('gcode');if(c)c.value=UI.g.code}}
+async function logout(){try{await sb.rpc('tayyor_logout',{p_slug:SLUG,p_token:TOK()})}catch(e){}authLost()}
+async function savePwd(){const n=UI.pwNew||'';if(n.length<4)return toast(t('g_pass_short'),'bad');let ok=false;
+  try{const x=await sb.rpc('tayyor_set_password',{p_slug:SLUG,p_token:TOK(),p_old:UI.pwOld||'',p_new:n});ok=x.data===true}catch(e){}
+  if(ok){UI.pwOld=UI.pwNew='';toast(t('set_pass_ok'));render()}else toast(t('set_pass_bad'),'bad')}
+async function saveName(v){v=(v||'').trim();if(!v||v===S.name)return;let ok=false;
+  try{const x=await sb.rpc('tayyor_rename',{p_slug:SLUG,p_token:TOK(),p_name:v});ok=x.data===true}catch(e){}
+  if(ok){mutate(()=>{S.name=v});toast(t('set_name_ok'))}else toast(t('g_fail'),'bad')}
 let installEv=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEv=e;render()});
 async function doInstall(){if(installEv){installEv.prompt();await installEv.userChoice;installEv=null;render()}}
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
@@ -387,11 +496,23 @@ function hm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,'0')
 function mmss(ms){ms=Math.max(0,ms);const s=Math.ceil(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 
 /* ---------- views ---------- */
-function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt="">Tayyor${ROLE!=='client'?` <small style="font-weight:600;color:var(--mut)">${t('r_'+ROLE)}</small>`:''}</div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header>${installBox()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
-function foot(){return`<div class="foot">${t('version')} ${APP_VERSION} · <span style="color:${online?'var(--ok)':'var(--bad)'}">●</span> ${online?t('on_line'):t('off_line')}${SLUG!=='demo'?' · '+esc(SLUG):''}</div>`}
+function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt="">${esc((ROLE==='client'?(PUB&&PUB.name):(S&&S.name))||'Tayyor')}${ROLE!=='client'?` <small style="font-weight:600;color:var(--mut)">${t('r_'+ROLE)}</small>`:''}</div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header>${installBox()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
+function foot(){return`<div class="foot">${t('version')} ${APP_VERSION} · <span style="color:${online?'var(--ok)':'var(--bad)'}">●</span> ${online?t('on_line'):t('off_line')}${SLUG?' · '+esc(SLUG):''} · Tayyor</div>`}
 function installBox(){if(isStandalone)return'';if(installEv)return`<button class="btn full" style="margin:6px 0" onclick="doInstall()">📲 ${t('install')}</button>`;if(isIOS)return`<p class="sub">📲 ${t('ios_hint')}</p>`;return''}
-function vPin(){return`${head()}<h2>${t('pin')}</h2><input id="pin" type="password" inputmode="numeric" onkeydown="if(event.key==='Enter')login()" autofocus><div class="row" style="margin-top:10px"><button class="btn" onclick="login()">${t('pin_ok')}</button></div>${foot()}`}
-
+function gateHTML(){const g=UI.g,reg=UI.gate==='register';
+  if(!reg)return head()+`<h2>${t('r_'+ROLE)}</h2><div class="card col"><div class="sub">${t('g_code')}</div><input id="gcode" autocapitalize="none" autocomplete="username" value="${esc(g.code||SLUG)}" oninput="UI.g.code=this.value">
+    <div class="sub" style="margin-top:10px">${t('g_pass')}</div><input type="password" autocomplete="current-password" value="${esc(g.pass)}" oninput="UI.g.pass=this.value" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn full" style="margin-top:12px" onclick="doLogin()">${t('g_login')}</button></div>
+    <button class="btn sec full" onclick="UI.gate='register';render()">${t('g_create')}</button>${foot()}`;
+  return head()+`<h2>${t('g_create')}</h2><div class="card col"><div class="sub">${t('g_name')}</div><input value="${esc(g.name)}" oninput="onGName(this)">
+    <div class="sub" style="margin-top:10px">${t('g_code')}</div><input id="gcode" autocapitalize="none" value="${esc(g.code)}" oninput="UI.g.code=this.value;UI.g.codeEdited=true"><div class="sub">${t('g_code_hint')}</div>
+    <div class="sub" style="margin-top:10px">${t('g_pass')}</div><input type="password" autocomplete="new-password" value="${esc(g.pass)}" oninput="UI.g.pass=this.value">
+    <div class="sub" style="margin-top:10px">${t('g_pass2')}</div><input type="password" autocomplete="new-password" value="${esc(g.pass2)}" oninput="UI.g.pass2=this.value" onkeydown="if(event.key==='Enter')doRegister()">
+    <button class="btn full" style="margin-top:12px" onclick="doRegister()">${t('g_make')}</button></div>
+    <button class="btn sec full" onclick="UI.gate='login';render()">${t('g_have')}</button>${foot()}`}
+function codeHTML(){return head()+`<h2>${t('c_code_title')}</h2>${UI.noTenant?`<p class="perr" style="font-size:14px">${t('c_none')}</p>`:''}<div class="card col"><input id="gcode" autocapitalize="none" placeholder="samsa-aka" value="${esc(UI.g.code||'')}" oninput="UI.g.code=this.value" onkeydown="if(event.key==='Enter')openCode()"><div class="sub" style="margin-top:6px">${t('c_code_hint')}</div><button class="btn full" style="margin-top:10px" onclick="openCode()">${t('c_code_btn')}</button></div>${foot()}`}
+function openCode(){const c=slugify(UI.g.code);if(c.length<3)return toast(t('g_code_bad'),'bad');reloadAs(c)}
+function seedFresh(name){const s=seed();s.ready={meat:0,pot:0,herb:0,pump:0};s.batches=[];s.name=name;return s}
 function prodStatus(p){if(!p.stock)return invTracked(p.id)&&invFree(p.id)<=0?`<span class="chip bad">${t('out_of_stock')}</span>`:'';const fr=freeR(p.id);return fr>0?`<span class="chip ok">${t('in_stock',{n:fr})}</span>`:`<span class="chip bad">${t('none_now')}</span>`}
 function orderStatus(o){if(o.status==='done')return`<span class="chip">${t('st_done')}</span>`;if(o.status==='cancelled')return`<span class="chip bad">${t('st_cancel')}</span>`;
   if(isReady(o))return`<span class="chip ok">${t('st_ready')}</span>`;
@@ -401,17 +522,20 @@ function orderStatus(o){if(o.status==='done')return`<span class="chip">${t('st_d
 function modalTxt(x){const p=esc(pn(P(x.pid)));
   if(x.none>0)return x.wait>0?t('short_b',{p,w:x.want,r:x.take,n:x.wait,m:mins(x.at),k:x.none}):t('short_c',{p,w:x.want,r:x.take,k:x.none});
   return t('short_a',{p,w:x.want,r:x.take,m:mins(x.at)})}
-const histLoad=()=>{try{return JSON.parse(localStorage.getItem('tl.hist')||'[]')}catch(e){return[]}};
+const histLoad=()=>{try{return JSON.parse(localStorage.getItem(HK)||'[]')}catch(e){return[]}};
 const dtm=ts=>{const d=new Date(ts);return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+' '+hm(ts)};
-function orderCard(o){return`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><span class="sub">${t('at_time',{t:hm(o.pickupAt)})}</span></div>${o.lines.map(l=>`<div class="line"><span>${esc(pn(P(l.pid)))} × ${l.qty}</span>${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}${l.rb>0?`<span class="sub">${t('waiting',{n:l.rb})}</span>`:''}</div>`).join('')}${orderStatus(o)}<button class="btn bad full" style="margin-top:8px" onclick="cancelOrder('${o.id}')">${t('cancel_order')}</button></div>`}
+function pubOrder(id){const o=PUB&&PUB.orders&&PUB.orders[id];if(!o)return null;return{id,no:o.no,status:o.st,pickupAt:o.at,lines:o.lines.map(l=>({pid:l.pid,qty:l.qty,rr:l.rr,rb:l.rb,ask:l.ask,declined:l.dec,e:l.e}))}}
+const isPend=x=>!pubOrder(x.id)&&x.t>Date.now()-600000;
+function orderCard(o){return`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><span class="sub">${t('at_time',{t:hm(o.pickupAt)})}</span></div>${o.lines.map(l=>`<div class="line"><span>${esc(pn(P(l.pid)))} × ${l.qty}</span>${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}${l.rb>0?`<span class="sub">${t('waiting',{n:l.rb})}</span>`:''}</div>`).join('')}${orderStatus(o)}${UI.canc&&UI.canc[o.id]?`<div class="sub">${t('cancelling')}</div>`:`<button class="btn bad full" style="margin-top:8px" onclick="clientCancel('${o.id}')">${t('cancel_order')}</button>`}</div>`}
+function pendCard(x){return`<div class="card col"><div class="line"><b>${t('order_sent')}</b><span class="sub">${dtm(x.t)}</span></div>${x.items.map(([pid,q])=>`<div class="line"><span>${P(pid)?esc(pn(P(pid))):'?'} × ${q}</span></div>`).join('')}<span class="chip warn">${t('st_pending')}</span>${UI.canc&&UI.canc[x.id]?`<div class="sub">${t('cancelling')}</div>`:`<button class="btn bad full" style="margin-top:8px" onclick="clientCancel('${x.id}')">${t('cancel_order')}</button>`}</div>`}
 function repeatOrder(i){const h=histLoad()[i];if(!h)return;UI.cart={};for(const[pid,q]of h.items)if(P(pid)&&P(pid).on!==false)UI.cart[pid]=q;UI.ctab='new';render();toast(t('repeat_ok'));window.scrollTo(0,0)}
-function vClient(){const items=S.products.filter(p=>p.on!==false),tab=UI.ctab||'new';
+function vClient(){const items=PRODS().filter(p=>p.on!==false),tab=UI.ctab||'new';
   const tot=items.reduce((a,p)=>a+(UI.cart[p.id]||0)*p.price,0);
-  const mineIds=JSON.parse(localStorage.getItem('tl.mine')||'[]'),mine=mineIds.map(id=>S.orders.find(o=>o.id===id)).filter(Boolean),act=mine.filter(o=>o.status==='open');
-  let h=head()+`<div class="tabs">${[['new',t('c_new')],['mine',t('my_orders')+(act.length?`<span class="badge">${act.length}</span>`:'')],['hist',t('c_hist')]].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="UI.ctab='${k}';render()">${l}</button>`).join('')}</div>`;
-  if(tab==='mine')return h+(act.length?act.map(orderCard).join(''):`<p class="sub">${t('no_active')}</p><button class="btn full" onclick="UI.ctab='new';render()">${t('c_new')}</button>`)+foot();
-  if(tab==='hist'){const hs=histLoad().map((x,i)=>[x,i]).filter(([x])=>{const o=S.orders.find(y=>y.id===x.id);return !o||o.status!=='open'});
-    return h+(hs.length?hs.map(([x,i])=>{const o=S.orders.find(y=>y.id===x.id);return`<div class="card col"><div class="line"><b>${t('order_no',{n:x.no})}</b><span class="sub">${dtm(x.t)}</span></div>${x.items.map(([pid,q])=>`<div class="line"><span>${P(pid)?esc(pn(P(pid))):'?'} × ${q}</span></div>`).join('')}<div class="line"><b>${fm(x.sum)}</b>${o?orderStatus(o):''}</div><button class="btn full" style="margin-top:6px" onclick="repeatOrder(${i})">🔁 ${t('repeat')}</button></div>`}).join(''):`<p class="sub">${t('no_hist')}</p>`)+foot()}
+  const hist=histLoad(),ids=mineIds(),pend=hist.filter(x=>ids.includes(x.id)&&isPend(x)),act=ids.map(pubOrder).filter(o=>o&&o.status==='open'),cnt=pend.length+act.length;
+  let h=head()+`<div class="tabs">${[['new',t('c_new')],['mine',t('my_orders')+(cnt?`<span class="badge">${cnt}</span>`:'')],['hist',t('c_hist')]].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="UI.ctab='${k}';render()">${l}</button>`).join('')}</div>`;
+  if(tab==='mine')return h+(cnt?pend.map(pendCard).join('')+act.map(orderCard).join(''):`<p class="sub">${t('no_active')}</p><button class="btn full" onclick="UI.ctab='new';render()">${t('c_new')}</button>`)+foot();
+  if(tab==='hist'){const hs=hist.map((x,i)=>[x,i]).filter(([x])=>{const o=pubOrder(x.id);return !(o&&o.status==='open')&&!isPend(x)});
+    return h+(hs.length?hs.map(([x,i])=>{const o=pubOrder(x.id),no=o?o.no:x.no;return`<div class="card col"><div class="line"><b>${no?t('order_no',{n:no}):t('order_sent')}</b><span class="sub">${dtm(x.t)}</span></div>${x.items.map(([pid,q])=>`<div class="line"><span>${P(pid)?esc(pn(P(pid))):'?'} × ${q}</span></div>`).join('')}<div class="line"><b>${fm(x.sum)}</b>${o?orderStatus(o):''}</div><button class="btn full" style="margin-top:6px" onclick="repeatOrder(${i})">🔁 ${t('repeat')}</button></div>`}).join(''):`<p class="sub">${t('no_hist')}</p>`)+foot()}
   h+=`<h1 class="ask">${t('what_order')}</h1>`;
   h+=items.map(p=>`<div class="card"><div class="pe">${p.emoji}</div><div class="pi"><b>${esc(pn(p))}</b><div class="sub">${fm(p.price)}</div>${prodStatus(p)}</div><div class="step"><button onclick="cartAdd('${p.id}',-1)">−</button><span>${UI.cart[p.id]||0}</span><button onclick="cartAdd('${p.id}',1)">+</button></div></div>`).join('');
   h+=`<h2>${t('pickup_when')}</h2><div class="chips">${[[0,t('now')],[30,t('in_min',{n:30})],[60,t('in_hour')],[90,t('in_min',{n:90})],[120,t('in_min',{n:120})],[-1,t('pick_custom')]].map(([v,l])=>`<button class="chip2${UI.pick===v?' on':''}" onclick="pickSel(${v})">${l}</button>`).join('')}</div><input id="pt" inputmode="numeric" maxlength="5" placeholder="${t('time_ph')}" value="${esc(UI.pickTime||'')}" oninput="onTime(this)" style="margin-top:8px;display:${UI.pick===-1?'block':'none'}">
@@ -426,9 +550,9 @@ function vClient(){const items=S.products.filter(p=>p.on!==false),tab=UI.ctab||'
   return h}
 
 const invOf=pid=>(S.inv&&S.inv[pid])||null;
-const invTracked=pid=>!!invOf(pid);
+const invTracked=pid=>ROLE==='client'?!!(PUB&&PUB.iv&&PUB.iv[pid]!==undefined):!!invOf(pid);
 const invReserved=pid=>openP().reduce((a,o)=>a+o.lines.filter(l=>l.pid===pid).reduce((b,l)=>b+l.qty,0),0);
-const invFree=pid=>{const i=invOf(pid);return i?Math.max(0,i.q-invReserved(pid)):Infinity};
+const invFree=pid=>{if(ROLE==='client')return invTracked(pid)?PUB.iv[pid]:Infinity;const i=invOf(pid);return i?Math.max(0,i.q-invReserved(pid)):Infinity};
 function invDeduct(pid,d){const i=invOf(pid);if(i)i.q=Math.max(0,i.q-d)}
 function receive(pid,q,cost){mutate(()=>{S.inv=S.inv||{};const i=S.inv[pid]||{q:0,cost:0},nq=i.q+q;
   i.cost=nq>0?Math.round((i.q*i.cost+q*cost)/nq):cost;i.q=nq;S.inv[pid]=i;
@@ -491,10 +615,11 @@ function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt);
       h+=`<h2>${t('table',{n:UI.tbl})}</h2>${o?o.lines.map(l=>`<div class="card"><div class="pi">${P(l.pid).emoji} ${esc(pn(P(l.pid)))}</div><div class="step"><button onclick="hallAdd(${UI.tbl},'${l.pid}',-1)">−</button><span>${l.qty}</span><button onclick="hallAdd(${UI.tbl},'${l.pid}',1)">+</button></div></div>`).join('')+`<div class="line"><b>${t('total')}</b><b>${fm(sum)}</b></div><button class="btn ok full" onclick="closeTable(${UI.tbl})">${t('close_table')}</button>`:`<p class="sub">${t('table_empty')}</p>`}
       <h2>+</h2><div class="grid">${S.products.filter(p=>p.on!==false).map(p=>`<button onclick="hallAdd(${UI.tbl},'${p.id}',1)">${p.emoji}<br><small>${esc(pn(p))}</small>${p.stock?`<br><small>${freeR(p.id)}</small>`:''}</button>`).join('')}</div>`}}
   if(UI.tab==='set'){
-    h+=`<div class="card col"><b>${t('link')}</b><div class="sub" style="word-break:break-all">${esc(clientLink())}</div><div id="qr" style="margin-top:8px;max-width:180px"></div></div>
-    <div class="row"><div><div class="sub">${t('new_pin')}</div><input placeholder="••••" onchange="setPin(this.value);this.value=''"></div></div>`+
-    ''+`<button class="btn sec full" style="margin-top:8px" onclick="resetDemo()">${t('reset')}</button>`}
-  return h+`<div class="row" style="margin-top:16px"><button class="btn sec sm" onclick="sessionStorage.removeItem('tl.auth');render()">${t('exit')}</button></div>`+foot()}
+    h+=`<div class="card col"><div class="sub">${t('set_name')}</div><input value="${esc(S.name||'')}" onchange="saveName(this.value)"></div>
+    <div class="card col"><b>${t('link')}</b><div class="sub" style="word-break:break-all;margin-top:4px">${esc(clientLink())}</div><div id="qr" style="margin-top:8px;max-width:180px"></div><div class="sub" style="margin-top:6px">${t('g_code')}: <b>${esc(SLUG)}</b></div></div>
+    <div class="card col"><b>${t('set_pass')}</b><div class="sub" style="margin-top:6px">${t('set_old')}</div><input type="password" autocomplete="current-password" value="${esc(UI.pwOld||'')}" oninput="UI.pwOld=this.value">
+      <div class="sub" style="margin-top:8px">${t('set_new')}</div><input type="password" autocomplete="new-password" value="${esc(UI.pwNew||'')}" oninput="UI.pwNew=this.value"><button class="btn full" style="margin-top:10px" onclick="savePwd()">${t('set_save')}</button></div>`}
+  return h+`<div class="row" style="margin-top:16px"><button class="btn sec sm" onclick="logout()">${t('exit')}</button></div>`+foot()}
 
 function reqHTML(){const rs=[];for(const o of openP().sort((a,b)=>a.created-b.created))for(const l of o.lines)if(l.ask>0)rs.push([o,l]);
   if(!rs.length)return'';
@@ -509,14 +634,17 @@ function vKitchen(){const k=UI.k,stockP=S.products.filter(p=>p.stock&&p.on!==fal
   h+=`<h2>${t('baking')}</h2>`+(bs.length?bs.map(b=>{const q=P(b.pid),left=b.end-Date.now();return`<div class="card col"><div class="line"><b>${q?q.emoji+' '+esc(pn(q)):'?'} × ${b.qty}</b><span class="timer ${left<=0?'late':''}" data-end="${b.end}">${left>0?mmss(left):t('k_done_now')}</span></div>
     <div class="row"><button class="btn ok" onclick="takeOut('${b.id}')">${t('k_take')}</button><button class="btn sec sm" style="flex:0 0 auto" onclick="dropBatch('${b.id}')">${t('k_del')}</button></div></div>`}).join(''):`<p class="sub">${t('k_none')}</p>`);
   h+=`<h2>${t('ready')}</h2>`+stockP.map(x=>`<span class="chip ok">${x.emoji} ${rdy(x.id)}</span>`).join('');
-  return h+`<div class="row" style="margin-top:16px"><button class="btn sec sm" onclick="sessionStorage.removeItem('tl.auth');render()">${t('exit')}</button></div>`+foot()}
+  return h+`<div class="row" style="margin-top:16px"><button class="btn sec sm" onclick="logout()">${t('exit')}</button></div>`+foot()}
 
-function render(){if(!S){document.getElementById('app').innerHTML=head()+`<p class="sub" style="margin-top:40px;text-align:center">${t('loading')}</p>`;return}
+function render(){
+  const app=document.getElementById('app');let h;
+  if(ROLE==='client'){if(!SLUG||UI.noTenant)h=codeHTML();else if(!PUB)h=head()+`<p class="sub" style="margin-top:40px;text-align:center">${t('loading')}</p>`;else h=null}
+  else{if(!SLUG||!TOK())h=gateHTML();else if(!S)h=head()+`<p class="sub" style="margin-top:40px;text-align:center">${t('loading')}</p>`;else h=null}
   const ae=document.activeElement;
-  if(ae&&['INPUT','SELECT'].includes(ae.tagName)&&document.getElementById('app').contains(ae)&&ae.type!=='checkbox'){pendingRender=true;return}
-  pendingRender=false;const r=route();let h;
-  if(r==='order')h=vClient();else if(r==='desk'||r==='kitchen')h=authed()?(r==='desk'?vDesk():vKitchen()):vPin();else h='';
-  document.getElementById('app').innerHTML=h+cfmHTML();
+  if(ae&&['INPUT','SELECT'].includes(ae.tagName)&&app.contains(ae)&&ae.type!=='checkbox'){pendingRender=true;return}
+  pendingRender=false;
+  if(h===null)h=ROLE==='client'?vClient():(ROLE==='desk'?vDesk():vKitchen());
+  app.innerHTML=h+cfmHTML();
   const q=document.getElementById('qr');if(q&&window.qrcode){try{const c=qrcode(0,'M');c.addData(clientLink());c.make();q.innerHTML=c.createSvgTag(4)}catch(e){}}}
 document.addEventListener('focusout',()=>{if(pendingRender)setTimeout(()=>{if(pendingRender)render()},300)});
 
@@ -530,5 +658,7 @@ async function chk(){try{const r=await fetch(ROOT+'version.json?'+Date.now(),{ca
 async function doUpdate(){try{const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs)await r.unregister();for(const k of await caches.keys())await caches.delete(k)}catch(e){}location.reload()}
 setInterval(chk,60000);chk();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register(ROOT+'sw.js',{scope:ROOT}).catch(()=>{});
-applyZoom();load();render();
-(async()=>{await pull();if(S){lastFid=S.fid;render()}startSync();booted=true})();
+applyZoom();
+if(ROLE==='client'){render();pullPub().then(()=>render())}
+else{load();render();if(TOK())pull().then(()=>{if(S){lastFid=S.fid;render()}})}
+schedule();

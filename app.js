@@ -1,5 +1,5 @@
 
-const APP_VERSION='1.3.2';
+const APP_VERSION='1.3.3';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -324,12 +324,12 @@ function dashHTML(){
   const td=sumDay(dayKey()),halls=S.orders.filter(o=>o.type==='hall'&&o.status==='open'),open=openP().length;
   const kpi=(l,v,s,c)=>`<div class="kpi"><div class="kl">${l}</div><div class="kv">${v}</div><div class="ks">${s||'&nbsp;'}</div></div>`;
   let h=`<div class="kpis">${kpi(t('k_accept'),T.f+' <small>'+t('pcs')+'</small>',t('k_ready')+': '+T.r,T.f?'ok':'bad')}${kpi(t('baking'),T.b+' <small>'+t('pcs')+'</small>',t('k_resv')+': '+T.v,'')}${kpi(t('k_sold'),td.q+' <small>'+t('pcs')+'</small>',t('k_rev')+': '+fm(td.s),'')}${kpi(t('k_open'),open,t('k_hall')+': '+halls.length,'')}</div>`;
-  h+=`<h2>${t('d_title')}</h2>`+st.map(p=>{const r=resv(p.id),f=freeR(p.id),fb=freeB(p.id),b=bakeTot(p.id),rd=rdy(p.id),tot=Math.max(1,rd+b);
+  h+=`<h2>${t('d_title')}</h2><div class="tiles">`+st.map(p=>{const r=resv(p.id),f=freeR(p.id),fb=freeB(p.id),b=bakeTot(p.id),rd=rdy(p.id);
     const bt=S.batches.filter(x=>x.pid===p.id).sort((a,c)=>a.end-c.end)[0],sold=((S.sold&&S.sold[dayKey()])||{})[p.id];
-    const lvl=f+fb<=0?['bad',t('d_out')]:f+fb<=3?['warn',t('d_low')]:['ok',t('d_ok')];
-    return`<div class="card col dp"><div class="line"><b>${p.emoji} ${esc(pn(p))}</b><span><span class="chip ${lvl[0]}">${lvl[1]}</span><span class="chip">${t('d_sold')} ${sold?sold.q:0}</span></span></div>
-    <div class="dn"><div><span class="dv ${f>0?'okc':'badc'}">${f}</span><span class="dl">${t('free')}</span></div><div><span class="dv">${r.r}</span><span class="dl">${t('reserved')}</span></div><div><span class="dv">${rd}</span><span class="dl">${t('ready')}</span></div><div><span class="dv ovc">${b}</span><span class="dl">${t('baking')}</span></div></div>
-    <div class="sub">${t('k_accept')}: <b>${f}</b>${fb>0?' · '+t('d_later',{n:fb,m:mins(eta(p.id,fb)||Date.now())}):''}${bt?' · '+t('baking')+': '+bt.qty+' (~'+mins(bt.end)+' '+t('min')+')':' · '+t('d_nobake')}</div></div>`}).join('');
+    const lvl=f+fb<=0?'bad':f+fb<=3?'warn':'ok';
+    return`<div class="tile ${lvl}"><div class="th">${p.emoji} ${esc(pn(p))}</div><div class="tv ${f>0?'okc':'badc'}">${f}</div><div class="tl">${t('free')}</div>
+    <div class="tr"><span>${t('reserved')}</span><b>${r.r}</b></div><div class="tr"><span>${t('ready')}</span><b>${rd}</b></div><div class="tr"><span>${t('baking')}</span><b class="ovc">${b}</b></div><div class="tr"><span>${t('d_sold')}</span><b>${sold?sold.q:0}</b></div>
+    <div class="ts">${bt?(fb>0?t('d_later',{n:fb,m:mins(eta(p.id,fb)||Date.now())}):t('baking')+' ~'+mins(bt.end)+' '+t('min')):t('d_nobake')}</div></div>`}).join('')+'</div>';
   return h}
 function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt);
   let h=head()+`<div class="tabs">${[['orders',t('t_orders')+(open.length?`<span class="badge">${open.length}</span>`:'')],['hall',t('t_hall')],['stock',t('t_stock')],['set',t('t_set')]].map(([k,l])=>`<button class="${UI.tab===k?'on':''}" onclick="UI.tab='${k}';render()">${l}</button>`).join('')}</div>`;

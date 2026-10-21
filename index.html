@@ -17,7 +17,7 @@
 <div class="foot" id="ver"></div>
 </div>
 <script>
-const V='1.3.3',LI={uzc:0,uzl:1,ru:2,en:3},L=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
+const V='1.3.4',LI={uzc:0,uzl:1,ru:2,en:3},L=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 let lang=localStorage.getItem('tl.lang')||'ru';
 const T={tag:["Самса буюртмаси ва заҳираси","Samsa buyurtmasi va zaxirasi","Заказы и запасы самсы","Samsa orders & stock"],
 c:["Буюртма бериш (мижоз)","Buyurtma berish (mijoz)","Заказать (клиент)","Order (customer)"],
@@ -32,7 +32,7 @@ if(legacy[hs])location.replace(legacy[hs]+q);
 function draw(){
  document.getElementById('langs').innerHTML=L.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="lang='${c}';localStorage.setItem('tl.lang',lang);draw()">${n}</button>`).join('');
  document.getElementById('tag').textContent=t('tag');
- document.getElementById('roles').innerHTML=`<button onclick="location.href='client/${q}'">🛒 ${t('c')}</button><button onclick="location.href='desk/${q}'" style="border-left:8px solid #1c7ed6">🖥 ${t('d')}</button><button onclick="location.href='kitchen/${q}'" style="border-left:8px solid #c2255c">🔥 ${t('k')}</button>`;
+ document.getElementById('roles').innerHTML=`<button onclick="location.href='client/${q}'">🛒 ${t('c')}</button><button onclick="location.href='desk/${q}'" style="border-left:8px solid #1c7ed6">🖥 ${t('d')}</button><button onclick="location.href='kitchen/${q}'" style="border-left:8px solid #b91c1c">🔥 ${t('k')}</button>`;
  document.getElementById('hint').textContent=t('h');
  document.getElementById('ver').textContent=t('v')+' '+V;
 }

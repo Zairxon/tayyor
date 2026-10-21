@@ -1,5 +1,5 @@
 
-const APP_VERSION='1.3.3';
+const APP_VERSION='1.3.4';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -343,7 +343,7 @@ function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt);
     <span class="chip ok">${t('free')} ${freeR(p.id)}</span><span class="chip warn">${t('reserved')} ${r.r}</span><span class="chip">${t('baking')} ${bakeTot(p.id)}${r.b?` (${t('reserved')} ${r.b})`:''}</span>
     <div class="sub" style="margin-top:6px">${t('add_ready')}</div><div class="row">${[-5,-1,1,5,10].map(d=>`<button class="btn sec sm" onclick="adj('${p.id}',${d})">${d>0?'+':''}${d}</button>`).join('')}</div></div>`}).join('');
   if(UI.tab==='hall'){
-    h+=`<div class="grid">${tbls().map(i=>`<button class="${hallOrder(i)?'occ':''} ${UI.tbl===i?'sel':''}" onclick="UI.tbl=${i};render()">${i}</button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn sec sm" onclick="addTable()">${t('add_table')}</button>${UI.tbl&&!hallOrder(UI.tbl)?`<button class="btn bad sm" onclick="delTable(${UI.tbl})">${t('del_table')} ${UI.tbl}</button>`:''}</div>`;
+    h+=`<div class="grid tb">${tbls().map(i=>`<button class="${hallOrder(i)?'occ':''} ${UI.tbl===i?'sel':''}" onclick="UI.tbl=${i};render()">${i}</button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn sec sm" onclick="addTable()">${t('add_table')}</button>${UI.tbl&&!hallOrder(UI.tbl)?`<button class="btn bad sm" onclick="delTable(${UI.tbl})">${t('del_table')} ${UI.tbl}</button>`:''}</div>`;
     if(UI.tbl){const o=hallOrder(UI.tbl),sum=o?o.lines.reduce((a,l)=>a+l.qty*P(l.pid).price,0):0;
       h+=`<h2>${t('table',{n:UI.tbl})}</h2>${o?o.lines.map(l=>`<div class="card"><div class="pi">${P(l.pid).emoji} ${esc(pn(P(l.pid)))}</div><div class="step"><button onclick="hallAdd(${UI.tbl},'${l.pid}',-1)">−</button><span>${l.qty}</span><button onclick="hallAdd(${UI.tbl},'${l.pid}',1)">+</button></div></div>`).join('')+`<div class="line"><b>${t('total')}</b><b>${fm(sum)}</b></div><button class="btn ok full" onclick="closeTable(${UI.tbl})">${t('close_table')}</button>`:`<p class="sub">${t('table_empty')}</p>`}
       <h2>+</h2><div class="grid">${S.products.filter(p=>p.on!==false).map(p=>`<button onclick="hallAdd(${UI.tbl},'${p.id}',1)">${p.emoji}<br><small>${esc(pn(p))}</small>${p.stock?`<br><small>${freeR(p.id)}</small>`:''}</button>`).join('')}</div>`}}

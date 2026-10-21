@@ -1,5 +1,5 @@
 
-const APP_VERSION='1.5.0';
+const APP_VERSION='1.6.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -87,6 +87,12 @@ k_wont:["Пиширмайман","Pishirmayman","Не буду печь","Won't 
 l_ask:["Буюртма №{no}: {p} яна {n} та — ошпаз жавоби керак","Buyurtma №{no}: {p} yana {n} ta — oshpaz javobi kerak","Заказ №{no}: {p} ещё {n} шт — нужен ответ повара","Order #{no}: {p} {n} more — cook's answer needed"],
 l_ans_bake:["Ошпаз: {p} ~{m} дақиқада тайёр","Oshpaz: {p} ~{m} daqiqada tayyor","Повар: {p} будет через ~{m} мин","Cook: {p} will be ready in ~{m} min"],
 l_ans_no:["Ошпаз: {p} ({n} та) пишмайди","Oshpaz: {p} ({n} ta) pishmaydi","Повар: {p} ({n} шт) печь не будет","Cook: won't bake {p} ({n})"],
+c_new:["Янги буюртма","Yangi buyurtma","Новый заказ","New order"],
+c_hist:["Тарих","Tarix","История","History"],
+repeat:["Қайтариш","Qaytarish","Повторить","Repeat"],
+repeat_ok:["Буюртма саватга қўшилди — текширинг ва юборинг","Buyurtma savatga qo'shildi — tekshiring va yuboring","Заказ добавлен в корзину — проверьте и оформите","Order added to your cart — review and place it"],
+no_active:["Фаол буюртмалар йўқ","Faol buyurtmalar yo'q","Активных заказов нет","No active orders"],
+no_hist:["Тарих бўш","Tarix bo'sh","История пуста","History is empty"],
 phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
@@ -239,8 +245,9 @@ function placeOrder(mode){UI.modal=null;let oid=null;
     const no=S.next++;oid=coid;
     S.orders.push({id:oid,no,type:'pickup',name:cname,phone:cphone,pickupAt:cat,created:Date.now(),status:'open',lines});
     feed('l_new',{no,oid});for(const l of lines)if(l.ask>0)feed('l_ask',{no,oid,pid:l.pid,n:l.ask})});
-  if(oid){const mine=JSON.parse(localStorage.getItem('tl.mine')||'[]');mine.unshift(oid);localStorage.setItem('tl.mine',JSON.stringify(mine.slice(0,20)));
-    UI.cart={};toast(t('ord_placed'));try{window.Notification&&Notification.permission==='default'&&Notification.requestPermission()}catch(e){}}
+  if(oid){const mine=JSON.parse(localStorage.getItem('tl.mine')||'[]');mine.unshift(oid);localStorage.setItem('tl.mine',JSON.stringify(mine.slice(0,60)));
+    {const od=S.orders.find(x=>x.id===oid),hh=histLoad();hh.unshift({id:oid,no:od?od.no:0,t:Date.now(),items:Object.entries(cart).filter(([,q])=>q>0),sum:Object.entries(cart).reduce((a,[pid,q])=>a+(P(pid)?P(pid).price*q:0),0)});try{localStorage.setItem('tl.hist',JSON.stringify(hh.slice(0,60)))}catch(e){}}
+    UI.cart={};UI.ctab='mine';toast(t('ord_placed'));try{window.Notification&&Notification.permission==='default'&&Notification.requestPermission()}catch(e){}}
   else toast(t('nothing'));
   render()}
 function startBatch(){const k=UI.k,p=P(k.pid);if(!p||k.qty<1)return;const m=Math.max(1,+k.min||(S.lastMin&&S.lastMin[k.pid])||25),kp=k.pid,kq=k.qty,bid=uid();
@@ -333,11 +340,18 @@ function orderStatus(o){if(o.status==='done')return`<span class="chip">${t('st_d
 function modalTxt(x){const p=esc(pn(P(x.pid)));
   if(x.none>0)return x.wait>0?t('short_b',{p,w:x.want,r:x.take,n:x.wait,m:mins(x.at),k:x.none}):t('short_c',{p,w:x.want,r:x.take,k:x.none});
   return t('short_a',{p,w:x.want,r:x.take,m:mins(x.at)})}
-function vClient(){const items=S.products.filter(p=>p.on!==false);
+const histLoad=()=>{try{return JSON.parse(localStorage.getItem('tl.hist')||'[]')}catch(e){return[]}};
+const dtm=ts=>{const d=new Date(ts);return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+' '+hm(ts)};
+function orderCard(o){return`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><span class="sub">${t('at_time',{t:hm(o.pickupAt)})}</span></div>${o.lines.map(l=>`<div class="line"><span>${esc(pn(P(l.pid)))} × ${l.qty}</span>${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}${l.rb>0?`<span class="sub">${t('waiting',{n:l.rb})}</span>`:''}</div>`).join('')}${orderStatus(o)}</div>`}
+function repeatOrder(i){const h=histLoad()[i];if(!h)return;UI.cart={};for(const[pid,q]of h.items)if(P(pid)&&P(pid).on!==false)UI.cart[pid]=q;UI.ctab='new';render();toast(t('repeat_ok'));window.scrollTo(0,0)}
+function vClient(){const items=S.products.filter(p=>p.on!==false),tab=UI.ctab||'new';
   const tot=items.reduce((a,p)=>a+(UI.cart[p.id]||0)*p.price,0);
-  const mine=(JSON.parse(localStorage.getItem('tl.mine')||'[]')).map(id=>S.orders.find(o=>o.id===id)).filter(Boolean);
-  let h=head()+`<h1 class="ask">${t('what_order')}</h1>`;
-  if(mine.length)h+=`<h2>${t('my_orders')}</h2>`+mine.map(o=>`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><span class="sub">${t('at_time',{t:hm(o.pickupAt)})}</span></div>${o.lines.map(l=>`<div class="line"><span>${esc(pn(P(l.pid)))} × ${l.qty}</span>${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}${l.rb>0?`<span class="sub">${t('waiting',{n:l.rb})}</span>`:''}</div>`).join('')}${orderStatus(o)}</div>`).join('');
+  const mineIds=JSON.parse(localStorage.getItem('tl.mine')||'[]'),mine=mineIds.map(id=>S.orders.find(o=>o.id===id)).filter(Boolean),act=mine.filter(o=>o.status==='open');
+  let h=head()+`<div class="tabs">${[['new',t('c_new')],['mine',t('my_orders')+(act.length?`<span class="badge">${act.length}</span>`:'')],['hist',t('c_hist')]].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="UI.ctab='${k}';render()">${l}</button>`).join('')}</div>`;
+  if(tab==='mine')return h+(act.length?act.map(orderCard).join(''):`<p class="sub">${t('no_active')}</p><button class="btn full" onclick="UI.ctab='new';render()">${t('c_new')}</button>`)+foot();
+  if(tab==='hist'){const hs=histLoad().map((x,i)=>[x,i]).filter(([x])=>{const o=S.orders.find(y=>y.id===x.id);return !o||o.status!=='open'});
+    return h+(hs.length?hs.map(([x,i])=>{const o=S.orders.find(y=>y.id===x.id);return`<div class="card col"><div class="line"><b>${t('order_no',{n:x.no})}</b><span class="sub">${dtm(x.t)}</span></div>${x.items.map(([pid,q])=>`<div class="line"><span>${P(pid)?esc(pn(P(pid))):'?'} × ${q}</span></div>`).join('')}<div class="line"><b>${fm(x.sum)}</b>${o?orderStatus(o):''}</div><button class="btn full" style="margin-top:6px" onclick="repeatOrder(${i})">🔁 ${t('repeat')}</button></div>`}).join(''):`<p class="sub">${t('no_hist')}</p>`)+foot()}
+  h+=`<h1 class="ask">${t('what_order')}</h1>`;
   h+=items.map(p=>`<div class="card"><div class="pe">${p.emoji}</div><div class="pi"><b>${esc(pn(p))}</b><div class="sub">${fm(p.price)}</div>${prodStatus(p)}</div><div class="step"><button onclick="cartAdd('${p.id}',-1)">−</button><span>${UI.cart[p.id]||0}</span><button onclick="cartAdd('${p.id}',1)">+</button></div></div>`).join('');
   h+=`<h2>${t('pickup_when')}</h2><select onchange="pickSel(this.value)">${[[0,t('now')],[30,t('in_min',{n:30})],[60,t('in_hour')],[90,t('in_min',{n:90})],[120,t('in_min',{n:120})],[-1,t('pick_custom')]].map(([v,l])=>`<option value="${v}"${UI.pick===v?' selected':''}>${l}</option>`).join('')}</select><input type="time" id="pt" value="${esc(UI.pickTime||'')}" onchange="UI.pickTime=this.value" style="margin-top:8px;display:${UI.pick===-1?'block':'none'}">
   <div class="row" style="margin-top:8px"><input placeholder="${t('name')}" value="${esc(UI.name)}" oninput="UI.name=this.value"><div style="flex:1;min-width:140px"><input id="ph" type="tel" placeholder="+998 90 123 45 67" autocomplete="tel" value="${esc(phoneView(UI.phone))}" oninput="onPhone(this)" onfocus="if(!this.value)this.value='+998 '" onblur="phBlur(this)">${phoneErr()}</div></div>${foot()}

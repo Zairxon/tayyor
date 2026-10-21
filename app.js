@@ -1,5 +1,5 @@
 
-const APP_VERSION='1.6.0';
+const APP_VERSION='1.6.1';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -93,6 +93,7 @@ repeat:["Қайтариш","Qaytarish","Повторить","Repeat"],
 repeat_ok:["Буюртма саватга қўшилди — текширинг ва юборинг","Buyurtma savatga qo'shildi — tekshiring va yuboring","Заказ добавлен в корзину — проверьте и оформите","Order added to your cart — review and place it"],
 no_active:["Фаол буюртмалар йўқ","Faol buyurtmalar yo'q","Активных заказов нет","No active orders"],
 no_hist:["Тарих бўш","Tarix bo'sh","История пуста","History is empty"],
+cancel_order:["Буюртмани бекор қилиш","Buyurtmani bekor qilish","Отменить заказ","Cancel order"],
 phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
@@ -175,9 +176,10 @@ function load(){try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 const strip=()=>{const d=JSON.parse(JSON.stringify(S));delete d._rev;d.orders=d.orders.filter(o=>o.status==='open'||Date.now()-o.created<2*864e5).slice(-300);return d};
 function setOnline(v){if(online!==v){online=v;render()}}
-async function pull(){if(!sb)return false;
+async function pull(force){if(!sb)return false;
   try{let{data,error}=await sb.rpc('tayyor_get',{p_slug:SLUG});if(error)throw error;
     if(!data){await sb.rpc('tayyor_init',{p_slug:SLUG,p_pin:'0000',p_data:(()=>{const s=seed();return s})()});({data,error}=await sb.rpc('tayyor_get',{p_slug:SLUG}));if(error||!data)throw error||new Error('init')}
+    if(!force&&(queue.length||syncing))return true;
     S=data.data;S._rev=data.rev;save();setOnline(true);return true}
   catch(e){setOnline(false);return false}}
 function mutate(fn){const r=fn();queue.push(fn);save();afterChange();flush();return r}
@@ -185,7 +187,7 @@ async function flush(){if(syncing||!queue.length||!sb||!S)return;syncing=true;
   try{while(queue.length){const n=queue.length,base=S._rev??0;
     const{data,error}=await sb.rpc('tayyor_put',{p_slug:SLUG,p_data:strip(),p_rev:base});if(error)throw error;
     if(data>=0){S._rev=data;queue.splice(0,n);save();setOnline(true)}
-    else if(data===-1){const pend=queue.slice();queue=[];if(!await pull())throw new Error('pull');for(const f of pend){f();queue.push(f)}afterChange()}
+    else if(data===-1){const pend=queue.slice();queue=[];if(!await pull(true))throw new Error('pull');for(const f of pend){f();queue.push(f)}afterChange()}
     else{queue=[];throw new Error('too big')}}}
   catch(e){setOnline(false)}
   finally{syncing=false;if(staleRemote&&!queue.length){staleRemote=false;if(await pull())afterChange()}}}
@@ -302,7 +304,7 @@ let lastFid=null;
 function feedToasts(){if(lastFid===null){lastFid=S.fid;return}
   const mine=JSON.parse(localStorage.getItem('tl.mine')||'[]');const r=route();
   for(const f of S.feed.filter(x=>x.id>lastFid)){
-    const ok=r==='desk'||(r==='kitchen'&&['l_new','l_batch','l_done','l_ask'].includes(f.k))||(r==='order'&&['l_ordready','l_ans_bake','l_ans_no'].includes(f.k)&&mine.includes(f.a.oid));
+    const ok=r==='desk'||(r==='kitchen'&&['l_new','l_batch','l_done','l_ask','l_cancel'].includes(f.k))||(r==='order'&&['l_ordready','l_ans_bake','l_ans_no'].includes(f.k)&&mine.includes(f.a.oid));
     if(!ok)continue;toast(fmtFeed(f));beep(f.k==='l_ask'?4:f.k==='l_new'||f.k==='l_ordready'?3:1);
     if(r==='order'){try{navigator.vibrate&&navigator.vibrate(300);window.Notification&&Notification.permission==='granted'&&new Notification('Tayyor',{body:fmtFeed(f)})}catch(e){}}}
   lastFid=S.fid}
@@ -342,7 +344,7 @@ function modalTxt(x){const p=esc(pn(P(x.pid)));
   return t('short_a',{p,w:x.want,r:x.take,m:mins(x.at)})}
 const histLoad=()=>{try{return JSON.parse(localStorage.getItem('tl.hist')||'[]')}catch(e){return[]}};
 const dtm=ts=>{const d=new Date(ts);return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+' '+hm(ts)};
-function orderCard(o){return`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><span class="sub">${t('at_time',{t:hm(o.pickupAt)})}</span></div>${o.lines.map(l=>`<div class="line"><span>${esc(pn(P(l.pid)))} × ${l.qty}</span>${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}${l.rb>0?`<span class="sub">${t('waiting',{n:l.rb})}</span>`:''}</div>`).join('')}${orderStatus(o)}</div>`}
+function orderCard(o){return`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><span class="sub">${t('at_time',{t:hm(o.pickupAt)})}</span></div>${o.lines.map(l=>`<div class="line"><span>${esc(pn(P(l.pid)))} × ${l.qty}</span>${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}${l.rb>0?`<span class="sub">${t('waiting',{n:l.rb})}</span>`:''}</div>`).join('')}${orderStatus(o)}<button class="btn bad full" style="margin-top:8px" onclick="cancelOrder('${o.id}')">${t('cancel_order')}</button></div>`}
 function repeatOrder(i){const h=histLoad()[i];if(!h)return;UI.cart={};for(const[pid,q]of h.items)if(P(pid)&&P(pid).on!==false)UI.cart[pid]=q;UI.ctab='new';render();toast(t('repeat_ok'));window.scrollTo(0,0)}
 function vClient(){const items=S.products.filter(p=>p.on!==false),tab=UI.ctab||'new';
   const tot=items.reduce((a,p)=>a+(UI.cart[p.id]||0)*p.price,0);

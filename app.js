@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.5.10';
+const APP_VERSION='2.6.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -141,7 +141,7 @@ g_have:["Столовам бор — кириш","Stolovam bor — kirish","У �
 g_bad:["Код ёки парол нотўғри","Kod yoki parol noto'g'ri","Неверный код или пароль","Wrong code or password"],
 g_locked:["Жуда кўп уриниш. 10 дақиқа кутинг","Juda ko'p urinish. 10 daqiqa kuting","Слишком много попыток. Подождите 10 минут","Too many attempts. Wait 10 minutes"],
 g_taken:["Бу код банд — бошқасини танланг","Bu kod band — boshqasini tanlang","Этот код уже занят — выберите другой","This code is taken — choose another"],
-g_pass_short:["Парол камида 4 белгидан иборат бўлсин","Parol kamida 4 belgidan iborat bo'lsin","Пароль — не короче 4 символов","The password must be at least 4 characters"],
+g_pass_short:["Парол камида 6 белгидан иборат бўлсин","Parol kamida 6 belgidan iborat bo'lsin","Пароль — не короче 6 символов","The password must be at least 6 characters"],
 g_pass_diff:["Паролла бир хил эмас","Parollar bir xil emas","Пароли не совпадают","Passwords don't match"],
 g_code_bad:["Код: лотин ҳарфлари, рақам ва дефис, 3–40 белги","Kod: lotin harflari, raqam va defis, 3–40 belgi","Код: латиница, цифры и дефис, от 3 до 40 символов","Code: Latin letters, digits and hyphen, 3–40 characters"],
 g_name_need:["Столовая номини киритинг","Stolovaya nomini kiriting","Введите название столовой","Enter the canteen name"],
@@ -476,10 +476,11 @@ function clientNotify(po,no){const rd=o=>o.lines.length&&o.lines.every(l=>l.rr>=
 function makeOrder(p){if(S.orders.some(o=>o.id===p.id))return null;
   const cart={};for(const it of (p.items||[])){const pid=it[0],q=it[1],pr=P(pid);if(pr&&pr.on!==false){const n=Math.min(200,Math.max(0,Math.floor(+q||0)));if(n>0)cart[pid]=(cart[pid]||0)+n}}
   const mode=p.mode==='ready'?'ready':'all',lines=[];
-  const base=(no,status,ls,x)=>({id:p.id,no,type:'pickup',cid:p.src?0:1,src:p.src||'app',name:String(p.name||'').slice(0,60),phone:String(p.phone||'').slice(0,20),pickupAt:+p.at||Date.now(),created:Date.now(),status,lines:ls,...x});
+  const base=(no,status,ls,x)=>({id:p.id,no,type:'pickup',cid:p.src?0:1,src:p.src||'app',name:String(p.name||'').slice(0,60),phone:String(p.phone||'').slice(0,20),pickupAt:Math.min(Date.now()+864e5,Math.max(Date.now()-36e5,+p.at||Date.now())),dev:String(p.dev||'').slice(0,24),created:Date.now(),status,lines:ls,...x});
   if(!p.src&&!p.ok){const dig=String(p.phone||'').replace(/\D/g,'').slice(3),total=Object.values(cart).reduce((a,b)=>a+b,0),big=S.settings.big??30;
     if(dig&&(S.block||[]).includes(dig)){const no=S.next++;S.orders.push(base(no,'cancelled',[]));return no}
-    if(big>0&&total>=big){const no=S.next++;S.orders.push(base(no,'hold',[],{items:cart,mode}));feed('l_hold',{no,oid:p.id});return no}}
+    const mine=S.orders.filter(o=>o.cid&&(o.status==='open'||o.status==='hold')),same=mine.filter(o=>(dig&&String(o.phone||'').replace(/\D/g,'').slice(3)===dig)||(p.dev&&o.dev===String(p.dev).slice(0,24))).length;
+    if((big>0&&total>=big)||same>=3||mine.length>=40){const no=S.next++;S.orders.push(base(no,'hold',[],{items:cart,mode}));feed('l_hold',{no,oid:p.id});return no}}
   for(const a of analyze(cart)){
     if(!a.stock){const q=Math.min(a.want,invFree(a.pid));if(q>0)lines.push({pid:a.pid,qty:q,rr:q,rb:0,want:a.want});continue}
     const rb=mode==='all'?a.wait:0,ask=mode==='all'?a.none:0,qty=a.take+rb+ask;
@@ -636,12 +637,12 @@ function askAnswer(oid,pid,bake){const el=document.getElementById('am-'+oid+'-'+
   mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;const l=o.lines.find(x=>x.pid===pid);if(!l||!(l.ask>0))return;const n=l.ask;
     if(bake){S.batches.push({id:bid,pid,qty:n,start:Date.now(),end:Date.now()+m*60000});l.rb+=n;l.ask=0;S.lastMin=S.lastMin||{};S.lastMin[pid]=m;feed('l_batch',{pid,n,m});feed('l_ans_bake',{no:o.no,oid,pid,m})}
     else{l.qty-=n;l.ask=0;l.declined=(l.declined||0)+n;feed('l_ans_no',{no:o.no,oid,pid,n});o.lines=o.lines.filter(x=>x.qty>0);if(!o.lines.length){o.status='cancelled';feed('l_cancel',{no:o.no})}}})}
-function giveOrder(oid,partial){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o)return;
+function giveOrder(oid,partial){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;
   for(const l of o.lines){if(P(l.pid)&&P(l.pid).stock)S.ready[l.pid]=Math.max(0,rdy(l.pid)-l.rr);else if(P(l.pid))invDeduct(l.pid,l.rr);if(partial){l.qty=l.rr;l.rb=0;l.ask=0}}
   o.lines=o.lines.filter(l=>l.qty>0);recSale(o.lines);recSrc(o.src||(o.cid?'app':'phone'),linesSum(o.lines));o.status='done'})}
 function cancelOrder(oid){const o0=S.orders.find(x=>x.id===oid);if(!o0)return;askConfirm(t('confirm_cancel',{no:o0.no}),()=>cancelOrderDo(oid))}
 function cancelOrderDo(oid){const o0=S.orders.find(x=>x.id===oid);if(!o0)return;
-  mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o)return;o.status='cancelled';feed(ROLE==='client'?'l_cancel_c':'l_cancel',{no:o.no,oid:o.id})});
+  mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||(o.status!=='open'&&o.status!=='hold'))return;o.status='cancelled';feed(ROLE==='client'?'l_cancel_c':'l_cancel',{no:o.no,oid:o.id})});
   if(ROLE==='client')toast(t('l_cancel',{no:o0.no}))}
 function adj(pid,d){mutate(()=>{S.ready[pid]=Math.max(0,rdy(pid)+d)})}
 const tbls=()=>(S.settings.tableIds&&S.settings.tableIds.length?S.settings.tableIds:Array.from({length:S.settings.tables||12},(_,i)=>i+1));
@@ -708,7 +709,7 @@ function saveInfo(){const ip=document.getElementById('ip'),d=ip?(ip.dataset.d!==
   mutate(()=>{S.info={phone:d,addr:addr.trim().slice(0,160),loc:loc.slice(0,300)}});toast(t('info_saved'))}
 function geoFill(){if(!navigator.geolocation)return toast(t('info_geo_fail'),'bad');
   navigator.geolocation.getCurrentPosition(p=>{const el=document.getElementById('il');if(el)el.value=p.coords.latitude.toFixed(6)+', '+p.coords.longitude.toFixed(6);saveInfo();toast(t('info_geo_ok'))},()=>toast(t('info_geo_fail'),'bad'),{enableHighAccuracy:true,timeout:15000})}
-async function savePwd(){const n=UI.pwNew||'';if(n.length<4)return toast(t('g_pass_short'),'bad');let ok=false;
+async function savePwd(){const n=UI.pwNew||'';if(n.length<6)return toast(t('g_pass_short'),'bad');let ok=false;
   try{const x=await sb.rpc('tayyor_set_password',{p_slug:SLUG,p_token:TOK(),p_old:UI.pwOld||'',p_new:n});ok=x.data===true}catch(e){}
   if(ok){UI.pwOld=UI.pwNew='';toast(t('set_pass_ok'));render()}else toast(t('set_pass_bad'),'bad')}
 
@@ -732,7 +733,7 @@ function fmtNum(v){return String(v==null?'':v).replace(/\D/g,'').replace(/\B(?=(
 function maskNum(el){el.value=fmtNum(el.value)}
 function maskDate(el){const d=el.value.replace(/\D/g,'').slice(0,8);el.value=d.length>4?d.slice(0,2)+'.'+d.slice(2,4)+'.'+d.slice(4):d.length>2?d.slice(0,2)+'.'+d.slice(2):d}
 async function adCreate(){const f=AD.f,name=(f.name||'').trim(),code=slugify(f.code||name),days=Math.floor(+f.days||10),fee=Math.floor(+String(f.fee||0).replace(/\s/g,'')),until=parseDMY(f.until);
-  if(!name)return toast(t('g_name_need'),'bad');if(code.length<3)return toast(t('g_code_bad'),'bad');if((f.pass||'').length<4)return toast(t('g_pass_short'),'bad');if(days<1||days>365)return toast(t('a_days_bad'),'bad');
+  if(!name)return toast(t('g_name_need'),'bad');if(code.length<3)return toast(t('g_code_bad'),'bad');if((f.pass||'').length<6)return toast(t('g_pass_short'),'bad');if(days<1||days>365)return toast(t('a_days_bad'),'bad');
   if(!(fee>=0))return toast(t('a_fee_bad'),'bad');if(!until)return toast(t('a_date_bad'),'bad');
   const s0=seedFresh(name),keep=S;S=s0;const pub=buildPub();S=keep;let r;
   try{const x=await sb.rpc('tayyor_admin_create',{p_token:ATOK(),p_slug:code,p_name:name,p_pass:f.pass,p_days:days,p_state:s0,p_pub:pub,p_fee:fee,p_paid_until:until});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
@@ -754,7 +755,7 @@ const adItem=slug=>(AD.list||[]).find(x=>x.slug===slug);
 function adDays(slug,v){const d=Math.floor(+v);if(!(d>=1&&d<=365)){toast(t('a_days_bad'),'bad');render();return}adUpdate(slug,{days:d},'a_days_ok',{n:adItem(slug).name,d})}
 function adOpen(slug){AD.open=AD.open===slug?null:slug;render()}
 function adRename(slug){const c=adItem(slug);askInput(t('a_rename_t',{n:c.name}),c.name,'text',v=>{v=v.trim();if(!v||v===c.name)return;adUpdate(slug,{name:v},'a_name_ok',{n:v})})}
-function adPass(slug){const c=adItem(slug);askInput(t('a_pass_t',{n:c.name}),'', 'text',v=>{if(v.length<4)return toast(t('g_pass_short'),'bad');adUpdate(slug,{pass:v},'a_pass_ok',{n:c.name}).then(ok=>{if(ok)showCreds(c.name,slug,v)})})}
+function adPass(slug){const c=adItem(slug);askInput(t('a_pass_t',{n:c.name}),'', 'text',v=>{if(v.length<6)return toast(t('g_pass_short'),'bad');adUpdate(slug,{pass:v},'a_pass_ok',{n:c.name}).then(ok=>{if(ok)showCreds(c.name,slug,v)})})}
 function adToggle(slug){const c=adItem(slug),off=!c.disabled;askConfirm(t(off?'a_c_disable':'a_c_enable',{n:c.name}),()=>adUpdate(slug,{disabled:off},off?'a_off_ok':'a_on_ok',{n:c.name}))}
 function adDelete(slug){const c=adItem(slug);askConfirm(t('a_c_del',{n:c.name}),async()=>{let r;
   try{const x=await sb.rpc('tayyor_admin_delete',{p_token:ATOK(),p_slug:slug});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
@@ -1027,7 +1028,8 @@ setInterval(()=>{tick++;
     for(const o of openP()){if(o.pk||o.pickupAt-o.created<=lead)continue;
       if(ROLE==='kitchen'){const at=o.pickupAt-lead;if(at<=now&&now-at<6e5&&!alerted.has('r'+o.id)){alerted.add('r'+o.id);beep(4);toast(t('rem_k',{no:o.no,m:Math.max(0,Math.ceil((o.pickupAt-now)/6e4))}));render()}}
       else if(o.pickupAt<=now&&now-o.pickupAt<6e5&&!alerted.has('d'+o.id)){alerted.add('d'+o.id);beep(3);toast(t('rem_d',{no:o.no}),'bad')}}
-    if(ROLE==='desk'&&tick%30===0){const g=S.settings.grace??60;if(g>0)for(const id of openP().filter(o=>o.pickupAt+g*6e4<now).map(o=>o.id))noShow(id)}}
+    if(ROLE==='desk'&&tick%30===0){const g=S.settings.grace??60;if(g>0)for(const id of openP().filter(o=>o.pickupAt+g*6e4<now).map(o=>o.id))noShow(id);
+      for(const id of S.orders.filter(o=>o.status==='hold'&&((g>0&&o.pickupAt+g*6e4<now)||o.created+864e5<now)).map(o=>o.id))holdReject(id)}}
   if(tick%20===0)render()},1000);
 async function chk(){try{const r=await fetch(ROOT+'version.json?'+Date.now(),{cache:'no-store'});const j=await r.json();if(j.v&&j.v!==APP_VERSION){UI.upd=true;render()}}catch(e){}}
 async function doUpdate(){try{const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs)await r.unregister();for(const k of await caches.keys())await caches.delete(k)}catch(e){}

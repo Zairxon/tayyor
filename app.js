@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.5.6';
+const APP_VERSION='2.5.7';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -284,7 +284,12 @@ info_geo_fail:["Жойлашувни аниқлаб бўлмади: рухсат
 info_saved:["Алоқа маълумотлари сақланди","Aloqa ma'lumotlari saqlandi","Контакты сохранены","Contacts saved"],
 info_loc_bad:["Ҳавола (https://…) ёки координаталарни киритинг, масалан 41.3110, 69.2401","Havola (https://…) yoki koordinatalarni kiriting, masalan 41.3110, 69.2401","Укажите ссылку (https://…) или координаты, например 41.3110, 69.2401","Enter a link (https://…) or coordinates, e.g. 41.3110, 69.2401"],
 c_map:["Харитада","Xaritada","На карте","On the map"],
-k_orders:["Йиғиш учун буюртмалар","Yig'ish uchun buyurtmalar","Заказы к выдаче","Orders to pack"],
+k_orders:["Олиб кетиш учун (қадоқланг)","Olib ketish uchun (qadoqlang)","С собой — упаковать","Takeaway — pack it"],
+k_hall_title:["Залда (тарелкада беринг)","Zalda (tarelkada bering)","В зале — подать на тарелке","Dine-in — serve on a plate"],
+k_serve:["Столга берилди","Stolga berildi","Подано на стол","Served to the table"],
+hall_tbl:["Стол {n}","Stol {n}","Стол {n}","Table {n}"],
+l_hall:["Стол {tb}: янги таомлар — тарелкада беринг","Stol {tb}: yangi taomlar — tarelkada bering","Стол {tb}: новые блюда — подайте на тарелке","Table {tb}: new dishes — serve on a plate"],
+l_served:["Ошпаз {tb}-столга таомларни берди","Oshpaz {tb}-stolga taomlarni berdi","Повар подал блюда на стол {tb}","The cook served table {tb}"],
 k_pack:["Қадоқлаб, қабулхонага бериш","Qadoqlab, qabulxonaga berish","Упаковать и передать ресепшену","Pack and hand to reception"],
 k_packed:["Қадоқланган, қабулхонага берилган","Qadoqlangan, qabulxonaga berilgan","Упаковано, передано ресепшену","Packed and handed to reception"],
 pk_soon:["{m} дақиқадан кейин олиб кетишади","{m} daqiqadan keyin olib ketishadi","Заберут через {m} мин","Pickup in {m} min"],
@@ -477,6 +482,12 @@ function makeOrder(p){if(S.orders.some(o=>o.id===p.id))return null;
   if(lines.length){feed('l_new',{no,oid:p.id});for(const l of lines)if(l.ask>0)feed('l_ask',{no,oid:p.id,pid:l.pid,n:l.ask})}
   return no}
 /* cook packs and hands over to reception; reception gives to the customer */
+const hallPend=o=>o.lines.filter(l=>l.qty>(l.sv||0));
+function serveHall(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;for(const l of o.lines)l.sv=l.qty;feed('l_served',{tb:o.table})})}
+function hallCookHTML(){const os=S.orders.filter(o=>o.type==='hall'&&o.status==='open'&&hallPend(o).length).sort((a,b)=>a.created-b.created);if(!os.length)return'';
+  return`<h2>🍽 ${t('k_hall_title')} (${os.length})</h2>`+os.map(o=>`<div class="card col"><div class="line"><b>${t('hall_tbl',{n:o.table})}</b><b>${hallPend(o).reduce((a,l)=>a+l.qty-(l.sv||0),0)} ${t('pcs')}</b></div>
+    <div class="packrow">${hallPend(o).map(l=>`<div class="pk warn"><div class="pe2">${P(l.pid)?P(l.pid).emoji:'?'}</div><div class="pq">${l.qty-(l.sv||0)}</div><div class="pn">${P(l.pid)?esc(pn(P(l.pid))):'?'}</div></div>`).join('')}</div>
+    <button class="btn ok full" onclick="serveHall('${o.id}')">🍽 ${t('k_serve')}</button></div>`).join('')}
 function packOrder(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open'||o.pk)return;o.pk=Date.now();feed('l_packed',{no:o.no,oid})})}
 function holdAccept(oid){mutate(()=>{const i=S.orders.findIndex(x=>x.id===oid&&x.status==='hold');if(i<0)return;const o=S.orders[i];S.orders.splice(i,1);
   makeOrder({id:o.id,no:o.no,items:Object.entries(o.items||{}),mode:o.mode,name:o.name,phone:o.phone,at:o.pickupAt,ok:1})})}
@@ -633,6 +644,8 @@ function hallAdd(n,pid,d){let fail=false;mutate(()=>{const p=P(pid);if(d>0&&((p.
   let o=hallOrder(n);if(!o){if(d<0)return;o={id:'h'+uid(),no:0,type:'hall',table:n,created:Date.now(),status:'open',lines:[]};S.orders.push(o)}
   let l=o.lines.find(x=>x.pid===pid);if(!l){if(d<0)return;l={pid,qty:0,rr:0,rb:0};o.lines.push(l)}
   l.qty+=d;if(p.stock)S.ready[pid]=Math.max(0,rdy(pid)-d);else invDeduct(pid,d);
+  if((l.sv||0)>l.qty)l.sv=l.qty;
+  if(d>0){const lf=S.feed.filter(f=>(f.k==='l_hall'||f.k==='l_served')&&f.a.tb===n).pop();if(!(lf&&lf.k==='l_hall'&&Date.now()-lf.t<20000))feed('l_hall',{tb:n})}
   if(l.qty<=0)o.lines=o.lines.filter(x=>x!==l);if(!o.lines.length)S.orders=S.orders.filter(x=>x!==o)});
   if(fail)toast(t('no_stock'))}
 function closeTable(n){mutate(()=>{const o=hallOrder(n);if(o){recSale(o.lines);recSrc('hall',linesSum(o.lines));o.status='closed'}});UI.tbl=null;render()}
@@ -646,11 +659,11 @@ function toast(m,k){const d=document.createElement('div');d.className='toast'+(k
 let actx;function beep(n=2){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();for(let i=0;i<n;i++){const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.frequency.value=880;g.gain.value=.15;o.start(actx.currentTime+i*.25);o.stop(actx.currentTime+i*.25+.15)}}catch(e){}}
 function fmtFeed(f,role){const a=f.a||{};const o=a.oid&&S.orders.find(x=>x.id===a.oid);let k=f.k,L=o?o.lines:[];
   if(role==='kitchen'){if(k==='l_cancel'||k==='l_cancel_c'){k='l_cancel_k';L=L.filter(l=>l.ask>0||l.rb>0)}else if(k==='l_new'&&L.some(l=>l.rb>0)){k='l_new_k';L=L.filter(l=>l.rb>0)}}
-  return t(k,{no:a.no,s:L.map(lineTxt).join(', '),p:pn(P(a.pid)),n:a.n,m:a.m,ph:a.ph})}
+  return t(k,{no:a.no,s:L.map(lineTxt).join(', '),p:pn(P(a.pid)),n:a.n,m:a.m,ph:a.ph,tb:a.tb})}
 let lastFid=null;
 function relevant(f,r,mine){const o=f.a&&f.a.oid&&S.orders.find(x=>x.id===f.a.oid),need=o&&o.lines.some(l=>l.ask>0||l.rb>0);
   if(r==='desk')return true;
-  if(r==='kitchen'){if(f.k==='l_ask')return true;if(f.k==='l_new')return !!o&&!o.lines.some(l=>l.ask>0);if(f.k==='l_noshow')return true;return(f.k==='l_cancel'||f.k==='l_cancel_c')&&!!need}
+  if(r==='kitchen'){if(f.k==='l_ask')return true;if(f.k==='l_new')return !!o&&!o.lines.some(l=>l.ask>0);if(f.k==='l_noshow'||f.k==='l_hall')return true;return(f.k==='l_cancel'||f.k==='l_cancel_c')&&!!need}
   if(r==='order')return['l_ordready','l_ans_bake','l_ans_no'].includes(f.k)&&mine.includes(f.a.oid);
   return false}
 function feedToasts(){if(lastFid===null){lastFid=S.fid;return}
@@ -974,7 +987,7 @@ function reqHTML(){const rs=[];for(const o of openP().sort((a,b)=>a.created-b.cr
   return`<h2 style="color:var(--bad)">🔔 ${t('k_req_title')} (${rs.length})</h2>`+rs.map(([o,l])=>`<div class="card col" style="border-color:var(--bad)"><b>${t('k_req_line',{no:o.no,p:esc(pn(P(l.pid))),n:l.ask})}</b><div class="sub">${t('at_time',{t:hm(o.pickupAt)})}</div><div class="row" style="margin-top:6px;flex-wrap:nowrap"><input id="am-${o.id}-${l.pid}" type="number" min="1" value="${(S.lastMin&&S.lastMin[l.pid])||25}"><span class="sub" style="flex:0 0 auto">${t('min')}</span></div><div class="row" style="margin-top:8px"><button class="btn ok" onclick="askAnswer('${o.id}','${l.pid}',true)">🔥 ${t('k_will')}</button><button class="btn bad" onclick="askAnswer('${o.id}','${l.pid}',false)">${t('k_wont')}</button></div></div>`).join('')}
 function vKitchen(){const k=UI.k,stockP=S.products.filter(p=>p.stock&&p.on!==false);if(!P(k.pid))k.pid=stockP[0]&&stockP[0].id;
   const p=P(k.pid);const bs=[...S.batches].sort((a,b)=>a.end-b.end);
-  let h=head()+reqHTML()+packHTML()+`<h2>${t('k_put')}</h2><div class="grid pg">${stockP.map(x=>ptile(`UI.k.pid='${x.id}';UI.k.min=null;render()`,x.emoji,pn(x),askN(x.id)>0?'! '+askN(x.id):rdy(x.id),k.pid===x.id?'sel':'')).join('')}</div>`;
+  let h=head()+reqHTML()+hallCookHTML()+packHTML()+`<h2>${t('k_put')}</h2><div class="grid pg">${stockP.map(x=>ptile(`UI.k.pid='${x.id}';UI.k.min=null;render()`,x.emoji,pn(x),askN(x.id)>0?'! '+askN(x.id):rdy(x.id),k.pid===x.id?'sel':'')).join('')}</div>`;
   if(p){
     h+=`<div class="card col"><div class="sub">${t('k_qty')}</div><div class="step" style="justify-content:space-between"><button onclick="UI.k.qty=Math.max(1,UI.k.qty-5);render()">−</button><span class="big">${k.qty}</span><button onclick="UI.k.qty+=5;render()">+</button></div>
     <div class="row" style="margin:8px 0">${[10,20,30,50].map(n=>`<button class="btn sec sm" onclick="UI.k.qty=${n};render()">${n}</button>`).join('')}</div>

@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.5.0';
+const APP_VERSION='2.5.1';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -120,8 +120,6 @@ confirm_del_table:["{n}-столни ўчирасизми?","{n}-stolni o'chiras
 confirm_del_prod:["«{p}» ўчирилсинми?","«{p}» o'chirilsinmi?","Удалить «{p}»?","Delete “{p}”?"],
 confirm_drop_batch:["{p} × {n} партиясини олиб ташлайсизми?","{p} × {n} partiyasini olib tashlaysizmi?","Убрать партию {p} × {n} из духовки?","Remove the batch {p} × {n} from the oven?"],
 confirm_reset:["Жорий маълумотлар демо маълумотлар билан алмаштирилади. Давом этасизми?","Joriy ma'lumotlar demo ma'lumotlar bilan almashtiriladi. Davom etasizmi?","Все текущие данные будут заменены демо-данными. Продолжить?","All current data will be replaced with demo data. Continue?"],
-zoom_out:["Кичрайтириш","Kichraytirish","Уменьшить","Smaller"],
-zoom_in:["Катталаштириш","Kattalashtirish","Увеличить","Larger"],
 back:["Орқага","Orqaga","Назад","Back"],
 do_it:["Ҳа, бажариш","Ha, bajarish","Да, выполнить","Yes, do it"],
 time_ph:["СС:ДД","SS:DD","ЧЧ:ММ","HH:MM"],
@@ -666,9 +664,7 @@ let pendingRender=false;
 function afterChange(){if(ROLE!=='client')feedToasts();render()}
 const ROLE=window.ROLE||'client',ROOT=new URL('../',location.href).href,route=()=>ROLE==='client'?'order':ROLE;
 const clientLink=()=>ROOT+'client/?s='+SLUG;
-let zoomV=1;try{zoomV=Math.min(1.4,Math.max(0.6,+localStorage.getItem('tl.zoom')||1))}catch(e){}
-function applyZoom(){document.body.style.zoom=zoomV===1?'':zoomV}
-function zoomBy(d){zoomV=Math.round(Math.min(1.4,Math.max(0.6,zoomV+d))*10)/10;try{localStorage.setItem('tl.zoom',zoomV)}catch(e){}applyZoom();render()}
+try{localStorage.removeItem('tl.zoom')}catch(e){}
 const LCODE={uzc:'ЎЗ',uzl:'UZ',ru:'RU',en:'EN'};
 document.addEventListener('click',e=>{if(UI.langOpen&&!e.target.closest('.langs')){UI.langOpen=false;render()}});
 function setLang(l){lang=l;localStorage.setItem('tl.lang',l);document.documentElement.lang=l==='en'?'en':l==='ru'?'ru':'uz';render()}
@@ -808,7 +804,7 @@ function billBanner(){if(ROLE!=='desk'&&ROLE!=='kitchen')return'';const b=billTe
 function billToast(){const b=billText();if(!b)return;const k='tl.bill.'+SLUG+'.'+dayKey();try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}toast(b.m,b.late?'bad':'')}
 function contactHTML(){const i=PUB&&PUB.info;if(!i||(!i.phone&&!i.map))return'';
   return`<div class="contact">${i.phone?`<a class="chip2" href="tel:${esc(i.tel)}">📞 ${esc(i.phone)}</a>`:''}${i.map?`<a class="chip2" href="${esc(i.map)}" target="_blank" rel="noopener">📍 ${esc(i.addr||t('c_map'))}</a>`:''}</div>`}
-function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt=""><span class="bn">Tayyor</span></div><div class="langs"><button title="${t('zoom_out')}" onclick="zoomBy(-0.1)">A−</button><button title="${t('zoom_in')}" onclick="zoomBy(0.1)">A+</button><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header><div class="hmid">${((ROLE==='client'?(PUB&&PUB.name):ROLE==='admin'?'':(S&&S.name))||'')?`<span class="bc">${esc(ROLE==='client'?PUB.name:S.name)}</span>`:''}<span class="br">${t(ROLE==='client'?'role_client':'r_'+ROLE)}</span></div>${ROLE==='client'?contactHTML():''}${installBox()}${billBanner()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
+function head(){return`<header><div class="brand"><img class="logo" src="${ROOT}assets/emblem-${ROLE}.png" alt=""><span class="bn">Tayyor</span></div><div class="langs"><button onclick="UI.langOpen=!UI.langOpen;render()" aria-haspopup="true">🌐 ${LCODE[lang]}</button>${UI.langOpen?`<div class="lmenu">${LANGS.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="UI.langOpen=false;setLang('${c}')">${n}</button>`).join('')}</div>`:''}</div></header><div class="hmid">${((ROLE==='client'?(PUB&&PUB.name):ROLE==='admin'?'':(S&&S.name))||'')?`<span class="bc">${esc(ROLE==='client'?PUB.name:S.name)}</span>`:''}<span class="br">${t(ROLE==='client'?'role_client':'r_'+ROLE)}</span></div>${ROLE==='client'?contactHTML():''}${installBox()}${billBanner()}${UI.upd?`<div class="upd"><b>${t('update')}</b><button class="btn sm sec" onclick="doUpdate()">${t('update_btn')}</button></div>`:''}`}
 function foot(){return`<div class="foot">${t('version')} ${APP_VERSION} · <span style="color:${online?'var(--ok)':'var(--bad)'}">●</span> ${online?t('on_line'):t('off_line')}${SLUG?' · '+esc(SLUG):''} · Tayyor</div>`}
 function installBox(){if(isStandalone)return'';if(installEv)return`<button class="btn full" style="margin:6px 0" onclick="doInstall()">📲 ${t('install')}</button>`;if(isIOS)return`<p class="sub">📲 ${t('ios_hint')}</p>`;return''}
 function gateHTML(){const g=UI.g;
@@ -1014,7 +1010,7 @@ async function chk(){try{const r=await fetch(ROOT+'version.json?'+Date.now(),{ca
 async function doUpdate(){try{const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs)await r.unregister();for(const k of await caches.keys())await caches.delete(k)}catch(e){}location.reload()}
 setInterval(chk,60000);chk();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register(ROOT+'sw.js',{scope:ROOT}).catch(()=>{});
-applyZoom();
+
 if(ROLE==='client'){render();pullPub().then(()=>render())}
 else if(ROLE==='admin'){render();adRefresh()}
 else{load();render();if(TOK())pull().then(()=>{if(S){lastFid=S.fid;render();billToast()}})}

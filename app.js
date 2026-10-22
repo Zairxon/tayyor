@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.5.3';
+const APP_VERSION='2.5.4';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -1007,7 +1007,9 @@ setInterval(()=>{tick++;
     if(ROLE==='desk'&&tick%30===0){const g=S.settings.grace??60;if(g>0)for(const id of openP().filter(o=>o.pickupAt+g*6e4<now).map(o=>o.id))noShow(id)}}
   if(tick%20===0)render()},1000);
 async function chk(){try{const r=await fetch(ROOT+'version.json?'+Date.now(),{cache:'no-store'});const j=await r.json();if(j.v&&j.v!==APP_VERSION){UI.upd=true;render()}}catch(e){}}
-async function doUpdate(){try{const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs)await r.unregister();for(const k of await caches.keys())await caches.delete(k)}catch(e){}location.reload()}
+async function doUpdate(){try{const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs)await r.unregister();for(const k of await caches.keys())await caches.delete(k)}catch(e){}
+  try{const us=[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href);await Promise.all([...us,location.href,ROOT+'version.json'].map(u=>fetch(u,{cache:'reload'}).catch(()=>{})))}catch(e){}
+  location.reload()}
 setInterval(chk,60000);chk();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register(ROOT+'sw.js',{scope:ROOT}).catch(()=>{});
 

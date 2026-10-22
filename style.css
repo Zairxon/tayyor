@@ -159,3 +159,6 @@ header{flex-wrap:wrap}.langs{flex-wrap:wrap}
 
 .agrid2 .btn{white-space:normal;min-height:46px;line-height:1.15;display:flex;align-items:center;justify-content:center;text-align:center}
 .agrid2 .btn:last-child:nth-child(odd){grid-column:1/-1}
+
+.acts{display:flex;gap:6px;margin-top:8px}
+.acts .btn{flex:1 1 0;min-width:0;padding:9px 4px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:0}

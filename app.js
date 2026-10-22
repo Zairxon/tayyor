@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.5.9';
+const APP_VERSION='2.5.10';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -286,8 +286,8 @@ info_loc_bad:["Ҳавола (https://…) ёки координаталарни 
 c_map:["Харитада","Xaritada","На карте","On the map"],
 k_orders:["Олиб кетиш учун (қадоқланг)","Olib ketish uchun (qadoqlang)","С собой — упаковать","Takeaway — pack it"],
 k_hall_title:["Залда (тарелкада беринг)","Zalda (tarelkada bering)","В зале — подать на тарелке","Dine-in — serve on a plate"],
-wait_cook:["Ошпаз ҳали тайёрлаяпти","Oshpaz hali tayyorlayapti","Повар ещё готовит","The cook is still preparing"],
-give_force:["Ошпазсиз бериш","Oshpazsiz berish","Выдать без повара","Hand over without the cook"],
+wait_cook:["Ошпаз тайёрлаяпти","Oshpaz tayyorlayapti","Повар готовит","Cook is on it"],
+give_force:["Ошпазсиз","Oshpazsiz","Без повара","No cook"],
 confirm_force:["Ошпаз №{no} буюртмани ҳали бермади. Барибир берилсинми?","Oshpaz №{no} buyurtmani hali bermadi. Baribir berilsinmi?","Повар ещё не передал заказ №{no}. Выдать всё равно?","The cook hasn't handed over order #{no} yet. Hand it over anyway?"],
 wait_serve:["Ошпаз ҳали бермади","Oshpaz hali bermadi","Повар ещё не подал","The cook hasn't served yet"],
 close_force:["Ошпазсиз ёпиш","Oshpazsiz yopish","Закрыть без повара","Close without the cook"],
@@ -962,7 +962,7 @@ function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt),holdN=S.o
     h+=dashHTML()+holdHTML()+`<h2>${t('d_orders')}</h2>`;
     h+=open.length?open.map(o=>`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})} ${esc(o.name)}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div><div class="sub"><span class="chip">${o.src==='phone'?'☎ '+t('src_phone'):'📱 '+t('src_app')}</span> ${o.phone?esc(o.phone):''} ${o.pk?`<span class="chip ok">📦 ${t('chip_packed')}</span>`:`<span class="chip">👨‍🍳 ${t('chip_cook')}</span>`}</div>
       ${o.lines.map(l=>`<div class="line"><span>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</span><span>${l.rr>=l.qty?`<span class="chip ok">${t('ready')}</span>`:`${l.rr>0?`<span class="chip ok">${t('ready')} ${l.rr}</span>`:''}${l.rb>0?`<span class="chip warn">${t('waiting',{n:l.rb})} · ~${mins(etaLine(o,l)||Date.now())} ${t('min')}</span>`:''}${l.ask>0?`<span class="chip bad">${t('st_ask')}: ${l.ask}</span>`:''}${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}`}${l.want>l.qty?`<span class="chip bad">${t('asked',{w:l.want,q:l.qty})}</span>`:''}</span></div>`).join('')}
-      <div class="agrid2">${o.pk?`<button class="btn ok sm" onclick="giveOrder('${o.id}'${isReady(o)?'':',true'})">${t('give')}</button>`:`<button class="btn sec sm" disabled style="opacity:.55">⏳ ${t('wait_cook')}</button><button class="btn sec sm" onclick="giveForce('${o.id}')">${t('give_force')}</button>`}${Date.now()>=o.pickupAt?`<button class="btn sec sm" onclick="noShowAsk('${o.id}')">${t('noshow_btn')}</button>`:''}<button class="btn bad sm" onclick="cancelOrder('${o.id}')">${t('cancel')}</button></div></div>`).join(''):`<p class="sub">${t('no_orders')}</p>`;
+      <div class="acts">${o.pk?`<button class="btn ok sm" onclick="giveOrder('${o.id}'${isReady(o)?'':',true'})">${t('give')}</button>`:`<button class="btn sec sm" disabled style="opacity:.55">⏳ ${t('wait_cook')}</button><button class="btn sec sm" onclick="giveForce('${o.id}')">${t('give_force')}</button>`}${Date.now()>=o.pickupAt?`<button class="btn sec sm" onclick="noShowAsk('${o.id}')">${t('noshow_btn')}</button>`:''}<button class="btn bad sm" onclick="cancelOrder('${o.id}')">${t('cancel')}</button></div></div>`).join(''):`<p class="sub">${t('no_orders')}</p>`;
     h+=`<h2>🔔</h2>`+S.feed.slice(-8).reverse().map(f=>`<div class="line sub${f.k.startsWith('l_cancel')?' cancelred':''}"><span>${fmtFeed(f,'desk')}</span><span>${hm(f.t)}</span></div>`).join('')}
   if(UI.tab==='new')h+=deskNewHTML();
   if(UI.tab==='report')h+=reportHTML();

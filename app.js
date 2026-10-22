@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.5.2';
+const APP_VERSION='2.5.3';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -287,8 +287,8 @@ c_map:["Харитада","Xaritada","На карте","On the map"],
 k_orders:["Йиғиш учун буюртмалар","Yig'ish uchun buyurtmalar","Заказы к выдаче","Orders to pack"],
 k_pack:["Қадоқлаб, қабулхонага бериш","Qadoqlab, qabulxonaga berish","Упаковать и передать ресепшену","Pack and hand to reception"],
 k_packed:["Қадоқланган, қабулхонага берилган","Qadoqlangan, qabulxonaga berilgan","Упаковано, передано ресепшену","Packed and handed to reception"],
-k_soon:["{m} дақиқадан кейин олиб кетишади","{m} daqiqadan keyin olib ketishadi","Заберут через {m} мин","Pickup in {m} min"],
-k_late:["Вақт ўтди","Vaqt o'tdi","Время вышло","Time's up"],
+pk_soon:["{m} дақиқадан кейин олиб кетишади","{m} daqiqadan keyin olib ketishadi","Заберут через {m} мин","Pickup in {m} min"],
+pk_late:["Вақт ўтди","Vaqt o'tdi","Время вышло","Time's up"],
 rem_k:["Буюртма №{no}: {m} дақиқадан кейин олиб кетишади — қадоқлаш вақти","Buyurtma №{no}: {m} daqiqadan keyin olib ketishadi — qadoqlash vaqti","Заказ №{no}: через {m} мин заберут — пора упаковать","Order #{no}: pickup in {m} min — time to pack"],
 rem_d:["Буюртма №{no} вақти келди, лекин ошпаз ҳали бермади","Buyurtma №{no} vaqti keldi, lekin oshpaz hali bermadi","Заказ №{no}: время пришло, а повар ещё не передал","Order #{no}: it's time, but the cook hasn't handed it over yet"],
 l_packed:["Ошпаз №{no} буюртмани қадоқлаб берди — мижозга беринг","Oshpaz №{no} buyurtmani qadoqlab berdi — mijozga bering","Повар упаковал заказ №{no} — выдайте клиенту","The cook packed order #{no} — hand it to the customer"],
@@ -497,7 +497,7 @@ function packHTML(){const os=openP().sort((a,b)=>a.pickupAt-b.pickupAt);if(!os.l
   return`<h2>📦 ${t('k_orders')} (${os.length})</h2>`+os.map(o=>{const left=Math.ceil((o.pickupAt-Date.now())/60000),rd=isReady(o);
     return`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div>
     ${o.lines.map(l=>`<div class="line"><span>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</span><span>${l.rr>=l.qty?`<span class="chip ok">${t('ready')}</span>`:`${l.rb>0?`<span class="chip warn">${t('waiting',{n:l.rb})}</span>`:''}${l.ask>0?`<span class="chip bad">${t('st_ask')}: ${l.ask}</span>`:''}`}</span></div>`).join('')}
-    ${o.pk?`<span class="chip ok">${t('k_packed')}</span>`:`<span class="chip ${left<0?'bad':left<=lead?'warn':''}">${left<0?t('k_late'):t('k_soon',{m:left})}</span><button class="btn ok full" style="margin-top:8px" onclick="packOrder('${o.id}')" ${rd?'':'disabled style="opacity:.4"'}>📦 ${t('k_pack')}</button>`}</div>`}).join('')}
+    ${o.pk?`<span class="chip ok">${t('k_packed')}</span>`:`<span class="chip ${left<0?'bad':left<=lead?'warn':''}">${left<0?t('pk_late'):t('pk_soon',{m:left})}</span><button class="btn ok full" style="margin-top:8px" onclick="packOrder('${o.id}')" ${rd?'':'disabled style="opacity:.4"'}>📦 ${t('k_pack')}</button>`}</div>`}).join('')}
 async function processInbox(){if(!sb||!TOK()||inboxBusy)return;inboxBusy=true;
   try{const{data}=await sb.rpc('tayyor_inbox_get',{p_slug:SLUG,p_token:TOK()});
     for(const it of (data||[])){if(ingested.has(it.id))continue;ingested.add(it.id);const p=it.payload;
@@ -776,8 +776,8 @@ function adminHTML(){const f=AD.f,tab=AD.tab||'list';
       <button class="btn ok full" style="margin-top:6px" onclick="adPay('${c.slug}')">${t('a_pay')}</button>
       ${(c.pays&&c.pays.length)?`<div class="sub" style="margin-top:6px">${t('a_pays')}:</div>`+c.pays.map(p=>`<div class="line sub"><span>${dtm(Date.parse(p.t))} · ${fm(p.a)}</span><span>→ ${dMY(p.u)}</span></div>`).join(''):''}</div>
     <div class="row" style="margin-top:8px;flex-wrap:nowrap;align-items:center"><span class="sub" style="flex:1">${t('a_days')}</span><input type="number" min="1" max="365" style="width:90px;flex:0 0 90px" value="${c.days}" onchange="adDays('${c.slug}',this.value)"></div>
-    <div class="sub" style="margin-top:8px">${t('a_links')}</div><div class="chips"><button class="chip2" onclick="adCopy('${c.slug}','client')">${t('a_link_client')}</button><button class="chip2" onclick="adCopy('${c.slug}','desk')">${t('a_link_desk')}</button><button class="chip2" onclick="adCopy('${c.slug}','kitchen')">${t('a_link_kitchen')}</button></div>
-    <div class="chips" style="margin-top:10px"><button class="btn sec sm" onclick="adRename('${c.slug}')">${t('a_rename')}</button><button class="btn sec sm" onclick="adPass('${c.slug}')">${t('a_setpass')}</button><button class="btn sec sm" onclick="adToggle('${c.slug}')">${t(c.disabled?'a_enable':'a_disable')}</button><button class="btn bad sm" onclick="adDelete('${c.slug}')">${t('del')}</button></div></div>`}).join(''):`<p class="sub">${t('a_none')}</p>`;
+    <div class="sep"></div><div class="sub">${t('a_links')}</div><div class="agrid">${[['client','a_link_client'],['desk','a_link_desk'],['kitchen','a_link_kitchen']].map(([r,k])=>`<button class="btn sec sm" onclick="adCopy('${c.slug}','${r}')">📋 ${t(k)}</button>`).join('')}</div>
+    <div class="sep"></div><div class="agrid2"><button class="btn sec sm" onclick="adRename('${c.slug}')">${t('a_rename')}</button><button class="btn sec sm" onclick="adPass('${c.slug}')">${t('a_setpass')}</button><button class="btn sec sm" onclick="adToggle('${c.slug}')">${t(c.disabled?'a_enable':'a_disable')}</button><button class="btn bad sm" onclick="adDelete('${c.slug}')">${t('del')}</button></div></div></div>`}).join(''):`<p class="sub">${t('a_none')}</p>`;
   return h+foot()}
 function showCreds(name,slug,pass){UI.cred={name,slug,pass};render()}
 function credText(){const c=UI.cred;return t('cred_msg',{n:c.name,l:c.slug,p:c.pass,c:ROOT+'client/?s='+c.slug,d:ROOT+'desk/?s='+c.slug,k:ROOT+'kitchen/?s='+c.slug}).replace(/\\\\n/g,'\n')}

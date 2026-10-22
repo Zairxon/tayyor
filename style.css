@@ -134,3 +134,12 @@ header{flex-wrap:wrap}.langs{flex-wrap:wrap}
 
 /* phones: whole interface 30% smaller */
 @media (max-width:640px){body{zoom:.7}}
+
+.sep{height:1px;background:var(--bd);margin:12px 0}
+.agrid,.agrid2{display:grid;gap:8px;margin-top:8px}.agrid{grid-template-columns:repeat(3,1fr)}.agrid2{grid-template-columns:repeat(2,1fr)}
+.agrid .btn,.agrid2 .btn{width:100
+.sep{height:1px;background:var(--bd);margin:12px 0}
+.agrid,.agrid2{display:grid;gap:8px;margin-top:8px}
+.agrid{grid-template-columns:repeat(3,1fr)}
+.agrid2{grid-template-columns:repeat(2,1fr)}
+.agrid .btn,.agrid2 .btn{width:100%;padding:10px 6px;white-space:nowrap}

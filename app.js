@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.4.0';
+const APP_VERSION='2.5.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -286,6 +286,37 @@ info_geo_fail:["Жойлашувни аниқлаб бўлмади: рухсат
 info_saved:["Алоқа маълумотлари сақланди","Aloqa ma'lumotlari saqlandi","Контакты сохранены","Contacts saved"],
 info_loc_bad:["Ҳавола (https://…) ёки координаталарни киритинг, масалан 41.3110, 69.2401","Havola (https://…) yoki koordinatalarni kiriting, masalan 41.3110, 69.2401","Укажите ссылку (https://…) или координаты, например 41.3110, 69.2401","Enter a link (https://…) or coordinates, e.g. 41.3110, 69.2401"],
 c_map:["Харитада","Xaritada","На карте","On the map"],
+k_orders:["Йиғиш учун буюртмалар","Yig'ish uchun buyurtmalar","Заказы к выдаче","Orders to pack"],
+k_pack:["Қадоқлаб, қабулхонага бериш","Qadoqlab, qabulxonaga berish","Упаковать и передать ресепшену","Pack and hand to reception"],
+k_packed:["Қадоқланган, қабулхонага берилган","Qadoqlangan, qabulxonaga berilgan","Упаковано, передано ресепшену","Packed and handed to reception"],
+k_soon:["{m} дақиқадан кейин олиб кетишади","{m} daqiqadan keyin olib ketishadi","Заберут через {m} мин","Pickup in {m} min"],
+k_late:["Вақт ўтди","Vaqt o'tdi","Время вышло","Time's up"],
+rem_k:["Буюртма №{no}: {m} дақиқадан кейин олиб кетишади — қадоқлаш вақти","Buyurtma №{no}: {m} daqiqadan keyin olib ketishadi — qadoqlash vaqti","Заказ №{no}: через {m} мин заберут — пора упаковать","Order #{no}: pickup in {m} min — time to pack"],
+rem_d:["Буюртма №{no} вақти келди, лекин ошпаз ҳали бермади","Buyurtma №{no} vaqti keldi, lekin oshpaz hali bermadi","Заказ №{no}: время пришло, а повар ещё не передал","Order #{no}: it's time, but the cook hasn't handed it over yet"],
+l_packed:["Ошпаз №{no} буюртмани қадоқлаб берди — мижозга беринг","Oshpaz №{no} buyurtmani qadoqlab berdi — mijozga bering","Повар упаковал заказ №{no} — выдайте клиенту","The cook packed order #{no} — hand it to the customer"],
+l_packed_c:["Буюртма №{no} қадоқланди — олиб кетишингиз мумкин","Buyurtma №{no} qadoqlandi — olib ketishingiz mumkin","Заказ №{no} упакован — можно забирать","Order #{no} is packed — you can pick it up"],
+st_packed:["Қадоқланди, олиб кетишингиз мумкин","Qadoqlandi, olib ketishingiz mumkin","Упакован, можно забирать","Packed, ready for pickup"],
+chip_cook:["Ошпаз тайёрламоқда","Oshpaz tayyorlamoqda","Повар готовит","The cook is preparing"],
+chip_packed:["Ошпаз қадоқлади","Oshpaz qadoqladi","Упакован поваром","Packed by the cook"],
+l_hold:["Катта буюртма №{no} тасдиқлашни кутяпти","Katta buyurtma №{no} tasdiqlashni kutyapti","Крупный заказ №{no} ждёт подтверждения","Large order #{no} is waiting for confirmation"],
+hold_title:["Тасдиқлаш керак","Tasdiqlash kerak","Требует подтверждения","Needs confirmation"],
+hold_ok:["Қабул қилиш","Qabul qilish","Принять","Accept"],
+hold_no:["Рад этиш","Rad etish","Отклонить","Decline"],
+st_hold:["Столовая тасдиқлашини кутяпти","Stolovaya tasdiqlashini kutyapti","Ждёт подтверждения столовой","Waiting for the canteen to confirm"],
+noshow_btn:["Келмади","Kelmadi","Не пришёл","Didn't come"],
+confirm_noshow:["№{no} буюртма олинмади — бекор қилинсинми?","№{no} buyurtma olinmadi — bekor qilinsinmi?","Заказ №{no} не забрали — отменить?","Order #{no} wasn't picked up — cancel it?"],
+l_noshow:["Буюртма №{no} олинмади — бекор қилинди","Buyurtma №{no} olinmadi — bekor qilindi","Заказ №{no} не забрали — отменён","Order #{no} wasn't picked up — cancelled"],
+l_blocked:["{ph} рақами блокланди: икки марта олмади","{ph} raqami bloklandi: ikki marta olmadi","Номер {ph} заблокирован: дважды не забрал заказ","Number {ph} blocked: missed pickup twice"],
+set_rules:["Буюртма қоидалари","Buyurtma qoidalari","Правила заказов","Order rules"],
+rule_lead:["Ошпазга эслатма (олиб кетишдан неча дақиқа олдин)","Oshpazga eslatma (olib ketishdan necha daqiqa oldin)","Напоминание повару (за сколько минут до выдачи)","Cook reminder (minutes before pickup)"],
+rule_grace:["Олинмаган буюртмани автоматик бекор қилиш (дақиқа, 0 — ўчирилган)","Olinmagan buyurtmani avtomatik bekor qilish (daqiqa, 0 — o'chirilgan)","Автоотмена, если не забрали (через сколько минут, 0 — выкл.)","Auto-cancel if not picked up (minutes, 0 = off)"],
+rule_big:["Катта буюртма — тасдиқлаш керак (дона, 0 — ўчирилган)","Katta buyurtma — tasdiqlash kerak (dona, 0 — o'chirilgan)","Крупный заказ — нужно подтверждение (от скольких штук, 0 — выкл.)","Large order needs confirmation (pieces, 0 = off)"],
+rule_saved:["Қоидалар сақланди","Qoidalar saqlandi","Правила сохранены","Rules saved"],
+rule_bad:["0 дан 999 гача сон киритинг","0 dan 999 gacha son kiriting","Введите число от 0 до 999","Enter a number from 0 to 999"],
+blk_title:["Блокланган рақамлар","Bloklangan raqamlar","Заблокированные номера","Blocked numbers"],
+blk_none:["Блокланган рақамлар йўқ","Bloklangan raqamlar yo'q","Заблокированных номеров нет","No blocked numbers"],
+blk_off:["Блокдан чиқариш","Blokdan chiqarish","Разблокировать","Unblock"],
+send_rate:["Буюртмалар жуда кўп — озгина кутиб, қайта уриниб кўринг","Buyurtmalar juda ko'p — ozgina kutib, qayta urinib ko'ring","Слишком много заказов — подождите немного и повторите","Too many orders — wait a little and try again"],
 phone_bad:["Рақам нотўғри: +998 дан кейин 9 та рақам бўлиши керак","Raqam noto'g'ri: +998 dan keyin 9 ta raqam bo'lishi kerak","Неверный номер: после +998 должно быть 9 цифр","Invalid number: +998 must be followed by 9 digits"],
 what_order:["Нима буюртма берасиз?","Nima buyurtma berasiz?","Что закажете?","What would you like to order?"],
 k_sold:["Бугун сотилди","Bugun sotildi","Продано сегодня","Sold today"],
@@ -375,21 +406,28 @@ try{sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false}})
 function load(){try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.products)S=null}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 const strip=()=>{const d=JSON.parse(JSON.stringify(S));delete d._rev;delete d.retain;delete d.bill;const keep=(S.retain||10)*864e5,now=Date.now();
-  d.orders=d.orders.filter(o=>o.status==='open'||now-o.created<keep).map(o=>(o.status==='open'||now-o.created<216e5)?o:{id:o.id,no:o.no,type:o.type,table:o.table,status:o.status,created:o.created,lines:[]}).slice(-3000);return d};
+  d.orders=d.orders.filter(o=>o.status==='open'||o.status==='hold'||now-o.created<keep).map(o=>(o.status==='open'||o.status==='hold'||now-o.created<216e5)?o:{id:o.id,no:o.no,type:o.type,table:o.table,status:o.status,created:o.created,lines:[]}).slice(-3000);return d};
 function setOnline(v){if(online!==v){online=v;render()}}
 const mineIds=()=>{try{return JSON.parse(localStorage.getItem(MK)||'[]')}catch(e){return[]}};
 function authLost(){try{localStorage.removeItem(TK);localStorage.removeItem(KEY)}catch(e){}S=null;queue=[];UI.gate='login';render()}
+let lastAct=Date.now(),lastChange=Date.now(),lastPut=null;
+['pointerdown','keydown','touchstart'].forEach(e=>addEventListener(e,()=>{lastAct=Date.now()},{passive:true}));
+function pollDelay(){const q=Date.now()-Math.max(lastAct,lastChange),m=q>6e5?4:q>12e4?2:1;
+  if(ROLE==='admin')return 30000;
+  if(ROLE==='client'){const busy=mineIds().some(id=>{const o=pubOrder(id);return o&&(o.status==='open'||o.status==='hold')})||Object.values(UI.cart).some(v=>v>0);return document.hidden?(busy?20000:40000):(busy?5000:5000*m)}
+  return document.hidden?15000*Math.min(m,2):3000*m}
 async function pull(force){if(!sb||!TOK())return false;
   try{const{data,error}=await sb.rpc('tayyor_state_get',{p_slug:SLUG,p_token:TOK()});if(error)throw error;
     if(!data){authLost();return false}
     if(!force&&(queue.length||syncing))return true;
-    S=data.data;S._rev=data.rev;S.retain=data.retain;S.bill=data.bill;if(data.name)S.name=data.name;save();setOnline(true);return true}
+    lastPut=null;S=data.data;S._rev=data.rev;S.retain=data.retain;S.bill=data.bill;if(data.name)S.name=data.name;save();setOnline(true);return true}
   catch(e){setOnline(false);return false}}
 function mutate(fn){const r=fn();queue.push(fn);save();afterChange();flush();return r}
 async function flush(){if(syncing||!queue.length||!sb||!S||!TOK())return;syncing=true;
-  try{while(queue.length){const n=queue.length,base=S._rev??0;
-    const{data,error}=await sb.rpc('tayyor_state_put',{p_slug:SLUG,p_token:TOK(),p_data:strip(),p_pub:buildPub(),p_rev:base});if(error)throw error;
-    if(data>=0){S._rev=data;queue.splice(0,n);save();setOnline(true)}
+  try{while(queue.length){const n=queue.length,base=S._rev??0,body=strip(),pub=buildPub(),sig=JSON.stringify([body,pub]);
+    if(sig===lastPut){queue.splice(0,n);continue}
+    const{data,error}=await sb.rpc('tayyor_state_put',{p_slug:SLUG,p_token:TOK(),p_data:body,p_pub:pub,p_rev:base});if(error)throw error;
+    if(data>=0){S._rev=data;lastPut=sig;queue.splice(0,n);save();setOnline(true)}
     else if(data===-3){authLost();return}
     else if(data===-1){const pend=queue.slice();queue=[];if(!await pull(true))throw new Error('pull');for(const f of pend){f();queue.push(f)}afterChange()}
     else{queue=[];throw new Error('too big')}}
@@ -405,21 +443,23 @@ function buildInfo(){const i=S.info||{},loc=parseLoc(i.loc);let map='';
 function buildPub(){const fr={},fb={},sup={},iv={};
   for(const p of S.products){if(p.on===false)continue;if(p.stock){fr[p.id]=freeR(p.id);fb[p.id]=freeB(p.id);sup[p.id]=supply(p.id)}else if(invTracked(p.id))iv[p.id]=invFree(p.id)}
   const orders={};for(const o of S.orders)if(o.type==='pickup'&&o.cid&&(o.status==='open'||Date.now()-o.created<2*864e5))
-    orders[o.id]={no:o.no,st:o.status,at:o.pickupAt,lines:o.lines.map(l=>({pid:l.pid,qty:l.qty,rr:l.rr,rb:l.rb,ask:l.ask||0,dec:l.declined||0,e:l.rb>0?(etaLine(o,l)||0):0}))};
+    orders[o.id]={no:o.no,st:o.status,at:o.pickupAt,pk:o.pk?1:0,lines:o.lines.map(l=>({pid:l.pid,qty:l.qty,rr:l.rr,rb:l.rb,ask:l.ask||0,dec:l.declined||0,e:l.rb>0?(etaLine(o,l)||0):0}))};
   return{info:buildInfo(),products:S.products.filter(p=>p.on!==false).map(p=>({id:p.id,emoji:p.emoji,names:p.names,price:p.price,stock:!!p.stock})),fr,fb,sup,iv,orders}}
 /* customer side */
 async function pullPub(){if(!sb||!SLUG)return false;const mine=mineIds(),key=mine.join(',');
   try{const{data,error}=await sb.rpc('tayyor_pub_get',{p_slug:SLUG,p_since:(PUB&&key===pubIds)?PUB._rev:-1,p_ids:mine});if(error)throw error;
     setOnline(true);
     if(data.none){PUB=null;UI.noTenant=true;render();return false}
-    UI.noTenant=false;if(data.same)return true;
+    UI.noTenant=false;if(data.same)return true;lastChange=Date.now();
     const prev=PUB;PUB={...data.data,orders:data.orders||{},name:data.name,_rev:data.rev};pubIds=key;nameApp(PUB.name);
     if(prev)clientNotify(prev.orders,PUB.orders);render();return true}
   catch(e){setOnline(false);return false}}
 function clientNotify(po,no){const rd=o=>o.lines.length&&o.lines.every(l=>l.rr>=l.qty),say=(m,bad,loud)=>{toast(m,bad?'bad':'');if(loud){beep(3);try{navigator.vibrate&&navigator.vibrate(300);window.Notification&&Notification.permission==='granted'&&new Notification(PUB.name||'Tayyor',{body:m})}catch(e){}}};
   for(const id of mineIds()){const n=no[id],p=po[id];if(!n)continue;
-    if(!p){say(t('order_accepted',{no:n.no}));continue}
+    if(!p){say(t(n.st==='hold'?'st_hold':'order_accepted',{no:n.no}));continue}
     if(p.st==='open'&&n.st==='cancelled'){say(t('l_cancel',{no:n.no}),true);continue}
+    if(p.st==='hold'&&n.st==='open'){say(t('order_accepted',{no:n.no}));continue}
+    if(n.st==='open'&&!p.pk&&n.pk){say(t('l_packed_c',{no:n.no}),false,true);continue}
     if(n.st==='open'&&!rd(p)&&rd(n)){say(t('l_ordready',{no:n.no}),false,true);continue}
     for(const l of n.lines){const q=p.lines.find(x=>x.pid===l.pid);if(!q||!(q.ask>0)||l.ask>0)continue;
       const nm=pn(P(l.pid));if(l.dec>q.dec)say(t('l_ans_no',{no:n.no,p:nm,n:l.dec-q.dec}),true,true);else if(l.rb>q.rb)say(t('l_ans_bake',{no:n.no,p:nm,m:mins(l.e||Date.now())}),false,true)}}}
@@ -427,19 +467,44 @@ function clientNotify(po,no){const rd=o=>o.lines.length&&o.lines.every(l=>l.rr>=
 function makeOrder(p){if(S.orders.some(o=>o.id===p.id))return null;
   const cart={};for(const it of (p.items||[])){const pid=it[0],q=it[1],pr=P(pid);if(pr&&pr.on!==false){const n=Math.min(200,Math.max(0,Math.floor(+q||0)));if(n>0)cart[pid]=(cart[pid]||0)+n}}
   const mode=p.mode==='ready'?'ready':'all',lines=[];
+  const base=(no,status,ls,x)=>({id:p.id,no,type:'pickup',cid:p.src?0:1,src:p.src||'app',name:String(p.name||'').slice(0,60),phone:String(p.phone||'').slice(0,20),pickupAt:+p.at||Date.now(),created:Date.now(),status,lines:ls,...x});
+  if(!p.src&&!p.ok){const dig=String(p.phone||'').replace(/\D/g,'').slice(3),total=Object.values(cart).reduce((a,b)=>a+b,0),big=S.settings.big??30;
+    if(dig&&(S.block||[]).includes(dig)){const no=S.next++;S.orders.push(base(no,'cancelled',[]));return no}
+    if(big>0&&total>=big){const no=S.next++;S.orders.push(base(no,'hold',[],{items:cart,mode}));feed('l_hold',{no,oid:p.id});return no}}
   for(const a of analyze(cart)){
     if(!a.stock){const q=Math.min(a.want,invFree(a.pid));if(q>0)lines.push({pid:a.pid,qty:q,rr:q,rb:0,want:a.want});continue}
     const rb=mode==='all'?a.wait:0,ask=mode==='all'?a.none:0,qty=a.take+rb+ask;
     if(qty>0)lines.push({pid:a.pid,qty,rr:a.take,rb,ask,want:a.want})}
-  const no=S.next++;
-  S.orders.push({id:p.id,no,type:'pickup',cid:p.src?0:1,src:p.src||'app',name:String(p.name||'').slice(0,60),phone:String(p.phone||'').slice(0,20),pickupAt:+p.at||Date.now(),created:Date.now(),status:lines.length?'open':'cancelled',lines});
+  const no=p.no||S.next++;S.orders.push(base(no,lines.length?'open':'cancelled',lines));
   if(lines.length){feed('l_new',{no,oid:p.id});for(const l of lines)if(l.ask>0)feed('l_ask',{no,oid:p.id,pid:l.pid,n:l.ask})}
   return no}
+/* cook packs and hands over to reception; reception gives to the customer */
+function packOrder(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open'||o.pk)return;o.pk=Date.now();feed('l_packed',{no:o.no,oid})})}
+function holdAccept(oid){mutate(()=>{const i=S.orders.findIndex(x=>x.id===oid&&x.status==='hold');if(i<0)return;const o=S.orders[i];S.orders.splice(i,1);
+  makeOrder({id:o.id,no:o.no,items:Object.entries(o.items||{}),mode:o.mode,name:o.name,phone:o.phone,at:o.pickupAt,ok:1})})}
+function holdReject(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(o&&o.status==='hold')o.status='cancelled'})}
+function noShow(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;o.status='cancelled';feed('l_noshow',{no:o.no,oid});
+  const d=String(o.phone||'').replace(/\D/g,'').slice(3);
+  if(d){S.ns=S.ns||{};S.ns[d]=(S.ns[d]||0)+1;if(S.ns[d]>=2){S.block=S.block||[];if(!S.block.includes(d)){S.block.push(d);feed('l_blocked',{no:o.no,ph:'+998 '+fmtPh(d)})}}}})}
+function noShowAsk(oid){const o=S.orders.find(x=>x.id===oid);if(o)askConfirm(t('confirm_noshow',{no:o.no}),()=>noShow(oid))}
+function unblock(d){mutate(()=>{S.block=(S.block||[]).filter(x=>x!==d);if(S.ns)delete S.ns[d]})}
+function saveRules(){const g=id=>{const v=(document.getElementById(id).value||'').trim();return v===''?NaN:+v},a=g('rl'),b=g('rg'),c=g('rb');
+  if([a,b,c].some(v=>!(Number.isInteger(v)&&v>=0&&v<=999))){toast(t('rule_bad'),'bad');render();return}
+  mutate(()=>{S.settings.lead=a;S.settings.grace=b;S.settings.big=c});toast(t('rule_saved'))}
+function holdHTML(){const hs=S.orders.filter(o=>o.status==='hold');if(!hs.length)return'';
+  return`<h2 style="color:var(--bad)">${t('hold_title')} (${hs.length})</h2>`+hs.map(o=>`<div class="card col" style="border-color:var(--bad)"><div class="line"><b>${t('order_no',{n:o.no})} ${esc(o.name)}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div><div class="sub">${o.phone?esc(o.phone):''}</div>
+    ${Object.entries(o.items||{}).map(([pid,q])=>`<div class="line"><span>${P(pid)?P(pid).emoji+' '+esc(pn(P(pid))):'?'} × ${q}</span></div>`).join('')}
+    <div class="row" style="margin-top:8px"><button class="btn ok sm" onclick="holdAccept('${o.id}')">${t('hold_ok')}</button><button class="btn bad sm" onclick="holdReject('${o.id}')">${t('hold_no')}</button></div></div>`).join('')}
+function packHTML(){const os=openP().sort((a,b)=>a.pickupAt-b.pickupAt);if(!os.length)return'';const lead=S.settings.lead??10;
+  return`<h2>📦 ${t('k_orders')} (${os.length})</h2>`+os.map(o=>{const left=Math.ceil((o.pickupAt-Date.now())/60000),rd=isReady(o);
+    return`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div>
+    ${o.lines.map(l=>`<div class="line"><span>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</span><span>${l.rr>=l.qty?`<span class="chip ok">${t('ready')}</span>`:`${l.rb>0?`<span class="chip warn">${t('waiting',{n:l.rb})}</span>`:''}${l.ask>0?`<span class="chip bad">${t('st_ask')}: ${l.ask}</span>`:''}`}</span></div>`).join('')}
+    ${o.pk?`<span class="chip ok">${t('k_packed')}</span>`:`<span class="chip ${left<0?'bad':left<=lead?'warn':''}">${left<0?t('k_late'):t('k_soon',{m:left})}</span><button class="btn ok full" style="margin-top:8px" onclick="packOrder('${o.id}')" ${rd?'':'disabled style="opacity:.4"'}>📦 ${t('k_pack')}</button>`}</div>`}).join('')}
 async function processInbox(){if(!sb||!TOK()||inboxBusy)return;inboxBusy=true;
   try{const{data}=await sb.rpc('tayyor_inbox_get',{p_slug:SLUG,p_token:TOK()});
     for(const it of (data||[])){if(ingested.has(it.id))continue;ingested.add(it.id);const p=it.payload;
       if(it.kind==='order')mutate(()=>{FEEDC='ext';try{makeOrder(p)}finally{FEEDC=CID}});
-      else mutate(()=>{FEEDC='ext';try{const o=S.orders.find(x=>x.id===p.id);if(o&&o.status==='open'){o.status='cancelled';feed('l_cancel_c',{no:o.no,oid:o.id})}}finally{FEEDC=CID}});
+      else mutate(()=>{FEEDC='ext';try{const o=S.orders.find(x=>x.id===p.id);if(o&&(o.status==='open'||o.status==='hold')){o.status='cancelled';feed('l_cancel_c',{no:o.no,oid:o.id})}}finally{FEEDC=CID}});
       ackQ.push(it.id)}}
   catch(e){}finally{inboxBusy=false}}
 async function syncTick(){
@@ -447,12 +512,12 @@ async function syncTick(){
   if(ROLE==='admin'){if(ATOK())await adRefresh();return}
   if(!TOK()||!S)return;
   if(queue.length||syncing){flush();return}
-  try{const r=await sb.rpc('tayyor_rev',{p_slug:SLUG,p_token:TOK()});if(r.error)throw r.error;
-    if(r.data===-3){authLost();return}
-    setOnline(true);if(r.data!==S._rev&&await pull())afterChange();billToast();
-    await processInbox();flush()}
+  try{const r=await sb.rpc('tayyor_poll',{p_slug:SLUG,p_token:TOK()});if(r.error)throw r.error;const pl=r.data||{};
+    if(pl.rev===-3){authLost();return}
+    setOnline(true);if(pl.rev!==S._rev){lastChange=Date.now();if(await pull())afterChange()}billToast();
+    if(pl.inbox>0){lastChange=Date.now();await processInbox()}flush()}
   catch(e){setOnline(false)}}
-function schedule(){setTimeout(async()=>{try{await syncTick()}catch(e){}schedule()},ROLE==='client'?(document.hidden?20000:5000):ROLE==='admin'?30000:(document.hidden?15000:3000))}
+function schedule(){setTimeout(async()=>{try{await syncTick()}catch(e){}schedule()},pollDelay())}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncTick()});
 const CID=(()=>{try{let c=sessionStorage.getItem('tl.cid');if(!c){c=uid();sessionStorage.setItem('tl.cid',c)}return c}catch(e){return uid()}})();
 let FEEDC=CID;
@@ -501,6 +566,7 @@ function tryOrder(){if(UI.pick===-1){const at=pickAt();if(at===null||at<Date.now
   if(!phoneOk(UI.phone)){UI.phTouched=true;phUpd();toast(t('phone_bad'));const i=document.getElementById('ph');if(i)i.focus();return}
   const a=analyze(UI.cart);if(!a.length)return toast(t('cart_empty'));
   if(a.some(x=>x.stock&&x.take<x.want))UI.modal=a;else placeOrder('all');render()}
+const devId=()=>{try{let d=localStorage.getItem('tl.dev');if(!d){d=newId();localStorage.setItem('tl.dev',d)}return d}catch(e){return''}};
 function newId(){const a=new Uint8Array(10);crypto.getRandomValues(a);return Array.from(a,b=>(b%36).toString(36)).join('')}
 function placeOrder(mode){return ROLE==='client'?submitOrder(mode):deskPlace(mode)}
 function deskPlace(mode){UI.modal=null;const cart=Object.entries(UI.cart).filter(([,q])=>q>0);if(!cart.length){render();return}
@@ -520,9 +586,9 @@ function liveSell(){const cart=Object.entries(UI.cart).filter(([,q])=>q>0);if(!c
 
 async function submitOrder(mode){UI.modal=null;const cart=Object.entries(UI.cart).filter(([,q])=>q>0);
   if(!cart.length){render();return}
-  const id=newId(),payload={id,items:cart,mode,name:UI.name.trim().slice(0,60),phone:UI.phone?'+998 '+fmtPh(UI.phone):'',at:pickAt()||Date.now()};
-  let ok=false;try{const{data}=await sb.rpc('tayyor_client_order',{p_slug:SLUG,p_payload:payload});ok=!!(data&&data.ok)}catch(e){}
-  if(!ok){toast(t('send_fail'),'bad');render();return}
+  const id=newId(),payload={id,items:cart,mode,name:UI.name.trim().slice(0,60),phone:UI.phone?'+998 '+fmtPh(UI.phone):'',at:pickAt()||Date.now(),dev:devId()};
+  let ok=false,err='';try{const{data}=await sb.rpc('tayyor_client_order',{p_slug:SLUG,p_payload:payload});ok=!!(data&&data.ok);err=(data&&data.err)||''}catch(e){}
+  if(!ok){toast(t(err==='rate'?'send_rate':'send_fail'),'bad');render();return}
   const mine=mineIds();mine.unshift(id);try{localStorage.setItem(MK,JSON.stringify(mine.slice(0,60)))}catch(e){}
   const hh=histLoad();hh.unshift({id,no:0,t:Date.now(),items:cart,sum:cart.reduce((a,[pid,q])=>a+(P(pid)?P(pid).price*q:0),0)});try{localStorage.setItem(HK,JSON.stringify(hh.slice(0,60)))}catch(e){}
   UI.cart={};UI.ctab='mine';toast(t('sent'));try{window.Notification&&Notification.permission==='default'&&Notification.requestPermission()}catch(e){}
@@ -581,12 +647,12 @@ function resetDemo(){askConfirm(t('confirm_reset'),()=>{localStorage.removeItem(
 function toast(m,k){const d=document.createElement('div');d.className='toast'+(k?' '+k:'');d.textContent=m;document.getElementById('toasts').appendChild(d);setTimeout(()=>d.remove(),4500)}
 let actx;function beep(n=2){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();for(let i=0;i<n;i++){const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.frequency.value=880;g.gain.value=.15;o.start(actx.currentTime+i*.25);o.stop(actx.currentTime+i*.25+.15)}}catch(e){}}
 function fmtFeed(f,role){const a=f.a||{};const o=a.oid&&S.orders.find(x=>x.id===a.oid);let k=f.k,L=o?o.lines:[];
-  if(role==='kitchen'){if(k==='l_cancel'||k==='l_cancel_c'){k='l_cancel_k';L=L.filter(l=>l.ask>0||l.rb>0)}else if(k==='l_new'){k='l_new_k';L=L.filter(l=>l.rb>0)}}
-  return t(k,{no:a.no,s:L.map(lineTxt).join(', '),p:pn(P(a.pid)),n:a.n,m:a.m})}
+  if(role==='kitchen'){if(k==='l_cancel'||k==='l_cancel_c'){k='l_cancel_k';L=L.filter(l=>l.ask>0||l.rb>0)}else if(k==='l_new'&&L.some(l=>l.rb>0)){k='l_new_k';L=L.filter(l=>l.rb>0)}}
+  return t(k,{no:a.no,s:L.map(lineTxt).join(', '),p:pn(P(a.pid)),n:a.n,m:a.m,ph:a.ph})}
 let lastFid=null;
 function relevant(f,r,mine){const o=f.a&&f.a.oid&&S.orders.find(x=>x.id===f.a.oid),need=o&&o.lines.some(l=>l.ask>0||l.rb>0);
   if(r==='desk')return true;
-  if(r==='kitchen'){if(f.k==='l_ask')return true;if(f.k==='l_new')return !!o&&o.lines.some(l=>l.rb>0)&&!o.lines.some(l=>l.ask>0);return(f.k==='l_cancel'||f.k==='l_cancel_c')&&!!need}
+  if(r==='kitchen'){if(f.k==='l_ask')return true;if(f.k==='l_new')return !!o&&!o.lines.some(l=>l.ask>0);if(f.k==='l_noshow')return true;return(f.k==='l_cancel'||f.k==='l_cancel_c')&&!!need}
   if(r==='order')return['l_ordready','l_ans_bake','l_ans_no'].includes(f.k)&&mine.includes(f.a.oid);
   return false}
 function feedToasts(){if(lastFid===null){lastFid=S.fid;return}
@@ -753,7 +819,7 @@ function codeHTML(){return head()+`<h2>${t('c_code_title')}</h2>${UI.noTenant?`<
 function openCode(){const c=slugify(UI.g.code);if(c.length<3)return toast(t('g_code_bad'),'bad');reloadAs(c)}
 function seedFresh(name){const s=seed();s.ready={meat:0,pot:0,herb:0,pump:0};s.batches=[];s.name=name;return s}
 function prodStatus(p){if(!p.stock)return invTracked(p.id)&&invFree(p.id)<=0?`<span class="chip bad">${t('out_of_stock')}</span>`:'';const fr=freeR(p.id);return fr>0?`<span class="chip ok">${t('in_stock',{n:fr})}</span>`:`<span class="chip bad">${t('none_now')}</span>`}
-function orderStatus(o){if(o.status==='done')return`<span class="chip">${t('st_done')}</span>`;if(o.status==='cancelled')return`<span class="chip bad">${t('st_cancel')}</span>`;
+function orderStatus(o){if(o.status==='hold')return`<span class="chip warn">${t('st_hold')}</span>`;if(o.pk&&o.status==='open')return`<span class="chip ok">${t('st_packed')}</span>`;if(o.status==='done')return`<span class="chip">${t('st_done')}</span>`;if(o.status==='cancelled')return`<span class="chip bad">${t('st_cancel')}</span>`;
   if(isReady(o))return`<span class="chip ok">${t('st_ready')}</span>`;
   if(o.lines.some(l=>l.ask>0))return`<span class="chip warn">${t('st_ask')}</span>`;
   let at=0;for(const l of o.lines)if(l.rb>0)at=Math.max(at,etaLine(o,l)||0);
@@ -763,17 +829,17 @@ function modalTxt(x){const p=esc(pn(P(x.pid)));
   return t('short_a',{p,w:x.want,r:x.take,m:mins(x.at)})}
 const histLoad=()=>{try{return JSON.parse(localStorage.getItem(HK)||'[]')}catch(e){return[]}};
 const dtm=ts=>{const d=new Date(ts);return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+' '+hm(ts)};
-function pubOrder(id){const o=PUB&&PUB.orders&&PUB.orders[id];if(!o)return null;return{id,no:o.no,status:o.st,pickupAt:o.at,lines:o.lines.map(l=>({pid:l.pid,qty:l.qty,rr:l.rr,rb:l.rb,ask:l.ask,declined:l.dec,e:l.e}))}}
+function pubOrder(id){const o=PUB&&PUB.orders&&PUB.orders[id];if(!o)return null;return{id,no:o.no,status:o.st,pickupAt:o.at,pk:o.pk,lines:o.lines.map(l=>({pid:l.pid,qty:l.qty,rr:l.rr,rb:l.rb,ask:l.ask,declined:l.dec,e:l.e}))}}
 const isPend=x=>!pubOrder(x.id)&&x.t>Date.now()-600000;
 function orderCard(o){return`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><span class="sub">${t('at_time',{t:hm(o.pickupAt)})}</span></div>${o.lines.map(l=>`<div class="line"><span>${esc(pn(P(l.pid)))} × ${l.qty}</span>${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}${l.rb>0?`<span class="sub">${t('waiting',{n:l.rb})}</span>`:''}</div>`).join('')}${orderStatus(o)}${UI.canc&&UI.canc[o.id]?`<div class="sub">${t('cancelling')}</div>`:`<button class="btn bad full" style="margin-top:8px" onclick="clientCancel('${o.id}')">${t('cancel_order')}</button>`}</div>`}
 function pendCard(x){return`<div class="card col"><div class="line"><b>${t('order_sent')}</b><span class="sub">${dtm(x.t)}</span></div>${x.items.map(([pid,q])=>`<div class="line"><span>${P(pid)?esc(pn(P(pid))):'?'} × ${q}</span></div>`).join('')}<span class="chip warn">${t('st_pending')}</span>${UI.canc&&UI.canc[x.id]?`<div class="sub">${t('cancelling')}</div>`:`<button class="btn bad full" style="margin-top:8px" onclick="clientCancel('${x.id}')">${t('cancel_order')}</button>`}</div>`}
 function repeatOrder(i){const h=histLoad()[i];if(!h)return;UI.cart={};for(const[pid,q]of h.items)if(P(pid)&&P(pid).on!==false)UI.cart[pid]=q;UI.ctab='new';render();toast(t('repeat_ok'));window.scrollTo(0,0)}
 function vClient(){const items=PRODS().filter(p=>p.on!==false),tab=UI.ctab||'new';
   const tot=items.reduce((a,p)=>a+(UI.cart[p.id]||0)*p.price,0);
-  const hist=histLoad(),ids=mineIds(),pend=hist.filter(x=>ids.includes(x.id)&&isPend(x)),act=ids.map(pubOrder).filter(o=>o&&o.status==='open'),cnt=pend.length+act.length;
+  const hist=histLoad(),ids=mineIds(),pend=hist.filter(x=>ids.includes(x.id)&&isPend(x)),act=ids.map(pubOrder).filter(o=>o&&(o.status==='open'||o.status==='hold')),cnt=pend.length+act.length;
   let h=head()+`<div class="tabs">${[['new',t('c_new')],['mine',t('my_orders')+(cnt?`<span class="badge">${cnt}</span>`:'')],['hist',t('c_hist')]].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="UI.ctab='${k}';render()">${l}</button>`).join('')}</div>`;
   if(tab==='mine')return h+(cnt?pend.map(pendCard).join('')+act.map(orderCard).join(''):`<p class="sub">${t('no_active')}</p><button class="btn full" onclick="UI.ctab='new';render()">${t('c_new')}</button>`)+foot();
-  if(tab==='hist'){const hs=hist.map((x,i)=>[x,i]).filter(([x])=>{const o=pubOrder(x.id);return !(o&&o.status==='open')&&!isPend(x)});
+  if(tab==='hist'){const hs=hist.map((x,i)=>[x,i]).filter(([x])=>{const o=pubOrder(x.id);return !(o&&(o.status==='open'||o.status==='hold'))&&!isPend(x)});
     return h+(hs.length?hs.map(([x,i])=>{const o=pubOrder(x.id),no=o?o.no:x.no;return`<div class="card col"><div class="line"><b>${no?t('order_no',{n:no}):t('order_sent')}</b><span class="sub">${dtm(x.t)}</span></div>${x.items.map(([pid,q])=>`<div class="line"><span>${P(pid)?esc(pn(P(pid))):'?'} × ${q}</span></div>`).join('')}<div class="line"><b>${fm(x.sum)}</b>${o?orderStatus(o):''}</div><button class="btn full" style="margin-top:6px" onclick="repeatOrder(${i})">🔁 ${t('repeat')}</button></div>`}).join(''):`<p class="sub">${t('no_hist')}</p>`)+foot()}
   h+=`<h1 class="ask">${t('what_order')}</h1>`;
   h+=items.map(p=>`<div class="card"><div class="pe">${p.emoji}</div><div class="pi"><b>${esc(pn(p))}</b><div class="sub">${fm(p.price)}</div>${prodStatus(p)}</div><div class="step"><button onclick="cartAdd('${p.id}',-1)">−</button><span>${UI.cart[p.id]||0}</span><button onclick="cartAdd('${p.id}',1)">+</button></div></div>`).join('');
@@ -871,13 +937,13 @@ function deskNewHTML(){const src=UI.nsrc||'phone',items=S.products.filter(p=>p.o
     ${!anyW&&!anyT?`<p>${t('nothing')}</p>`:''}
     <button class="btn sec full" onclick="UI.modal=null;render()">${t('cancel')}</button></div></div>`}
   return h}
-function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt);
-  let h=head()+`<div class="tabs">${[['orders',t('t_orders')+(open.length?`<span class="badge">${open.length}</span>`:'')],['new',t('t_new_short')],['hall',t('t_hall')],['stock',t('t_stock')],['report',t('t_report')],['set',t('t_set')]].map(([k,l])=>`<button class="${UI.tab===k?'on':''}" onclick="UI.tab='${k}';render()">${l}</button>`).join('')}</div>`;
+function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt),holdN=S.orders.filter(o=>o.status==='hold').length;
+  let h=head()+`<div class="tabs">${[['orders',t('t_orders')+(open.length+holdN?`<span class="badge">${open.length+holdN}</span>`:'')],['new',t('t_new_short')],['hall',t('t_hall')],['stock',t('t_stock')],['report',t('t_report')],['set',t('t_set')]].map(([k,l])=>`<button class="${UI.tab===k?'on':''}" onclick="UI.tab='${k}';render()">${l}</button>`).join('')}</div>`;
   if(UI.tab==='orders'){
-    h+=dashHTML()+`<h2>${t('d_orders')}</h2>`;
-    h+=open.length?open.map(o=>`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})} ${esc(o.name)}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div><div class="sub"><span class="chip">${o.src==='phone'?'☎ '+t('src_phone'):'📱 '+t('src_app')}</span> ${o.phone?esc(o.phone):''}</div>
+    h+=dashHTML()+holdHTML()+`<h2>${t('d_orders')}</h2>`;
+    h+=open.length?open.map(o=>`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})} ${esc(o.name)}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div><div class="sub"><span class="chip">${o.src==='phone'?'☎ '+t('src_phone'):'📱 '+t('src_app')}</span> ${o.phone?esc(o.phone):''} ${o.pk?`<span class="chip ok">📦 ${t('chip_packed')}</span>`:`<span class="chip">👨‍🍳 ${t('chip_cook')}</span>`}</div>
       ${o.lines.map(l=>`<div class="line"><span>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</span><span>${l.rr>=l.qty?`<span class="chip ok">${t('ready')}</span>`:`${l.rr>0?`<span class="chip ok">${t('ready')} ${l.rr}</span>`:''}${l.rb>0?`<span class="chip warn">${t('waiting',{n:l.rb})} · ~${mins(etaLine(o,l)||Date.now())} ${t('min')}</span>`:''}${l.ask>0?`<span class="chip bad">${t('st_ask')}: ${l.ask}</span>`:''}${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}`}${l.want>l.qty?`<span class="chip bad">${t('asked',{w:l.want,q:l.qty})}</span>`:''}</span></div>`).join('')}
-      <div class="row" style="margin-top:8px">${isReady(o)?`<button class="btn ok sm" onclick="giveOrder('${o.id}')">${t('give')}</button>`:`<button class="btn sm" onclick="giveOrder('${o.id}',true)" ${o.lines.some(l=>l.rr>0)?'':'disabled style="opacity:.4"'}>${t('give_part')}</button>`}<button class="btn bad sm" onclick="cancelOrder('${o.id}')">${t('cancel')}</button></div></div>`).join(''):`<p class="sub">${t('no_orders')}</p>`;
+      <div class="row" style="margin-top:8px">${isReady(o)?`<button class="btn ok sm" onclick="giveOrder('${o.id}')">${t('give')}</button>`:`<button class="btn sm" onclick="giveOrder('${o.id}',true)" ${o.lines.some(l=>l.rr>0)?'':'disabled style="opacity:.4"'}>${t('give_part')}</button>`}${Date.now()>=o.pickupAt?`<button class="btn sec sm" onclick="noShowAsk('${o.id}')">${t('noshow_btn')}</button>`:''}<button class="btn bad sm" onclick="cancelOrder('${o.id}')">${t('cancel')}</button></div></div>`).join(''):`<p class="sub">${t('no_orders')}</p>`;
     h+=`<h2>🔔</h2>`+S.feed.slice(-8).reverse().map(f=>`<div class="line sub${f.k.startsWith('l_cancel')?' cancelred':''}"><span>${fmtFeed(f,'desk')}</span><span>${hm(f.t)}</span></div>`).join('')}
   if(UI.tab==='new')h+=deskNewHTML();
   if(UI.tab==='report')h+=reportHTML();
@@ -895,6 +961,11 @@ function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt);
       <div class="sub" style="margin-top:8px">${t('info_addr')}</div><input id="ia" value="${esc(inf.addr||'')}" onchange="saveInfo()">
       <div class="sub" style="margin-top:8px">${t('info_loc')}</div><input id="il" autocapitalize="none" value="${esc(inf.loc||'')}" onchange="saveInfo()"><div class="perr" style="display:${locBad?'block':'none'}">${t('info_loc_bad')}</div>
       <button class="btn sec full" style="margin-top:8px" onclick="geoFill()">📍 ${t('info_geo')}</button></div>
+    <div class="card col"><b>${t('set_rules')}</b>
+      <div class="sub" style="margin-top:8px">${t('rule_lead')}</div><input id="rl" type="number" min="0" max="999" value="${S.settings.lead??10}" onchange="saveRules()">
+      <div class="sub" style="margin-top:8px">${t('rule_grace')}</div><input id="rg" type="number" min="0" max="999" value="${S.settings.grace??60}" onchange="saveRules()">
+      <div class="sub" style="margin-top:8px">${t('rule_big')}</div><input id="rb" type="number" min="0" max="999" value="${S.settings.big??30}" onchange="saveRules()"></div>
+    <div class="card col"><b>${t('blk_title')}</b>${(S.block||[]).length?(S.block||[]).map(d=>`<div class="line" style="margin-top:6px"><span>+998 ${fmtPh(d)}</span><button class="btn sec sm" onclick="unblock('${d}')">${t('blk_off')}</button></div>`).join(''):`<div class="sub" style="margin-top:6px">${t('blk_none')}</div>`}</div>
     <div class="card col"><b>${t('link')}</b><div class="sub" style="word-break:break-all;margin-top:4px">${esc(clientLink())}</div><div id="qr" style="margin-top:8px;max-width:180px"></div><div class="sub" style="margin-top:6px">${t('g_code')}: <b>${esc(SLUG)}</b></div></div>
     <div class="card col"><b>${t('set_pass')}</b><div class="sub" style="margin-top:6px">${t('set_old')}</div><input type="password" autocomplete="current-password" value="${esc(UI.pwOld||'')}" oninput="UI.pwOld=this.value">
       <div class="sub" style="margin-top:8px">${t('set_new')}</div><input type="password" autocomplete="new-password" value="${esc(UI.pwNew||'')}" oninput="UI.pwNew=this.value"><button class="btn full" style="margin-top:10px" onclick="savePwd()">${t('set_save')}</button></div>`}
@@ -905,7 +976,7 @@ function reqHTML(){const rs=[];for(const o of openP().sort((a,b)=>a.created-b.cr
   return`<h2 style="color:var(--bad)">🔔 ${t('k_req_title')} (${rs.length})</h2>`+rs.map(([o,l])=>`<div class="card col" style="border-color:var(--bad)"><b>${t('k_req_line',{no:o.no,p:esc(pn(P(l.pid))),n:l.ask})}</b><div class="sub">${t('at_time',{t:hm(o.pickupAt)})}</div><div class="row" style="margin-top:6px;flex-wrap:nowrap"><input id="am-${o.id}-${l.pid}" type="number" min="1" value="${(S.lastMin&&S.lastMin[l.pid])||25}"><span class="sub" style="flex:0 0 auto">${t('min')}</span></div><div class="row" style="margin-top:8px"><button class="btn ok" onclick="askAnswer('${o.id}','${l.pid}',true)">🔥 ${t('k_will')}</button><button class="btn bad" onclick="askAnswer('${o.id}','${l.pid}',false)">${t('k_wont')}</button></div></div>`).join('')}
 function vKitchen(){const k=UI.k,stockP=S.products.filter(p=>p.stock&&p.on!==false);if(!P(k.pid))k.pid=stockP[0]&&stockP[0].id;
   const p=P(k.pid);const bs=[...S.batches].sort((a,b)=>a.end-b.end);
-  let h=head()+reqHTML()+`<h2>${t('k_put')}</h2><div class="grid pg">${stockP.map(x=>ptile(`UI.k.pid='${x.id}';UI.k.min=null;render()`,x.emoji,pn(x),askN(x.id)>0?'! '+askN(x.id):rdy(x.id),k.pid===x.id?'sel':'')).join('')}</div>`;
+  let h=head()+reqHTML()+packHTML()+`<h2>${t('k_put')}</h2><div class="grid pg">${stockP.map(x=>ptile(`UI.k.pid='${x.id}';UI.k.min=null;render()`,x.emoji,pn(x),askN(x.id)>0?'! '+askN(x.id):rdy(x.id),k.pid===x.id?'sel':'')).join('')}</div>`;
   if(p){
     h+=`<div class="card col"><div class="sub">${t('k_qty')}</div><div class="step" style="justify-content:space-between"><button onclick="UI.k.qty=Math.max(1,UI.k.qty-5);render()">−</button><span class="big">${k.qty}</span><button onclick="UI.k.qty+=5;render()">+</button></div>
     <div class="row" style="margin:8px 0">${[10,20,30,50].map(n=>`<button class="btn sec sm" onclick="UI.k.qty=${n};render()">${n}</button>`).join('')}</div>
@@ -933,6 +1004,11 @@ const alerted=new Set();let tick=0;
 setInterval(()=>{tick++;
   document.querySelectorAll('[data-end]').forEach(e=>{const l=+e.dataset.end-Date.now();if(l>0)e.textContent=mmss(l);else if(!e.classList.contains('late')){render()}});
   if(S)for(const b of S.batches)if(b.end<=Date.now()&&!alerted.has(b.id)){alerted.add(b.id);const r=route();if(r==='kitchen'||r==='desk'){beep(4);toast(t(r==='kitchen'?'timer_k':'timer_d',{p:pn(P(b.pid)),n:b.qty}));render()}}
+  if(S&&(ROLE==='kitchen'||ROLE==='desk')){const now=Date.now(),lead=(S.settings.lead??10)*6e4;
+    for(const o of openP()){if(o.pk||o.pickupAt-o.created<=lead)continue;
+      if(ROLE==='kitchen'){const at=o.pickupAt-lead;if(at<=now&&now-at<6e5&&!alerted.has('r'+o.id)){alerted.add('r'+o.id);beep(4);toast(t('rem_k',{no:o.no,m:Math.max(0,Math.ceil((o.pickupAt-now)/6e4))}));render()}}
+      else if(o.pickupAt<=now&&now-o.pickupAt<6e5&&!alerted.has('d'+o.id)){alerted.add('d'+o.id);beep(3);toast(t('rem_d',{no:o.no}),'bad')}}
+    if(ROLE==='desk'&&tick%30===0){const g=S.settings.grace??60;if(g>0)for(const id of openP().filter(o=>o.pickupAt+g*6e4<now).map(o=>o.id))noShow(id)}}
   if(tick%20===0)render()},1000);
 async function chk(){try{const r=await fetch(ROOT+'version.json?'+Date.now(),{cache:'no-store'});const j=await r.json();if(j.v&&j.v!==APP_VERSION){UI.upd=true;render()}}catch(e){}}
 async function doUpdate(){try{const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs)await r.unregister();for(const k of await caches.keys())await caches.delete(k)}catch(e){}location.reload()}

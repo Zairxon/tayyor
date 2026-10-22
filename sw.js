@@ -1,4 +1,4 @@
-const C='tayyor-2.5.8';
+const C='tayyor-2.5.9';
 const SHELL=['./','index.html','style.css','app.js','vendor/supabase.js','vendor/qrcode.min.js','assets/logo-client.png','assets/emblem-client.png','assets/emblem-desk.png','assets/emblem-kitchen.png','assets/emblem-admin.png'];
 for(const a of ['client','desk','kitchen','admin'])SHELL.push(a+'/',a+'/index.html',a+'/manifest.json',a+'/icon-192.png');
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});

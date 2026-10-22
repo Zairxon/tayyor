@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.5.5';
+const APP_VERSION='2.5.6';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -495,8 +495,8 @@ function holdHTML(){const hs=S.orders.filter(o=>o.status==='hold');if(!hs.length
     <div class="row" style="margin-top:8px"><button class="btn ok sm" onclick="holdAccept('${o.id}')">${t('hold_ok')}</button><button class="btn bad sm" onclick="holdReject('${o.id}')">${t('hold_no')}</button></div></div>`).join('')}
 function packHTML(){const os=openP().sort((a,b)=>a.pickupAt-b.pickupAt);if(!os.length)return'';const lead=S.settings.lead??10;
   return`<h2>📦 ${t('k_orders')} (${os.length})</h2>`+os.map(o=>{const left=Math.ceil((o.pickupAt-Date.now())/60000),rd=isReady(o);
-    return`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div>
-    ${o.lines.map(l=>`<div class="line"><span>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</span><span>${l.rr>=l.qty?`<span class="chip ok">${t('ready')}</span>`:`${l.rb>0?`<span class="chip warn">${t('waiting',{n:l.rb})}</span>`:''}${l.ask>0?`<span class="chip bad">${t('st_ask')}: ${l.ask}</span>`:''}`}</span></div>`).join('')}
+    return`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})} · ${o.lines.reduce((a,l)=>a+l.qty,0)} ${t('pcs')}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div>
+    <div class="packrow">${o.lines.map(l=>{const ok=l.rr>=l.qty;return`<div class="pk ${ok?'ok':'warn'}"><div class="pe2">${P(l.pid)?P(l.pid).emoji:'?'}</div><div class="pq">${l.qty}</div><div class="pn">${P(l.pid)?esc(pn(P(l.pid))):'?'}</div>${ok?'':`<div class="pw">${l.ask>0?t('st_ask'):t('waiting',{n:l.rb})}</div>`}</div>`}).join('')}</div>
     ${o.pk?`<span class="chip ok">${t('k_packed')}</span>`:`<span class="chip ${left<0?'bad':left<=lead?'warn':''}">${left<0?t('pk_late'):t('pk_soon',{m:left})}</span><button class="btn ok full" style="margin-top:8px" onclick="packOrder('${o.id}')" ${rd?'':'disabled style="opacity:.4"'}>📦 ${t('k_pack')}</button>`}</div>`}).join('')}
 async function processInbox(){if(!sb||!TOK()||inboxBusy)return;inboxBusy=true;
   try{const{data}=await sb.rpc('tayyor_inbox_get',{p_slug:SLUG,p_token:TOK()});

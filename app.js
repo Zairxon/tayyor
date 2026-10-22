@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.5.1';
+const APP_VERSION='2.5.2';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';

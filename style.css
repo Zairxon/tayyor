@@ -131,3 +131,6 @@ header{flex-wrap:wrap}.langs{flex-wrap:wrap}
 .cred{white-space:pre-wrap;word-break:break-all;background:var(--soft);border:1px solid var(--bd);border-radius:12px;padding:12px;font:14px/1.5 ui-monospace,Consolas,monospace;margin:0;user-select:text}
 
 .contact{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:-2px 0 12px}.contact a{text-decoration:none;color:var(--fg)}
+
+/* phones: whole interface 30% smaller */
+@media (max-width:640px){body{zoom:.7}}

@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.5.4';
+const APP_VERSION='2.5.5';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -731,6 +731,7 @@ function adPay(slug){const c=adItem(slug),today=dayKey(),base=c.until&&c.until>=
 const newForm=()=>({name:'',code:'',pass:'',days:10,fee:0,until:(()=>{const d=addMonthYmd(dayKey());return dMY(d)})(),edited:false});
 const adItem=slug=>(AD.list||[]).find(x=>x.slug===slug);
 function adDays(slug,v){const d=Math.floor(+v);if(!(d>=1&&d<=365)){toast(t('a_days_bad'),'bad');render();return}adUpdate(slug,{days:d},'a_days_ok',{n:adItem(slug).name,d})}
+function adOpen(slug){AD.open=AD.open===slug?null:slug;render()}
 function adRename(slug){const c=adItem(slug);askInput(t('a_rename_t',{n:c.name}),c.name,'text',v=>{v=v.trim();if(!v||v===c.name)return;adUpdate(slug,{name:v},'a_name_ok',{n:v})})}
 function adPass(slug){const c=adItem(slug);askInput(t('a_pass_t',{n:c.name}),'', 'text',v=>{if(v.length<4)return toast(t('g_pass_short'),'bad');adUpdate(slug,{pass:v},'a_pass_ok',{n:c.name}).then(ok=>{if(ok)showCreds(c.name,slug,v)})})}
 function adToggle(slug){const c=adItem(slug),off=!c.disabled;askConfirm(t(off?'a_c_disable':'a_c_enable',{n:c.name}),()=>adUpdate(slug,{disabled:off},off?'a_off_ok':'a_on_ok',{n:c.name}))}
@@ -767,8 +768,7 @@ function adminHTML(){const f=AD.f,tab=AD.tab||'list';
     <button class="btn ok full" style="margin-top:12px" onclick="adCreate()">${t('g_make')}</button></div>`;
   h+=(AD.list&&AD.list.length)?AD.list.map(c=>{const n=c.until?leftDays(c.until):null,nt=c.notify??5,
       st=n===null?['',t('a_not_set')]:n<0?['bad',t('a_overdue',{n:-n})]:n===0?['warn',t('a_today')]:n<=nt?['warn',t('a_left',{n})]:['ok',t('a_left',{n})];
-    return`<div class="card col canteen"><div class="line"><b>${esc(c.name)}</b><span class="chip ${c.disabled?'bad':'ok'}">${t(c.disabled?'a_off':'a_active')}</span></div>
-    <div class="sub">${t('g_code')}: <b>${esc(c.slug)}</b> · ${t('a_created')} ${dtm(Date.parse(c.created))}</div>
+    const op=AD.open===c.slug,body=`    <div class="sub">${t('g_code')}: <b>${esc(c.slug)}</b> · ${t('a_created')} ${dtm(Date.parse(c.created))}</div>
     <div class="sub">${t('a_size')}: ${kb(c.size||0)} · ${t('a_upd')}: ${c.updated?dtm(Date.parse(c.updated)):'—'}${c.inbox?` · ${t('a_inbox')}: ${c.inbox}`:''}</div>
     <div class="billbox"><div class="line" style="align-items:center"><span>${t('a_fee')}: <b>${fm(c.fee)}</b></span><button class="btn sec sm" onclick="adFee('${c.slug}')">${t('a_fee_btn')}</button></div>
       <div class="line" style="align-items:center"><span>${t('a_paid_until')}: <b>${c.until?dMY(c.until):'—'}</b> <span class="chip ${st[0]}">${st[1]}</span></span><button class="btn sec sm" onclick="adUntil('${c.slug}')">${t('a_date_btn')}</button></div>
@@ -777,7 +777,9 @@ function adminHTML(){const f=AD.f,tab=AD.tab||'list';
       ${(c.pays&&c.pays.length)?`<div class="sub" style="margin-top:6px">${t('a_pays')}:</div>`+c.pays.map(p=>`<div class="line sub"><span>${dtm(Date.parse(p.t))} · ${fm(p.a)}</span><span>→ ${dMY(p.u)}</span></div>`).join(''):''}</div>
     <div class="row" style="margin-top:8px;flex-wrap:nowrap;align-items:center"><span class="sub" style="flex:1">${t('a_days')}</span><input type="number" min="1" max="365" style="width:90px;flex:0 0 90px" value="${c.days}" onchange="adDays('${c.slug}',this.value)"></div>
     <div class="sep"></div><div class="sub">${t('a_links')}</div><div class="agrid">${[['client','a_link_client'],['desk','a_link_desk'],['kitchen','a_link_kitchen']].map(([r,k])=>`<button class="btn sec sm" onclick="adCopy('${c.slug}','${r}')">📋 ${t(k)}</button>`).join('')}</div>
-    <div class="sep"></div><div class="agrid2"><button class="btn sec sm" onclick="adRename('${c.slug}')">${t('a_rename')}</button><button class="btn sec sm" onclick="adPass('${c.slug}')">${t('a_setpass')}</button><button class="btn sec sm" onclick="adToggle('${c.slug}')">${t(c.disabled?'a_enable':'a_disable')}</button><button class="btn bad sm" onclick="adDelete('${c.slug}')">${t('del')}</button></div></div></div>`}).join(''):`<p class="sub">${t('a_none')}</p>`;
+    <div class="sep"></div><div class="agrid2"><button class="btn sec sm" onclick="adRename('${c.slug}')">${t('a_rename')}</button><button class="btn sec sm" onclick="adPass('${c.slug}')">${t('a_setpass')}</button><button class="btn sec sm" onclick="adToggle('${c.slug}')">${t(c.disabled?'a_enable':'a_disable')}</button><button class="btn bad sm" onclick="adDelete('${c.slug}')">${t('del')}</button></div></div>`;
+    return`<div class="card col canteen"><div class="chead" onclick="adOpen('${c.slug}')"><div class="line"><b class="cn">${esc(c.name)}</b><span class="chip ${c.disabled?'bad':'ok'}">${t(c.disabled?'a_off':'a_active')}</span></div>
+      <div class="line"><span class="sub">${t('a_fee')}: <b>${fm(c.fee)}</b> <span class="chip ${st[0]}">${st[1]}</span></span><span class="arr">${op?'▴':'▾'}</span></div></div>${op?`<div class="cbody">${body}</div>`:''}</div>`}).join(''):`<p class="sub">${t('a_none')}</p>`;
   return h+foot()}
 function showCreds(name,slug,pass){UI.cred={name,slug,pass};render()}
 function credText(){const c=UI.cred;return t('cred_msg',{n:c.name,l:c.slug,p:c.pass,c:ROOT+'client/?s='+c.slug,d:ROOT+'desk/?s='+c.slug,k:ROOT+'kitchen/?s='+c.slug}).replace(/\\\\n/g,'\n')}

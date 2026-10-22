@@ -143,3 +143,10 @@ header{flex-wrap:wrap}.langs{flex-wrap:wrap}
 .agrid{grid-template-columns:repeat(3,1fr)}
 .agrid2{grid-template-columns:repeat(2,1fr)}
 .agrid .btn,.agrid2 .btn{width:100%;padding:10px 6px;white-space:nowrap}
+
+.chead{cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.chead .line{align-items:center;gap:8px}
+.chead .cn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:17px}
+.chead .chip{flex:0 0 auto}
+.chead .arr{flex:0 0 auto;color:var(--mut,#6b7280);font-size:18px}
+.cbody{margin-top:10px;padding-top:10px;border-top:1px solid var(--bd)}

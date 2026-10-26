@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.7.0';
+const APP_VERSION='2.7.1';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -321,6 +321,7 @@ l_hready:["{tb}-стол тайёр — официантга беринг {w}","
 l_hready_w:["{tb}-стол буюртмаси тайёр — қабулхона беради","{tb}-stol buyurtmasi tayyor — qabulxona beradi","Стол {tb}: заказ готов — ресепшен передаст","Table {tb}: order is ready — reception will hand it over"],
 l_hhand:["{tb}-стол таомлари официантга берилди {w}","{tb}-stol taomlari ofitsiantga berildi {w}","Блюда стола {tb} переданы официанту {w}","Table {tb} dishes handed to the waiter {w}"],
 l_hhand_w:["{tb}-стол: таомларни қабулхонадан олинг","{tb}-stol: taomlarni qabulxonadan oling","Стол {tb}: заберите заказ у ресепшена","Table {tb}: pick up the order at reception"],
+cook_makes:["Ошпаз тайёрлайди","Oshpaz tayyorlaydi","Готовит повар","Made by the cook"],
 k_serve:["Тайёр — қабулхонага беринг","Tayyor — qabulxonaga bering","Готово — передать ресепшену","Ready — hand to reception"],
 hall_tbl:["Стол {n}","Stol {n}","Стол {n}","Table {n}"],
 l_hall:["Стол {tb}: янги таомлар — тарелкада беринг","Stol {tb}: yangi taomlar — tarelkada bering","Стол {tb}: новые блюда — подайте на тарелке","Table {tb}: new dishes — serve on a plate"],
@@ -518,6 +519,7 @@ function makeOrder(p){if(S.orders.some(o=>o.id===p.id))return null;
   if(lines.length){feed('l_new',{no,oid:p.id});for(const l of lines)if(l.ask>0)feed('l_ask',{no,oid:p.id,pid:l.pid,n:l.ask})}
   return no}
 /* cook packs and hands over to reception; reception gives to the customer */
+function needCook(p){return !!p&&(p.cook===undefined?!!p.stock:!!p.cook)}
 const hallPend=o=>o.lines.filter(l=>l.qty>(l.sv||0));
 const hallCook=o=>o.lines.filter(l=>l.qty>(l.rd||0));
 const hallRdy=o=>o.lines.filter(l=>(l.rd||0)>(l.sv||0));
@@ -539,13 +541,13 @@ function wSetName(){const v=((document.getElementById('wn')||{}).value||'').trim
 function wAdd(pid,d){const p=P(pid);if(!p)return;UI.wc=UI.wc||{};const n=(UI.wc[pid]||0)+d;if(n<0)return;
   if(d>0&&((p.stock&&n>freeR(pid))||(!p.stock&&invTracked(pid)&&n>invFree(pid))))return toast(t('no_stock'));
   if(n)UI.wc[pid]=n;else delete UI.wc[pid];render()}
-function wDec(n,pid){const o=hallOrder(n),l=o&&o.lines.find(x=>x.pid===pid);if(!l||l.qty<=(l.rd||0))return toast(t('w_cant'),'bad');hallAdd(n,pid,-1)}
+function wDec(n,pid){const o=hallOrder(n),l=o&&o.lines.find(x=>x.pid===pid);if(!l||l.qty<=(needCook(P(pid))?(l.rd||0):(l.sv||0)))return toast(t('w_cant'),'bad');hallAdd(n,pid,-1)}
 function wSend(){const n=UI.wt,items=Object.entries(UI.wc||{}).filter(([,q])=>q>0);if(!n||!items.length)return toast(t('w_cart_empty'));
-  let fail=null;
+  let fail=null;const anyCook=items.some(([pid])=>needCook(P(pid)));
   mutate(()=>{for(const [pid,q] of items){const p=P(pid);if(!p||(p.stock&&freeR(pid)<q)||(!p.stock&&invTracked(pid)&&invFree(pid)<q)){fail=p?pn(p):'?';return}}
     let o=hallOrder(n);if(!o){o={id:'h'+uid(),no:0,type:'hall',table:n,created:Date.now(),status:'open',lines:[],wn:wName()};S.orders.push(o)}
-    for(const [pid,q] of items){const p=P(pid);let l=o.lines.find(x=>x.pid===pid);if(!l){l={pid,qty:0,rr:0,rb:0};o.lines.push(l)}l.qty+=q;if(p.stock)S.ready[pid]=Math.max(0,rdy(pid)-q);else invDeduct(pid,q)}
-    if(!o.wn)o.wn=wName();feed('l_hall',{tb:n,oid:o.id,wn:wName()})});
+    for(const [pid,q] of items){const p=P(pid);let l=o.lines.find(x=>x.pid===pid);if(!l){l={pid,qty:0,rr:0,rb:0};o.lines.push(l)}l.qty+=q;if(!needCook(p))l.rd=(l.rd||0)+q;if(p.stock)S.ready[pid]=Math.max(0,rdy(pid)-q);else invDeduct(pid,q)}
+    if(!o.wn)o.wn=wName();feed(anyCook?'l_hall':'l_hready',{tb:n,oid:o.id,wn:wName()})});
   if(fail){toast(t('live_short',{p:fail}),'bad');return}UI.wc={};toast(t('w_sent',{n}));render()}
 function vWaiter(){if(!wName()||UI.wedit)return head()+`<div class="card col" style="margin-top:12px"><b>${t('w_name_title')}</b><input id="wn" maxlength="30" placeholder="${t('w_name_ph')}" value="${esc(wName())}" style="margin-top:8px"><button class="btn full" style="margin-top:10px" onclick="wSetName()">${t('set_save')}</button></div>`+foot();
   const n=UI.wt,st=o=>!o?'':hallCook(o).length?'wcook':hallRdy(o).length?'wrdy':'wgiven';
@@ -554,7 +556,7 @@ function vWaiter(){if(!wName()||UI.wedit)return head()+`<div class="card col" st
   <div class="chips" style="margin-top:8px"><span class="chip warn">${t('w_leg_cook')}</span><span class="chip ok">${t('w_leg_rdy')}</span><span class="chip">${t('w_leg_given')}</span></div>`;
   if(!n)return h+`<p class="sub" style="margin-top:14px">${t('w_none')}</p>`+foot();
   const o=hallOrder(n),c=UI.wc||{},cs=Object.entries(c).filter(([,q])=>q>0);
-  h+=`<h2>${t('hall_tbl',{n})}</h2>`+(o&&o.lines.length?o.lines.map(l=>{const ck=l.qty-(l.rd||0),rd=(l.rd||0)-(l.sv||0),gv=l.sv||0;return`<div class="card col"><div class="line"><b>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</b>${ck>0?`<button class="btn sec sm" style="flex:0 0 auto" onclick="wDec(${n},'${l.pid}')">−</button>`:''}</div><div class="chips">${ck>0?`<span class="chip warn">${t('w_cooking_n',{n:ck})}</span>`:''}${rd>0?`<span class="chip ok">${t('w_ready_n',{n:rd})}</span>`:''}${gv>0?`<span class="chip">${t('w_given_n',{n:gv})}</span>`:''}</div></div>`}).join(''):`<p class="sub">${t('w_empty_tbl')}</p>`);
+  h+=`<h2>${t('hall_tbl',{n})}</h2>`+(o&&o.lines.length?o.lines.map(l=>{const ck=l.qty-(l.rd||0),rd=(l.rd||0)-(l.sv||0),gv=l.sv||0;return`<div class="card col"><div class="line"><b>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</b>${l.qty>(needCook(P(l.pid))?(l.rd||0):(l.sv||0))?`<button class="btn sec sm" style="flex:0 0 auto" onclick="wDec(${n},'${l.pid}')">−</button>`:''}</div><div class="chips">${ck>0?`<span class="chip warn">${t('w_cooking_n',{n:ck})}</span>`:''}${rd>0?`<span class="chip ok">${t('w_ready_n',{n:rd})}</span>`:''}${gv>0?`<span class="chip">${t('w_given_n',{n:gv})}</span>`:''}</div></div>`}).join(''):`<p class="sub">${t('w_empty_tbl')}</p>`);
   h+=`<h2>${t('w_add')}</h2><div class="grid pg">${S.products.filter(p=>p.on!==false).map(p=>ptile(`wAdd('${p.id}',1)`,p.emoji,pn(p),p.stock?freeR(p.id):(invTracked(p.id)?invFree(p.id):'—'),c[p.id]?'sel':'')).join('')}</div>`;
   if(cs.length)h+=`<div class="card col" style="margin-top:12px"><b>${t('w_cart')} · ${t('hall_tbl',{n})}</b>${cs.map(([pid,q])=>`<div class="line"><span>${P(pid)?P(pid).emoji+' '+esc(pn(P(pid))):'?'}</span><div class="step"><button onclick="wAdd('${pid}',-1)">−</button><span>${q}</span><button onclick="wAdd('${pid}',1)">+</button></div></div>`).join('')}<button class="btn ok full" style="margin-top:10px" onclick="wSend()">🍽 ${t('w_send')}</button></div>`;
   return h+foot()}
@@ -716,12 +718,12 @@ function hallAdd(n,pid,d){let fail=false;mutate(()=>{const p=P(pid);if(d>0&&((p.
   let o=hallOrder(n);if(!o){if(d<0)return;o={id:'h'+uid(),no:0,type:'hall',table:n,created:Date.now(),status:'open',lines:[]};S.orders.push(o)}
   let l=o.lines.find(x=>x.pid===pid);if(!l){if(d<0)return;l={pid,qty:0,rr:0,rb:0};o.lines.push(l)}
   l.qty+=d;if(p.stock)S.ready[pid]=Math.max(0,rdy(pid)-d);else invDeduct(pid,d);
-  if((l.rd||0)>l.qty)l.rd=l.qty;if((l.sv||0)>l.qty)l.sv=l.qty;
+  if(!needCook(p))l.rd=l.qty;if((l.rd||0)>l.qty)l.rd=l.qty;if((l.sv||0)>l.qty)l.sv=l.qty;
   if(d>0){const lf=S.feed.filter(f=>(f.k==='l_hall'||f.k==='l_served')&&f.a.tb===n).pop();if(!(lf&&lf.k==='l_hall'&&Date.now()-lf.t<20000))feed('l_hall',{tb:n})}
   if(l.qty<=0)o.lines=o.lines.filter(x=>x!==l);if(!o.lines.length)S.orders=S.orders.filter(x=>x!==o)});
   if(fail)toast(t('no_stock'))}
 function closeTable(n){mutate(()=>{const o=hallOrder(n);if(o){recSale(o.lines);recSrc('hall',linesSum(o.lines));o.status='closed'}});UI.tbl=null;render()}
-function setP(id,f,v){mutate(()=>{const p=P(id);if(!p)return;if(f==='price')p[f]=Math.max(0,+v||0);else if(f==='stock')p.stock=!!v;else if(f.startsWith('n_'))p.names[f.slice(2)]=v})}
+function setP(id,f,v){mutate(()=>{const p=P(id);if(!p)return;if(f==='price')p[f]=Math.max(0,+v||0);else if(f==='stock')p.stock=!!v;else if(f==='cook')p.cook=!!v;else if(f.startsWith('n_'))p.names[f.slice(2)]=v})}
 function addProd(){mutate(()=>{const id='p'+uid();S.products.push({id,emoji:'🥟',names:{uzc:'Янги',uzl:'Yangi',ru:'Новое',en:'New'},price:5000,stock:true,on:true})})}
 function delProd(id){askConfirm(t('confirm_del_prod',{p:pn(P(id))}),()=>{mutate(()=>{S.products=S.products.filter(p=>p.id!==id)});render()})}
 function resetDemo(){askConfirm(t('confirm_reset'),()=>{localStorage.removeItem(MK);mutate(()=>{const n=seed();for(const k of Object.keys(S))if(k!=='_rev')delete S[k];Object.assign(S,n)})})}
@@ -975,7 +977,7 @@ function invHTML(){const ex=S.products.filter(p=>!p.stock&&p.on!==false),r=UI.rc
   h+=`<button class="btn sec full" style="margin-top:14px" onclick="UI.menuEdit=!UI.menuEdit;render()">✏️ ${t('menu_edit')}</button>`;
   if(UI.menuEdit)h+=S.products.map(menuCard).join('')+`<button class="btn sec full" onclick="addProd()">${t('add_prod')}</button>`;
   return h}
-function menuCard(p){return`<div class="card col"><div class="row">${LANGS.map(([c,n])=>`<input title="${n}" placeholder="${n}" value="${esc(p.names[c])}" onchange="setP('${p.id}','n_${c}',this.value)">`).join('')}</div><div class="row" style="margin-top:6px"><div><div class="sub">${t('price')}</div><input type="number" value="${p.price}" onchange="setP('${p.id}','price',this.value)"></div></div><div class="row" style="margin-top:6px;align-items:center"><label class="sub"><input type="checkbox" style="width:auto" ${p.stock?'checked':''} onchange="setP('${p.id}','stock',this.checked);render()"> ${t('tracked')}</label><button class="btn bad sm" style="flex:0 0 auto" onclick="delProd('${p.id}')">${t('del')}</button></div></div>`}
+function menuCard(p){return`<div class="card col"><div class="row">${LANGS.map(([c,n])=>`<input title="${n}" placeholder="${n}" value="${esc(p.names[c])}" onchange="setP('${p.id}','n_${c}',this.value)">`).join('')}</div><div class="row" style="margin-top:6px"><div><div class="sub">${t('price')}</div><input type="number" value="${p.price}" onchange="setP('${p.id}','price',this.value)"></div></div><div class="row" style="margin-top:6px;align-items:center"><label class="sub"><input type="checkbox" style="width:auto" ${p.stock?'checked':''} onchange="setP('${p.id}','stock',this.checked);render()"> ${t('tracked')}</label><label class="sub" style="margin-left:10px"><input type="checkbox" style="width:auto" ${needCook(p)?'checked':''} onchange="setP('${p.id}','cook',this.checked);render()"> ${t('cook_makes')}</label><button class="btn bad sm" style="flex:0 0 auto" onclick="delProd('${p.id}')">${t('del')}</button></div></div>`}
 const ptile=(on,e,n,c,cls='')=>`<button class="pt ${cls}" onclick="${on}"><span class="pe2">${e}</span><span class="pn">${esc(n)}</span><span class="pc">${c}</span></button>`;
 function sumDay(k){const d=(S.sold&&S.sold[k])||{};let q=0,s=0;for(const pid in d){const p=P(pid);if(p&&p.stock)q+=d[pid].q;s+=d[pid].s}return{q,s}}
 function dashHTML(){

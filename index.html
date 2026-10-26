@@ -19,13 +19,14 @@
 <div class="foot" id="ver"></div>
 </div>
 <script>
-const V='2.6.0',LI={uzc:0,uzl:1,ru:2,en:3},L=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
+const V='2.7.0',LI={uzc:0,uzl:1,ru:2,en:3},L=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 let lang=localStorage.getItem('tl.lang')||'ru',open_=false;
 const T={tag:["Самса буюртмаси ва заҳираси","Samsa buyurtmasi va zaxirasi","Заказы и запасы самсы","Samsa orders & stock"],
 c:["Буюртма бериш (мижоз)","Buyurtma berish (mijoz)","Заказать (клиент)","Order (customer)"],
 d:["Қабулхона иловаси","Qabulxona ilovasi","Приложение ресепшена","Reception app"],
 k:["Ошпаз иловаси","Oshpaz ilovasi","Приложение повара","Kitchen app"],
 h:["Ҳар бир иловани алоҳида телефонга ўрнатиш мумкин. Логин ва паролни администратор беради.","Har bir ilovani alohida telefonga o'rnatish mumkin. Login va parolni administrator beradi.","Каждое приложение устанавливается на телефон отдельно. Логин и пароль столовой выдаёт администратор.","Each app installs on a phone separately. The administrator provides the login and password."],
+w:["Официант иловаси","Ofitsiant ilovasi","Приложение официанта","Waiter app"],
 v:["Версия","Versiya","Версия","Version"]};
 const t=k=>T[k][LI[lang]];
 const q=location.search,hs=location.hash;
@@ -34,7 +35,7 @@ if(legacy[hs])location.replace(legacy[hs]+q);
 function draw(){
  document.getElementById('langs').innerHTML=`<button onclick="open_=!open_;draw()">🌐 ${{uzc:'ЎЗ',uzl:'UZ',ru:'RU',en:'EN'}[lang]}</button>`+(open_?`<div class="lmenu">${L.map(([c,n])=>`<button class="${lang===c?'on':''}" onclick="lang='${c}';open_=false;localStorage.setItem('tl.lang',lang);draw()">${n}</button>`).join('')}</div>`:'');
  document.getElementById('tag').textContent=t('tag');
- document.getElementById('roles').innerHTML=`<button onclick="location.href='client/${q}'">🛒 ${t('c')}</button><button onclick="location.href='desk/${q}'" style="border-left:8px solid #1c7ed6">🖥 ${t('d')}</button><button onclick="location.href='kitchen/${q}'" style="border-left:8px solid #b91c1c">🔥 ${t('k')}</button>`;
+ document.getElementById('roles').innerHTML=`<button onclick="location.href='client/${q}'">🛒 ${t('c')}</button><button onclick="location.href='desk/${q}'" style="border-left:8px solid #1c7ed6">🖥 ${t('d')}</button><button onclick="location.href='kitchen/${q}'" style="border-left:8px solid #b91c1c">🔥 ${t('k')}</button><button onclick="location.href='waiter/${q}'" style="border-left:8px solid #0b7285">🍽 ${t('w')}</button>`;
  document.getElementById('hint').textContent=t('h');
  document.getElementById('ver').textContent=t('v')+' '+V;
 }

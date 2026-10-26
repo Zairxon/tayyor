@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.6.0';
+const APP_VERSION='2.7.0';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -270,7 +270,7 @@ r_title:["{n}: ҳисобот — {p}","{n}: hisobot — {p}","{n}: отчёт �
 r_by_src:["Манбалар бўйича","Manbalar bo'yicha","По источникам","By source"],
 cred_title:["Кириш маълумотлари","Kirish ma'lumotlari","Данные для входа","Sign-in details"],
 cred_note:["Парол фақат ҳозир кўринади: кейин уни кўриб бўлмайди, фақат янгисини ўрнатиш мумкин.","Parol faqat hozir ko'rinadi: keyin uni ko'rib bo'lmaydi, faqat yangisini o'rnatish mumkin.","Пароль виден только сейчас: потом его увидеть нельзя, можно только задать новый.","The password is shown only now: later it can't be viewed, only replaced."],
-cred_msg:["Tayyor — {n}\nЛогин: {l}\nПарол: {p}\n\nБуюртма (мижозлар учун): {c}\nҚабулхона: {d}\nОшпаз: {k}","Tayyor — {n}\nLogin: {l}\nParol: {p}\n\nBuyurtma (mijozlar uchun): {c}\nQabulxona: {d}\nOshpaz: {k}","Tayyor — {n}\nЛогин: {l}\nПароль: {p}\n\nЗаказ (для клиентов): {c}\nРесепшен: {d}\nПовар: {k}","Tayyor — {n}\nLogin: {l}\nPassword: {p}\n\nOrder (for customers): {c}\nReception: {d}\nKitchen: {k}"],
+cred_msg:["Tayyor — {n}\nЛогин: {l}\nПарол: {p}\n\nБуюртма (мижозлар учун): {c}\nҚабулхона: {d}\nОшпаз: {k}\nОфициант: {w}","Tayyor — {n}\nLogin: {l}\nParol: {p}\n\nBuyurtma (mijozlar uchun): {c}\nQabulxona: {d}\nOshpaz: {k}\nOfitsiant: {w}","Tayyor — {n}\nЛогин: {l}\nПароль: {p}\n\nЗаказ (для клиентов): {c}\nРесепшен: {d}\nПовар: {k}\nОфициант: {w}","Tayyor — {n}\nLogin: {l}\nPassword: {p}\n\nOrder (for customers): {c}\nReception: {d}\nKitchen: {k}\nWaiter: {w}"],
 cred_copy:["Нусхалаш","Nusxalash","Копировать","Copy"],
 cred_close:["Ёпиш","Yopish","Закрыть","Close"],
 cred_copied:["Кириш маълумотлари нусхаланди","Kirish ma'lumotlari nusxalandi","Данные для входа скопированы","Sign-in details copied"],
@@ -292,7 +292,36 @@ confirm_force:["Ошпаз №{no} буюртмани ҳали бермади. �
 wait_serve:["Ошпаз ҳали бермади","Oshpaz hali bermadi","Повар ещё не подал","The cook hasn't served yet"],
 close_force:["Ошпазсиз ёпиш","Oshpazsiz yopish","Закрыть без повара","Close without the cook"],
 confirm_force_t:["Ошпаз {n}-столга ҳали бермади. Барибир ёпилсинми?","Oshpaz {n}-stolga hali bermadi. Baribir yopilsinmi?","Повар ещё не подал блюда на стол {n}. Закрыть всё равно?","The cook hasn't served table {n} yet. Close it anyway?"],
-k_serve:["Столга берилди","Stolga berildi","Подано на стол","Served to the table"],
+r_waiter:["Официант","Ofitsiant","Официант","Waiter"],
+a_link_waiter:["Официант","Ofitsiant","Официант","Waiter"],
+w_name_title:["Исмингиз","Ismingiz","Ваше имя","Your name"],
+w_name_ph:["Масалан: Алишер","Masalan: Alisher","Например: Алишер","For example: Alisher"],
+w_name_need:["Исмингизни киритинг","Ismingizni kiriting","Введите ваше имя","Enter your name"],
+w_name_change:["Исмни ўзгартириш","Ismni o'zgartirish","Сменить имя","Change name"],
+w_tables:["Столлар","Stollar","Столы","Tables"],
+w_leg_cook:["Тайёрланмоқда","Tayyorlanmoqda","Готовится","Cooking"],
+w_leg_rdy:["Тайёр, қабулхонада","Tayyor, qabulxonada","Готово, у ресепшена","Ready, at reception"],
+w_leg_given:["Берилди","Berildi","Передано","Handed over"],
+w_add:["Таом қўшиш","Taom qo'shish","Добавить блюда","Add dishes"],
+w_cart:["Янги буюртма","Yangi buyurtma","Новый заказ","New order"],
+w_send:["Ошпазга юбориш","Oshpazga yuborish","Отправить повару","Send to the cook"],
+w_cart_empty:["Таомларни танланг","Taomlarni tanlang","Выберите блюда","Pick the dishes"],
+w_sent:["Буюртма юборилди: {n}-стол","Buyurtma yuborildi: {n}-stol","Заказ отправлен: стол {n}","Order sent: table {n}"],
+w_cant:["Тайёр бўлган таомни бекор қилиб бўлмайди","Tayyor bo'lgan taomni bekor qilib bo'lmaydi","Это блюдо уже готово — отменить нельзя","This dish is already ready — it can't be cancelled"],
+w_none:["Столни танланг","Stolni tanlang","Выберите стол","Pick a table"],
+w_empty_tbl:["Бу столда ҳали буюртма йўқ","Bu stolda hali buyurtma yo'q","За этим столом ещё нет заказа","No order at this table yet"],
+w_cooking_n:["Тайёрланмоқда {n}","Tayyorlanmoqda {n}","Готовится {n}","Cooking {n}"],
+w_ready_n:["Тайёр {n}","Tayyor {n}","Готово {n}","Ready {n}"],
+w_given_n:["Берилди {n}","Berildi {n}","Передано {n}","Handed over {n}"],
+h_hand_title:["Залдан: тайёр — официантга беринг","Zaldan: tayyor — ofitsiantga bering","Зал: готово — передайте официанту","Dine-in: ready — hand to the waiter"],
+h_hand_btn:["Официантга бердим","Ofitsiantga berdim","Передал официанту","Handed to the waiter"],
+h_waiter:["Официант: {w}","Ofitsiant: {w}","Официант: {w}","Waiter: {w}"],
+l_hall_w:["Официант {w}: {tb}-стол буюртмаси ошпазга юборилди","Ofitsiant {w}: {tb}-stol buyurtmasi oshpazga yuborildi","Официант {w}: заказ на стол {tb} отправлен повару","Waiter {w}: order for table {tb} sent to the cook"],
+l_hready:["{tb}-стол тайёр — официантга беринг {w}","{tb}-stol tayyor — ofitsiantga bering {w}","Стол {tb} готов — передайте официанту {w}","Table {tb} is ready — hand it to the waiter {w}"],
+l_hready_w:["{tb}-стол буюртмаси тайёр — қабулхона беради","{tb}-stol buyurtmasi tayyor — qabulxona beradi","Стол {tb}: заказ готов — ресепшен передаст","Table {tb}: order is ready — reception will hand it over"],
+l_hhand:["{tb}-стол таомлари официантга берилди {w}","{tb}-stol taomlari ofitsiantga berildi {w}","Блюда стола {tb} переданы официанту {w}","Table {tb} dishes handed to the waiter {w}"],
+l_hhand_w:["{tb}-стол: таомларни қабулхонадан олинг","{tb}-stol: taomlarni qabulxonadan oling","Стол {tb}: заберите заказ у ресепшена","Table {tb}: pick up the order at reception"],
+k_serve:["Тайёр — қабулхонага беринг","Tayyor — qabulxonaga bering","Готово — передать ресепшену","Ready — hand to reception"],
 hall_tbl:["Стол {n}","Stol {n}","Стол {n}","Table {n}"],
 l_hall:["Стол {tb}: янги таомлар — тарелкада беринг","Stol {tb}: yangi taomlar — tarelkada bering","Стол {tb}: новые блюда — подайте на тарелке","Table {tb}: new dishes — serve on a plate"],
 l_served:["Ошпаз {tb}-столга таомларни берди","Oshpaz {tb}-stolga taomlarni berdi","Повар подал блюда на стол {tb}","The cook served table {tb}"],
@@ -490,11 +519,45 @@ function makeOrder(p){if(S.orders.some(o=>o.id===p.id))return null;
   return no}
 /* cook packs and hands over to reception; reception gives to the customer */
 const hallPend=o=>o.lines.filter(l=>l.qty>(l.sv||0));
-function serveHall(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;for(const l of o.lines)l.sv=l.qty;feed('l_served',{tb:o.table})})}
-function hallCookHTML(){const os=S.orders.filter(o=>o.type==='hall'&&o.status==='open'&&hallPend(o).length).sort((a,b)=>a.created-b.created);if(!os.length)return'';
-  return`<h2>🍽 ${t('k_hall_title')} (${os.length})</h2>`+os.map(o=>`<div class="card col"><div class="line"><b>${t('hall_tbl',{n:o.table})}</b><b>${hallPend(o).reduce((a,l)=>a+l.qty-(l.sv||0),0)} ${t('pcs')}</b></div>
-    <div class="packrow">${hallPend(o).map(l=>`<div class="pk warn"><div class="pe2">${P(l.pid)?P(l.pid).emoji:'?'}</div><div class="pq">${l.qty-(l.sv||0)}</div><div class="pn">${P(l.pid)?esc(pn(P(l.pid))):'?'}</div></div>`).join('')}</div>
-    <button class="btn ok full" onclick="serveHall('${o.id}')">🍽 ${t('k_serve')}</button></div>`).join('')}
+const hallCook=o=>o.lines.filter(l=>l.qty>(l.rd||0));
+const hallRdy=o=>o.lines.filter(l=>(l.rd||0)>(l.sv||0));
+const wName=()=>{try{return localStorage.getItem('tl.wn.'+SLUG)||''}catch(e){return''}};
+const hallTiles=(ls,f)=>`<div class="packrow">${ls.map(l=>`<div class="pk ${f(l)[1]}"><div class="pe2">${P(l.pid)?P(l.pid).emoji:'?'}</div><div class="pq">${f(l)[0]}</div><div class="pn">${P(l.pid)?esc(pn(P(l.pid))):'?'}</div></div>`).join('')}</div>`;
+function markHallReady(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;let any=false;for(const l of o.lines)if(l.qty>(l.rd||0)){l.rd=l.qty;any=true}if(any)feed('l_hready',{tb:o.table,oid,wn:o.wn||''})})}
+function handHall(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;let any=false;for(const l of o.lines)if((l.rd||0)>(l.sv||0)){l.sv=l.rd;any=true}if(any)feed('l_hhand',{tb:o.table,oid,wn:o.wn||''})})}
+const hallOpen=()=>S.orders.filter(o=>o.type==='hall'&&o.status==='open');
+function hallCookHTML(){const os=hallOpen().filter(o=>hallCook(o).length).sort((a,b)=>a.created-b.created);if(!os.length)return'';
+  return`<h2>🍽 ${t('k_hall_title')} (${os.length})</h2>`+os.map(o=>`<div class="card col"><div class="line"><b>${t('hall_tbl',{n:o.table})}</b><b>${hallCook(o).reduce((a,l)=>a+l.qty-(l.rd||0),0)} ${t('pcs')}</b></div>${o.wn?`<div class="sub">${t('h_waiter',{w:esc(o.wn)})}</div>`:''}
+    ${hallTiles(hallCook(o),l=>[l.qty-(l.rd||0),'warn'])}
+    <button class="btn ok full" onclick="markHallReady('${o.id}')">✅ ${t('k_serve')}</button></div>`).join('')}
+function hallHandHTML(){const os=hallOpen().filter(o=>hallRdy(o).length).sort((a,b)=>a.created-b.created);if(!os.length)return'';
+  return`<h2 style="color:var(--ok)">🍽 ${t('h_hand_title')} (${os.length})</h2>`+os.map(o=>`<div class="card col" style="border-color:var(--ok)"><div class="line"><b>${t('hall_tbl',{n:o.table})}</b><b>${hallRdy(o).reduce((a,l)=>a+(l.rd||0)-(l.sv||0),0)} ${t('pcs')}</b></div>${o.wn?`<div class="sub">${t('h_waiter',{w:esc(o.wn)})}</div>`:''}
+    ${hallTiles(hallRdy(o),l=>[(l.rd||0)-(l.sv||0),'ok'])}
+    <button class="btn ok full" onclick="handHall('${o.id}')">${t('h_hand_btn')}</button></div>`).join('')}
+/* waiter app */
+function wSetName(){const v=((document.getElementById('wn')||{}).value||'').trim().slice(0,30);if(!v)return toast(t('w_name_need'),'bad');try{localStorage.setItem('tl.wn.'+SLUG,v)}catch(e){}UI.wedit=false;render()}
+function wAdd(pid,d){const p=P(pid);if(!p)return;UI.wc=UI.wc||{};const n=(UI.wc[pid]||0)+d;if(n<0)return;
+  if(d>0&&((p.stock&&n>freeR(pid))||(!p.stock&&invTracked(pid)&&n>invFree(pid))))return toast(t('no_stock'));
+  if(n)UI.wc[pid]=n;else delete UI.wc[pid];render()}
+function wDec(n,pid){const o=hallOrder(n),l=o&&o.lines.find(x=>x.pid===pid);if(!l||l.qty<=(l.rd||0))return toast(t('w_cant'),'bad');hallAdd(n,pid,-1)}
+function wSend(){const n=UI.wt,items=Object.entries(UI.wc||{}).filter(([,q])=>q>0);if(!n||!items.length)return toast(t('w_cart_empty'));
+  let fail=null;
+  mutate(()=>{for(const [pid,q] of items){const p=P(pid);if(!p||(p.stock&&freeR(pid)<q)||(!p.stock&&invTracked(pid)&&invFree(pid)<q)){fail=p?pn(p):'?';return}}
+    let o=hallOrder(n);if(!o){o={id:'h'+uid(),no:0,type:'hall',table:n,created:Date.now(),status:'open',lines:[],wn:wName()};S.orders.push(o)}
+    for(const [pid,q] of items){const p=P(pid);let l=o.lines.find(x=>x.pid===pid);if(!l){l={pid,qty:0,rr:0,rb:0};o.lines.push(l)}l.qty+=q;if(p.stock)S.ready[pid]=Math.max(0,rdy(pid)-q);else invDeduct(pid,q)}
+    if(!o.wn)o.wn=wName();feed('l_hall',{tb:n,oid:o.id,wn:wName()})});
+  if(fail){toast(t('live_short',{p:fail}),'bad');return}UI.wc={};toast(t('w_sent',{n}));render()}
+function vWaiter(){if(!wName()||UI.wedit)return head()+`<div class="card col" style="margin-top:12px"><b>${t('w_name_title')}</b><input id="wn" maxlength="30" placeholder="${t('w_name_ph')}" value="${esc(wName())}" style="margin-top:8px"><button class="btn full" style="margin-top:10px" onclick="wSetName()">${t('set_save')}</button></div>`+foot();
+  const n=UI.wt,st=o=>!o?'':hallCook(o).length?'wcook':hallRdy(o).length?'wrdy':'wgiven';
+  let h=head()+`<div class="sub" style="text-align:center;margin:-4px 0 10px">👤 <b>${esc(wName())}</b> · <button class="linkb" onclick="UI.wedit=true;render()">${t('w_name_change')}</button></div>
+  <h2>${t('w_tables')}</h2><div class="grid tb">${tbls().map(i=>`<button class="${hallOrder(i)?'occ':''} ${n===i?'sel':''} ${st(hallOrder(i))}" onclick="UI.wt=${i};UI.wc={};render()">${i}</button>`).join('')}</div>
+  <div class="chips" style="margin-top:8px"><span class="chip warn">${t('w_leg_cook')}</span><span class="chip ok">${t('w_leg_rdy')}</span><span class="chip">${t('w_leg_given')}</span></div>`;
+  if(!n)return h+`<p class="sub" style="margin-top:14px">${t('w_none')}</p>`+foot();
+  const o=hallOrder(n),c=UI.wc||{},cs=Object.entries(c).filter(([,q])=>q>0);
+  h+=`<h2>${t('hall_tbl',{n})}</h2>`+(o&&o.lines.length?o.lines.map(l=>{const ck=l.qty-(l.rd||0),rd=(l.rd||0)-(l.sv||0),gv=l.sv||0;return`<div class="card col"><div class="line"><b>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</b>${ck>0?`<button class="btn sec sm" style="flex:0 0 auto" onclick="wDec(${n},'${l.pid}')">−</button>`:''}</div><div class="chips">${ck>0?`<span class="chip warn">${t('w_cooking_n',{n:ck})}</span>`:''}${rd>0?`<span class="chip ok">${t('w_ready_n',{n:rd})}</span>`:''}${gv>0?`<span class="chip">${t('w_given_n',{n:gv})}</span>`:''}</div></div>`}).join(''):`<p class="sub">${t('w_empty_tbl')}</p>`);
+  h+=`<h2>${t('w_add')}</h2><div class="grid pg">${S.products.filter(p=>p.on!==false).map(p=>ptile(`wAdd('${p.id}',1)`,p.emoji,pn(p),p.stock?freeR(p.id):(invTracked(p.id)?invFree(p.id):'—'),c[p.id]?'sel':'')).join('')}</div>`;
+  if(cs.length)h+=`<div class="card col" style="margin-top:12px"><b>${t('w_cart')} · ${t('hall_tbl',{n})}</b>${cs.map(([pid,q])=>`<div class="line"><span>${P(pid)?P(pid).emoji+' '+esc(pn(P(pid))):'?'}</span><div class="step"><button onclick="wAdd('${pid}',-1)">−</button><span>${q}</span><button onclick="wAdd('${pid}',1)">+</button></div></div>`).join('')}<button class="btn ok full" style="margin-top:10px" onclick="wSend()">🍽 ${t('w_send')}</button></div>`;
+  return h+foot()}
 function giveForce(oid){const o=S.orders.find(x=>x.id===oid);if(o)askConfirm(t('confirm_force',{no:o.no}),()=>giveOrder(oid,!isReady(o)))}
 function closeForce(n){askConfirm(t('confirm_force_t',{n}),()=>closeTable(n))}
 function packOrder(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open'||o.pk)return;o.pk=Date.now();feed('l_packed',{no:o.no,oid})})}
@@ -533,7 +596,7 @@ async function syncTick(){
   try{const r=await sb.rpc('tayyor_poll',{p_slug:SLUG,p_token:TOK()});if(r.error)throw r.error;const pl=r.data||{};
     if(pl.rev===-3){authLost();return}
     setOnline(true);if(pl.rev!==S._rev){lastChange=Date.now();if(await pull())afterChange()}billToast();
-    if(pl.inbox>0){lastChange=Date.now();await processInbox()}flush()}
+    if(pl.inbox>0&&ROLE!=='waiter'){lastChange=Date.now();await processInbox()}flush()}
   catch(e){setOnline(false)}}
 function schedule(){setTimeout(async()=>{try{await syncTick()}catch(e){}schedule()},pollDelay())}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncTick()});
@@ -653,7 +716,7 @@ function hallAdd(n,pid,d){let fail=false;mutate(()=>{const p=P(pid);if(d>0&&((p.
   let o=hallOrder(n);if(!o){if(d<0)return;o={id:'h'+uid(),no:0,type:'hall',table:n,created:Date.now(),status:'open',lines:[]};S.orders.push(o)}
   let l=o.lines.find(x=>x.pid===pid);if(!l){if(d<0)return;l={pid,qty:0,rr:0,rb:0};o.lines.push(l)}
   l.qty+=d;if(p.stock)S.ready[pid]=Math.max(0,rdy(pid)-d);else invDeduct(pid,d);
-  if((l.sv||0)>l.qty)l.sv=l.qty;
+  if((l.rd||0)>l.qty)l.rd=l.qty;if((l.sv||0)>l.qty)l.sv=l.qty;
   if(d>0){const lf=S.feed.filter(f=>(f.k==='l_hall'||f.k==='l_served')&&f.a.tb===n).pop();if(!(lf&&lf.k==='l_hall'&&Date.now()-lf.t<20000))feed('l_hall',{tb:n})}
   if(l.qty<=0)o.lines=o.lines.filter(x=>x!==l);if(!o.lines.length)S.orders=S.orders.filter(x=>x!==o)});
   if(fail)toast(t('no_stock'))}
@@ -668,10 +731,12 @@ function toast(m,k){const d=document.createElement('div');d.className='toast'+(k
 let actx;function beep(n=2){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();for(let i=0;i<n;i++){const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.frequency.value=880;g.gain.value=.15;o.start(actx.currentTime+i*.25);o.stop(actx.currentTime+i*.25+.15)}}catch(e){}}
 function fmtFeed(f,role){const a=f.a||{};const o=a.oid&&S.orders.find(x=>x.id===a.oid);let k=f.k,L=o?o.lines:[];
   if(role==='kitchen'){if(k==='l_cancel'||k==='l_cancel_c'){k='l_cancel_k';L=L.filter(l=>l.ask>0||l.rb>0)}else if(k==='l_new'&&L.some(l=>l.rb>0)){k='l_new_k';L=L.filter(l=>l.rb>0)}}
-  return t(k,{no:a.no,s:L.map(lineTxt).join(', '),p:pn(P(a.pid)),n:a.n,m:a.m,ph:a.ph,tb:a.tb})}
+  if(a.wn&&k==='l_hall'&&role!=='kitchen')k='l_hall_w';if(role==='waiter'&&k==='l_hready')k='l_hready_w';if(role==='waiter'&&k==='l_hhand')k='l_hhand_w';
+  return t(k,{no:a.no,s:L.map(lineTxt).join(', '),p:pn(P(a.pid)),n:a.n,m:a.m,ph:a.ph,tb:a.tb,w:a.wn||''})}
 let lastFid=null;
 function relevant(f,r,mine){const o=f.a&&f.a.oid&&S.orders.find(x=>x.id===f.a.oid),need=o&&o.lines.some(l=>l.ask>0||l.rb>0);
   if(r==='desk')return true;
+  if(r==='waiter')return(f.k==='l_hready'||f.k==='l_hhand')&&!!o&&o.wn===wName();
   if(r==='kitchen'){if(f.k==='l_ask')return true;if(f.k==='l_new')return !!o&&!o.lines.some(l=>l.ask>0);if(f.k==='l_noshow'||f.k==='l_hall')return true;return(f.k==='l_cancel'||f.k==='l_cancel_c')&&!!need}
   if(r==='order')return['l_ordready','l_ans_bake','l_ans_no'].includes(f.k)&&mine.includes(f.a.oid);
   return false}
@@ -760,7 +825,7 @@ function adToggle(slug){const c=adItem(slug),off=!c.disabled;askConfirm(t(off?'a
 function adDelete(slug){const c=adItem(slug);askConfirm(t('a_c_del',{n:c.name}),async()=>{let r;
   try{const x=await sb.rpc('tayyor_admin_delete',{p_token:ATOK(),p_slug:slug});if(x.error)throw x.error;r=x.data}catch(e){return toast(t('g_fail'),'bad')}
   if(r&&r.ok){toast(t('a_del_ok',{n:c.name}));adRefresh()}else toast(t('g_fail'),'bad')})}
-function adCopy(slug,role){const u=ROOT+role+'/?s='+slug;const done=()=>toast(t('a_copied',{x:t('a_link_'+(role==='client'?'client':role==='desk'?'desk':'kitchen'))+' · '+slug}));
+function adCopy(slug,role){const u=ROOT+role+'/?s='+slug;const done=()=>toast(t('a_copied',{x:t('a_link_'+role)+' · '+slug}));
   try{navigator.clipboard.writeText(u).then(done,()=>askInput(u,u,'text',()=>{}))}catch(e){askInput(u,u,'text',()=>{})}}
 async function adSavePass(){let ok=false;if((AD.nw||'').length<8)return toast(t('a_newpass8'),'bad');
   try{const x=await sb.rpc('tayyor_admin_set_password',{p_token:ATOK(),p_old:AD.old||'',p_new:AD.nw});ok=x.data===true}catch(e){}
@@ -798,13 +863,13 @@ function adminHTML(){const f=AD.f,tab=AD.tab||'list';
       <button class="btn ok full" style="margin-top:6px" onclick="adPay('${c.slug}')">${t('a_pay')}</button>
       ${(c.pays&&c.pays.length)?`<div class="sub" style="margin-top:6px">${t('a_pays')}:</div>`+c.pays.map(p=>`<div class="line sub"><span>${dtm(Date.parse(p.t))} · ${fm(p.a)}</span><span>→ ${dMY(p.u)}</span></div>`).join(''):''}</div>
     <div class="row" style="margin-top:8px;flex-wrap:nowrap;align-items:center"><span class="sub" style="flex:1">${t('a_days')}</span><input type="number" min="1" max="365" style="width:90px;flex:0 0 90px" value="${c.days}" onchange="adDays('${c.slug}',this.value)"></div>
-    <div class="sep"></div><div class="sub">${t('a_links')}</div><div class="agrid">${[['client','a_link_client'],['desk','a_link_desk'],['kitchen','a_link_kitchen']].map(([r,k])=>`<button class="btn sec sm" onclick="adCopy('${c.slug}','${r}')">📋 ${t(k)}</button>`).join('')}</div>
+    <div class="sep"></div><div class="sub">${t('a_links')}</div><div class="agrid">${[['client','a_link_client'],['desk','a_link_desk'],['kitchen','a_link_kitchen'],['waiter','a_link_waiter']].map(([r,k])=>`<button class="btn sec sm" onclick="adCopy('${c.slug}','${r}')">📋 ${t(k)}</button>`).join('')}</div>
     <div class="sep"></div><div class="agrid2"><button class="btn sec sm" onclick="adRename('${c.slug}')">${t('a_rename')}</button><button class="btn sec sm" onclick="adPass('${c.slug}')">${t('a_setpass')}</button><button class="btn sec sm" onclick="adToggle('${c.slug}')">${t(c.disabled?'a_enable':'a_disable')}</button><button class="btn bad sm" onclick="adDelete('${c.slug}')">${t('del')}</button></div></div>`;
     return`<div class="card col canteen"><div class="chead" onclick="adOpen('${c.slug}')"><div class="line"><b class="cn">${esc(c.name)}</b><span class="chip ${c.disabled?'bad':'ok'}">${t(c.disabled?'a_off':'a_active')}</span></div>
       <div class="line"><span class="sub">${t('a_fee')}: <b>${fm(c.fee)}</b> <span class="chip ${st[0]}">${st[1]}</span></span><span class="arr">${op?'▴':'▾'}</span></div></div>${op?`<div class="cbody">${body}</div>`:''}</div>`}).join(''):`<p class="sub">${t('a_none')}</p>`;
   return h+foot()}
 function showCreds(name,slug,pass){UI.cred={name,slug,pass};render()}
-function credText(){const c=UI.cred;return t('cred_msg',{n:c.name,l:c.slug,p:c.pass,c:ROOT+'client/?s='+c.slug,d:ROOT+'desk/?s='+c.slug,k:ROOT+'kitchen/?s='+c.slug}).replace(/\\\\n/g,'\n')}
+function credText(){const c=UI.cred;return t('cred_msg',{n:c.name,l:c.slug,p:c.pass,c:ROOT+'client/?s='+c.slug,d:ROOT+'desk/?s='+c.slug,k:ROOT+'kitchen/?s='+c.slug,w:ROOT+'waiter/?s='+c.slug}).replace(/\\\\n/g,'\n')}
 async function credCopy(){try{await navigator.clipboard.writeText(credText());toast(t('cred_copied'))}catch(e){toast(t('g_fail'),'bad')}}
 function credClose(){UI.cred=null;render()}
 function credHTML(){return UI.cred?`<div class="modal"><div><p class="cfm">${t('cred_title')}</p><pre class="cred">${esc(credText())}</pre><div class="sub" style="margin:8px 0 12px">${t('cred_note')}</div><div class="row"><button class="btn sec" onclick="credClose()">${t('cred_close')}</button><button class="btn" onclick="credCopy()">📋 ${t('cred_copy')}</button></div></div></div>`:''}
@@ -957,10 +1022,10 @@ function deskNewHTML(){const src=UI.nsrc||'phone',items=S.products.filter(p=>p.o
     ${!anyW&&!anyT?`<p>${t('nothing')}</p>`:''}
     <button class="btn sec full" onclick="UI.modal=null;render()">${t('cancel')}</button></div></div>`}
   return h}
-function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt),holdN=S.orders.filter(o=>o.status==='hold').length;
+function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt),holdN=S.orders.filter(o=>o.status==='hold'||(o.type==='hall'&&o.status==='open'&&hallRdy(o).length)).length;
   let h=head()+`<div class="tabs">${[['orders',t('t_orders')+(open.length+holdN?`<span class="badge">${open.length+holdN}</span>`:'')],['new',t('t_new_short')],['hall',t('t_hall')],['stock',t('t_stock')],['report',t('t_report')],['set',t('t_set')]].map(([k,l])=>`<button class="${UI.tab===k?'on':''}" onclick="UI.tab='${k}';render()">${l}</button>`).join('')}</div>`;
   if(UI.tab==='orders'){
-    h+=dashHTML()+holdHTML()+`<h2>${t('d_orders')}</h2>`;
+    h+=dashHTML()+holdHTML()+hallHandHTML()+`<h2>${t('d_orders')}</h2>`;
     h+=open.length?open.map(o=>`<div class="card col"><div class="line"><b>${t('order_no',{n:o.no})} ${esc(o.name)}</b><b>${t('at_time',{t:hm(o.pickupAt)})}</b></div><div class="sub"><span class="chip">${o.src==='phone'?'☎ '+t('src_phone'):'📱 '+t('src_app')}</span> ${o.phone?esc(o.phone):''} ${o.pk?`<span class="chip ok">📦 ${t('chip_packed')}</span>`:`<span class="chip">👨‍🍳 ${t('chip_cook')}</span>`}</div>
       ${o.lines.map(l=>`<div class="line"><span>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</span><span>${l.rr>=l.qty?`<span class="chip ok">${t('ready')}</span>`:`${l.rr>0?`<span class="chip ok">${t('ready')} ${l.rr}</span>`:''}${l.rb>0?`<span class="chip warn">${t('waiting',{n:l.rb})} · ~${mins(etaLine(o,l)||Date.now())} ${t('min')}</span>`:''}${l.ask>0?`<span class="chip bad">${t('st_ask')}: ${l.ask}</span>`:''}${l.declined>0?`<span class="chip bad">${t('declined',{n:l.declined})}</span>`:''}`}${l.want>l.qty?`<span class="chip bad">${t('asked',{w:l.want,q:l.qty})}</span>`:''}</span></div>`).join('')}
       <div class="acts">${o.pk?`<button class="btn ok sm" onclick="giveOrder('${o.id}'${isReady(o)?'':',true'})">${t('give')}</button>`:`<button class="btn sec sm" disabled style="opacity:.55">⏳ ${t('wait_cook')}</button><button class="btn sec sm" onclick="giveForce('${o.id}')">${t('give_force')}</button>`}${Date.now()>=o.pickupAt?`<button class="btn sec sm" onclick="noShowAsk('${o.id}')">${t('noshow_btn')}</button>`:''}<button class="btn bad sm" onclick="cancelOrder('${o.id}')">${t('cancel')}</button></div></div>`).join(''):`<p class="sub">${t('no_orders')}</p>`;
@@ -1014,7 +1079,7 @@ function render(){
   const ae=document.activeElement;
   if(ae&&['INPUT','SELECT'].includes(ae.tagName)&&app.contains(ae)&&ae.type!=='checkbox'){pendingRender=true;return}
   pendingRender=false;
-  if(h===null)h=ROLE==='client'?vClient():(ROLE==='desk'?vDesk():vKitchen());
+  if(h===null)h=ROLE==='client'?vClient():(ROLE==='desk'?vDesk():(ROLE==='waiter'?vWaiter():vKitchen()));
   app.innerHTML=h+cfmHTML()+inputHTML()+credHTML();
   const q=document.getElementById('qr');if(q&&window.qrcode){try{const c=qrcode(0,'M');c.addData(clientLink());c.make();q.innerHTML=c.createSvgTag(4)}catch(e){}}}
 document.addEventListener('focusout',()=>{if(pendingRender)setTimeout(()=>{if(pendingRender)render()},300)});

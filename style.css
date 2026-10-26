@@ -162,3 +162,10 @@ header{flex-wrap:wrap}.langs{flex-wrap:wrap}
 
 .acts{display:flex;gap:6px;margin-top:8px}
 .acts .btn{flex:1 1 0;min-width:0;padding:9px 4px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:0}
+
+.linkb{background:none;border:0;color:var(--pri);font:inherit;text-decoration:underline;padding:0;cursor:pointer}
+.grid.tb button.wcook{border-color:#f08c00;background:#fff4e6}
+.grid.tb button.wrdy{border-color:#2f9e44;background:#ebfbee}
+.grid.tb button.wgiven{background:#f1f3f5}
+.agrid{grid-template-columns:repeat(auto-fit,minmax(90px,1fr))!important}
+.grid.tb button.wcook,.grid.tb button.wrdy,.grid.tb button.wgiven{color:var(--fg,#111)}

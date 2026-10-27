@@ -1,5 +1,5 @@
 
-const APP_VERSION='2.7.1';
+const APP_VERSION='2.7.2';
 const LANGS=[['uzc','Ўзбекча'],['uzl',"O'zbekcha"],['ru','Русский'],['en','English']];
 const LI={uzc:0,uzl:1,ru:2,en:3};
 let lang=localStorage.getItem('tl.lang')||'ru';
@@ -113,6 +113,8 @@ inv_log:["Сўнгги кирим","So'nggi kirim","Последние пост�
 inv_samsa:["Самса: тайёр сонини тўғрилаш","Samsa: tayyor sonini to'g'rilash","Самса: поправить готовое","Samsa: adjust ready count"],
 inv_none:["Ҳисоб юритилмайди — қолдиқни киритинг","Hisob yuritilmaydi — qoldiqni kiriting","Учёт не ведётся — введите остаток","Not tracked — enter the stock"],
 rcv_ok:["Қабул қилинди","Qabul qilindi","Принято","Received"],
+av_yes:["Мавжуд","Mavjud","В наличии","In stock"],
+av_no:["Мавжуд эмас","Mavjud emas","Нет в наличии","Out of stock"],
 out_of_stock:["Тугаган","Tugagan","Нет в наличии","Out of stock"],
 confirm_cancel:["№{no} буюртмани бекор қилайсизми?","№{no} buyurtmani bekor qilasizmi?","Отменить заказ №{no}?","Cancel order #{no}?"],
 l_cancel_c:["Мижоз №{no} буюртмани бекор қилди: {s}","Mijoz №{no} buyurtmani bekor qildi: {s}","Клиент отменил заказ №{no}: {s}","Customer cancelled order #{no}: {s}"],
@@ -521,20 +523,22 @@ function makeOrder(p){if(S.orders.some(o=>o.id===p.id))return null;
 /* cook packs and hands over to reception; reception gives to the customer */
 function needCook(p){return !!p&&(p.cook===undefined?!!p.stock:!!p.cook)}
 const hallPend=o=>o.lines.filter(l=>l.qty>(l.sv||0));
-const hallCook=o=>o.lines.filter(l=>l.qty>(l.rd||0));
-const hallRdy=o=>o.lines.filter(l=>(l.rd||0)>(l.sv||0));
+const effRd=l=>needCook(P(l.pid))?(l.rd||0):l.qty;
+const hallCook=o=>o.lines.filter(l=>l.qty>effRd(l));
+const hallRdy=o=>o.lines.filter(l=>effRd(l)>(l.sv||0));
+function availLbl(p){if(needCook(p)||p.stock)return p.stock?freeR(p.id):(invTracked(p.id)?invFree(p.id):'—');return invTracked(p.id)&&invFree(p.id)<=0?`<span class="av no">${t('av_no')}</span>`:`<span class="av yes">${t('av_yes')}</span>`}
 const wName=()=>{try{return localStorage.getItem('tl.wn.'+SLUG)||''}catch(e){return''}};
 const hallTiles=(ls,f)=>`<div class="packrow">${ls.map(l=>`<div class="pk ${f(l)[1]}"><div class="pe2">${P(l.pid)?P(l.pid).emoji:'?'}</div><div class="pq">${f(l)[0]}</div><div class="pn">${P(l.pid)?esc(pn(P(l.pid))):'?'}</div></div>`).join('')}</div>`;
-function markHallReady(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;let any=false;for(const l of o.lines)if(l.qty>(l.rd||0)){l.rd=l.qty;any=true}if(any)feed('l_hready',{tb:o.table,oid,wn:o.wn||''})})}
-function handHall(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;let any=false;for(const l of o.lines)if((l.rd||0)>(l.sv||0)){l.sv=l.rd;any=true}if(any)feed('l_hhand',{tb:o.table,oid,wn:o.wn||''})})}
+function markHallReady(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;let any=false;for(const l of o.lines)if(l.qty>effRd(l)){l.rd=l.qty;any=true}if(any)feed('l_hready',{tb:o.table,oid,wn:o.wn||''})})}
+function handHall(oid){mutate(()=>{const o=S.orders.find(x=>x.id===oid);if(!o||o.status!=='open')return;let any=false;for(const l of o.lines)if(effRd(l)>(l.sv||0)){l.sv=effRd(l);any=true}if(any)feed('l_hhand',{tb:o.table,oid,wn:o.wn||''})})}
 const hallOpen=()=>S.orders.filter(o=>o.type==='hall'&&o.status==='open');
 function hallCookHTML(){const os=hallOpen().filter(o=>hallCook(o).length).sort((a,b)=>a.created-b.created);if(!os.length)return'';
-  return`<h2>🍽 ${t('k_hall_title')} (${os.length})</h2>`+os.map(o=>`<div class="card col"><div class="line"><b>${t('hall_tbl',{n:o.table})}</b><b>${hallCook(o).reduce((a,l)=>a+l.qty-(l.rd||0),0)} ${t('pcs')}</b></div>${o.wn?`<div class="sub">${t('h_waiter',{w:esc(o.wn)})}</div>`:''}
-    ${hallTiles(hallCook(o),l=>[l.qty-(l.rd||0),'warn'])}
+  return`<h2>🍽 ${t('k_hall_title')} (${os.length})</h2>`+os.map(o=>`<div class="card col"><div class="line"><b>${t('hall_tbl',{n:o.table})}</b><b>${hallCook(o).reduce((a,l)=>a+l.qty-effRd(l),0)} ${t('pcs')}</b></div>${o.wn?`<div class="sub">${t('h_waiter',{w:esc(o.wn)})}</div>`:''}
+    ${hallTiles(hallCook(o),l=>[l.qty-effRd(l),'warn'])}
     <button class="btn ok full" onclick="markHallReady('${o.id}')">✅ ${t('k_serve')}</button></div>`).join('')}
 function hallHandHTML(){const os=hallOpen().filter(o=>hallRdy(o).length).sort((a,b)=>a.created-b.created);if(!os.length)return'';
-  return`<h2 style="color:var(--ok)">🍽 ${t('h_hand_title')} (${os.length})</h2>`+os.map(o=>`<div class="card col" style="border-color:var(--ok)"><div class="line"><b>${t('hall_tbl',{n:o.table})}</b><b>${hallRdy(o).reduce((a,l)=>a+(l.rd||0)-(l.sv||0),0)} ${t('pcs')}</b></div>${o.wn?`<div class="sub">${t('h_waiter',{w:esc(o.wn)})}</div>`:''}
-    ${hallTiles(hallRdy(o),l=>[(l.rd||0)-(l.sv||0),'ok'])}
+  return`<h2 style="color:var(--ok)">🍽 ${t('h_hand_title')} (${os.length})</h2>`+os.map(o=>`<div class="card col" style="border-color:var(--ok)"><div class="line"><b>${t('hall_tbl',{n:o.table})}</b><b>${hallRdy(o).reduce((a,l)=>a+effRd(l)-(l.sv||0),0)} ${t('pcs')}</b></div>${o.wn?`<div class="sub">${t('h_waiter',{w:esc(o.wn)})}</div>`:''}
+    ${hallTiles(hallRdy(o),l=>[effRd(l)-(l.sv||0),'ok'])}
     <button class="btn ok full" onclick="handHall('${o.id}')">${t('h_hand_btn')}</button></div>`).join('')}
 /* waiter app */
 function wSetName(){const v=((document.getElementById('wn')||{}).value||'').trim().slice(0,30);if(!v)return toast(t('w_name_need'),'bad');try{localStorage.setItem('tl.wn.'+SLUG,v)}catch(e){}UI.wedit=false;render()}
@@ -556,8 +560,8 @@ function vWaiter(){if(!wName()||UI.wedit)return head()+`<div class="card col" st
   <div class="chips" style="margin-top:8px"><span class="chip warn">${t('w_leg_cook')}</span><span class="chip ok">${t('w_leg_rdy')}</span><span class="chip">${t('w_leg_given')}</span></div>`;
   if(!n)return h+`<p class="sub" style="margin-top:14px">${t('w_none')}</p>`+foot();
   const o=hallOrder(n),c=UI.wc||{},cs=Object.entries(c).filter(([,q])=>q>0);
-  h+=`<h2>${t('hall_tbl',{n})}</h2>`+(o&&o.lines.length?o.lines.map(l=>{const ck=l.qty-(l.rd||0),rd=(l.rd||0)-(l.sv||0),gv=l.sv||0;return`<div class="card col"><div class="line"><b>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</b>${l.qty>(needCook(P(l.pid))?(l.rd||0):(l.sv||0))?`<button class="btn sec sm" style="flex:0 0 auto" onclick="wDec(${n},'${l.pid}')">−</button>`:''}</div><div class="chips">${ck>0?`<span class="chip warn">${t('w_cooking_n',{n:ck})}</span>`:''}${rd>0?`<span class="chip ok">${t('w_ready_n',{n:rd})}</span>`:''}${gv>0?`<span class="chip">${t('w_given_n',{n:gv})}</span>`:''}</div></div>`}).join(''):`<p class="sub">${t('w_empty_tbl')}</p>`);
-  h+=`<h2>${t('w_add')}</h2><div class="grid pg">${S.products.filter(p=>p.on!==false).map(p=>ptile(`wAdd('${p.id}',1)`,p.emoji,pn(p),p.stock?freeR(p.id):(invTracked(p.id)?invFree(p.id):'—'),c[p.id]?'sel':'')).join('')}</div>`;
+  h+=`<h2>${t('hall_tbl',{n})}</h2>`+(o&&o.lines.length?o.lines.map(l=>{const ck=l.qty-effRd(l),rd=effRd(l)-(l.sv||0),gv=l.sv||0;return`<div class="card col"><div class="line"><b>${P(l.pid)?P(l.pid).emoji+' '+esc(pn(P(l.pid))):'?'} × ${l.qty}</b>${l.qty>(needCook(P(l.pid))?(l.rd||0):(l.sv||0))?`<button class="btn sec sm" style="flex:0 0 auto" onclick="wDec(${n},'${l.pid}')">−</button>`:''}</div><div class="chips">${ck>0?`<span class="chip warn">${t('w_cooking_n',{n:ck})}</span>`:''}${rd>0?`<span class="chip ok">${t('w_ready_n',{n:rd})}</span>`:''}${gv>0?`<span class="chip">${t('w_given_n',{n:gv})}</span>`:''}</div></div>`}).join(''):`<p class="sub">${t('w_empty_tbl')}</p>`);
+  h+=`<h2>${t('w_add')}</h2><div class="grid pg">${S.products.filter(p=>p.on!==false).map(p=>ptile(`wAdd('${p.id}',1)`,p.emoji,pn(p),availLbl(p),(c[p.id]?'sel ':'')+(!needCook(p)&&!p.stock&&invTracked(p.id)&&invFree(p.id)<=0?'off':''))).join('')}</div>`;
   if(cs.length)h+=`<div class="card col" style="margin-top:12px"><b>${t('w_cart')} · ${t('hall_tbl',{n})}</b>${cs.map(([pid,q])=>`<div class="line"><span>${P(pid)?P(pid).emoji+' '+esc(pn(P(pid))):'?'}</span><div class="step"><button onclick="wAdd('${pid}',-1)">−</button><span>${q}</span><button onclick="wAdd('${pid}',1)">+</button></div></div>`).join('')}<button class="btn ok full" style="margin-top:10px" onclick="wSend()">🍽 ${t('w_send')}</button></div>`;
   return h+foot()}
 function giveForce(oid){const o=S.orders.find(x=>x.id===oid);if(o)askConfirm(t('confirm_force',{no:o.no}),()=>giveOrder(oid,!isReady(o)))}
@@ -1039,7 +1043,7 @@ function vDesk(){const open=openP().sort((a,b)=>a.pickupAt-b.pickupAt),holdN=S.o
     h+=`<div class="grid tb">${tbls().map(i=>`<button class="${hallOrder(i)?'occ':''} ${UI.tbl===i?'sel':''}" onclick="UI.tbl=${i};render()">${i}</button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn sec sm" onclick="addTable()">${t('add_table')}</button>${UI.tbl&&!hallOrder(UI.tbl)?`<button class="btn bad sm" onclick="delTable(${UI.tbl})">${t('del_table')} ${UI.tbl}</button>`:''}</div>`;
     if(UI.tbl){const o=hallOrder(UI.tbl),sum=o?o.lines.reduce((a,l)=>a+l.qty*P(l.pid).price,0):0;
       h+=`<h2>${t('table',{n:UI.tbl})}</h2>${o?o.lines.map(l=>`<div class="card"><div class="pi">${P(l.pid).emoji} ${esc(pn(P(l.pid)))}</div><div class="step"><button onclick="hallAdd(${UI.tbl},'${l.pid}',-1)">−</button><span>${l.qty}</span><button onclick="hallAdd(${UI.tbl},'${l.pid}',1)">+</button></div></div>`).join('')+`<div class="line"><b>${t('total')}</b><b>${fm(sum)}</b></div>${hallPend(o).length?`<button class="btn sec full" disabled style="opacity:.55">⏳ ${t('wait_serve')}</button><button class="btn sec sm" style="margin-top:8px" onclick="closeForce(${UI.tbl})">${t('close_force')}</button>`:`<button class="btn ok full" onclick="closeTable(${UI.tbl})">${t('close_table')}</button>`}`:`<p class="sub">${t('table_empty')}</p>`}
-      <h2>+</h2><div class="grid pg">${S.products.filter(p=>p.on!==false).map(p=>ptile(`hallAdd(${UI.tbl},'${p.id}',1)`,p.emoji,pn(p),p.stock?freeR(p.id):(invTracked(p.id)?invFree(p.id):'—'))).join('')}</div>`}}
+      <h2>+</h2><div class="grid pg">${S.products.filter(p=>p.on!==false).map(p=>ptile(`hallAdd(${UI.tbl},'${p.id}',1)`,p.emoji,pn(p),availLbl(p))).join('')}</div>`}}
   if(UI.tab==='set'){
     const inf=S.info||{},locBad=inf.loc&&!parseLoc(inf.loc);
     h+=`<div class="card col"><div class="sub">${t('set_retain',{n:S.retain||10})}</div></div>
